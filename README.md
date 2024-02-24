@@ -40,6 +40,10 @@ Open up Visual Studio Code, navigate to the newly cloned folder, and open it.
 
 Click on the Source Control tab for GitHub-related features.
 
+## Database
+
+We will be using MySQL to store persistent data. The list of completed levels and the times of level completion for each player will 
+be saved to the database. 
 
 ## Organization
 
@@ -69,9 +73,3 @@ Whenever possible, follow the Python code style - https://peps.python.org/pep-00
 &middot; Pygbag Reference - https://pygame-web.github.io/
 
 &middot; MySQL Documentation - https://dev.mysql.com/doc/refman/8.0/en/sql-statements.html
-
-
-## Database
-
-We will be using MySQL to store persistent data. The list of completed levels and the times of level completion for each player will 
-be saved to the database. 
