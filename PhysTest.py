@@ -1,14 +1,23 @@
 import asyncio
 import pygame
-from Objects.PhysObj import *
+import random
+from Objects.PhysObj import TestObj
 
-background_color = (255, 255, 255)
+backgroundColor = (255, 255, 255)
 (width, height) = (1280, 720)
+
+objList = []
 
 async def main():
     pygame.init()
     screen = pygame.display.set_mode((width, height))
-    screen.fill(background_color)
+    screen.fill(backgroundColor)
+
+    for _ in range(20):
+        size = random.randint(20, 30)
+        x = random.randint(size, width-size)
+        y = random.randint(size, height-size)
+        objList.append(TestObj(screen, x, y, 5, size))
 
     pygame.display.flip()
 
@@ -19,7 +28,10 @@ async def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        
+        screen.fill(backgroundColor)
+        for obj in objList:
+            obj.draw()
+        pygame.display.flip()
         
         await asyncio.sleep(0)
 
