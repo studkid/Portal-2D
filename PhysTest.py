@@ -19,7 +19,7 @@ async def main():
         size = random.randint(20, 30)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
-        objList.append(TestObj(screen, x, y, 5, size))
+        objList.append(TestObj(screen, x, y, size, 0.005, 0.2))
 
     pygame.display.flip()
 

@@ -6,17 +6,19 @@ class PhysObj():
     # Constructor
     # x y: coordinates
     # weight: weight of the object
-    def __init__(self, x, y, angle, speed, weight) -> None:
+    # elasticity: "bounciness" of the object
+    def __init__(self, x, y, angle, speed, weight, elasticity) -> None:
         self.x = x
         self.y = y
         self.angle = angle
         self.speed = speed
         self.weight = weight
+        self.elasticity = elasticity
 
     # Moves Object
     # Speed: Pixels to move per call
     def move(self):
-        self.angle, self.speed = addVectors(self.angle, self.speed, math.pi, 0.002)
+        self.angle, self.speed = addVectors(self.angle, self.speed, math.pi, self.weight)
         self.x += math.sin(self.angle) * self.speed
         self.y -= math.cos(self.angle) * self.speed
         self.speed *= 0.999
@@ -30,20 +32,20 @@ class PhysObj():
         if self.x > width - size:
             self.x = 2 * (width - size) - self.x
             self.angle = -self.angle
-            self.speed *= 0.75
+            self.speed *= self.elasticity
         elif self.x < size:
             self.x = 2* size - self.x
             self.angle = -self.angle
-            self.speed *= 0.75
+            self.speed *= self.elasticity
 
         if self.y > height - size:
             self.y = 2 * (height - size) - self.y
             self.angle = math.pi - self.angle
-            self.speed *= 0.75
+            self.speed *= self.elasticity
         elif self.y < size:
             self.y = 2 * size - self.y
             self.angle = math.pi - self.angle
-            self.speed *= 0.75  
+            self.speed *= self.elasticity  
 
 def collide(obj1, obj2):
     dx = obj1.x - obj2.x
@@ -56,8 +58,8 @@ def collide(obj1, obj2):
         obj2.angle = 2 * tangent - obj2.angle
 
         obj1.speed, obj2.speed = obj2.speed, obj1.speed
-        obj1.speed *= 0.75
-        obj2.speed *= 0.75
+        obj1.speed *= obj1.elasticity
+        obj2.speed *= obj2.elasticity
 
         angle = 0.5 * math.pi + tangent
         obj1.x += math.sin(angle)
@@ -76,9 +78,9 @@ def addVectors(ang1, len1, ang2, len2):
 # Meant to test PhysObj class
 import random
 class TestObj(PhysObj):
-    def __init__(self, screen, x, y, weight, size) -> None:
+    def __init__(self, screen, x, y, size, weight, elasticity) -> None:
         self.screen = screen
-        super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight)
+        super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
         self.size = size
         self.color = (0, 0, 255)
 
