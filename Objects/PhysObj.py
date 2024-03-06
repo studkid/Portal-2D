@@ -17,10 +17,10 @@ class PhysObj():
 
     # Moves Object
     # Speed: Pixels to move per call
-    def move(self):
+    def move(self, dt):
         self.angle, self.speed = addVectors(self.angle, self.speed, math.pi, self.weight)
-        self.x += math.sin(self.angle) * self.speed
-        self.y -= math.cos(self.angle) * self.speed
+        self.x += math.sin(self.angle) * self.speed * dt
+        self.y -= math.cos(self.angle) * self.speed * dt
         self.speed *= 0.999
 
     # Causes obj to bounce
@@ -28,7 +28,7 @@ class PhysObj():
     # Height: screen height
     # Size: size object from origin
     # TODO, swap width/height checks with wall collision
-    def bounce(self, width, height, size):
+    def bounce(self, width, height, size, dt):
         if self.x > width - size:
             self.x = 2 * (width - size) - self.x
             self.angle = -self.angle
@@ -45,7 +45,7 @@ class PhysObj():
         elif self.y < size:
             self.y = 2 * size - self.y
             self.angle = math.pi - self.angle
-            self.speed *= self.elasticity  
+            self.speed *= self.elasticity
 
 def collide(obj1, obj2):
     dx = obj1.x - obj2.x

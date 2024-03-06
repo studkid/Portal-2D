@@ -14,6 +14,7 @@ async def main():
     screen = pygame.display.set_mode((width, height))
     screen.fill(backgroundColor)
     selectedObj = None
+    clock = pygame.time.Clock()
 
     for _ in range(20):
         size = random.randint(20, 30)
@@ -25,6 +26,8 @@ async def main():
 
     running = True
     while running:
+        dt = clock.tick(60)
+
         for event in pygame.event.get():
             # Exit handler
             if event.type == pygame.QUIT:
@@ -36,7 +39,7 @@ async def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 selectedObj = None
         
-        # Move Particle
+        # Move Object
         if selectedObj:
             mouseX, mouseY = pygame.mouse.get_pos()
             dx = mouseX - selectedObj.x
@@ -48,8 +51,9 @@ async def main():
 
         screen.fill(backgroundColor)
         for i, obj in enumerate(objList):
-            obj.move()
-            obj.bounce(1280, 720, obj.size)
+            if obj != selectedObj:
+                obj.move(dt)
+            obj.bounce(1280, 720, obj.size, dt)
             for obj2 in objList[i+1:]:
                 collide(obj, obj2)
             obj.draw()
