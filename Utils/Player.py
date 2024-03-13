@@ -17,9 +17,10 @@ class Player():
     def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
         return pygame.Rect(self.x, self.y, 40, 40)
 
-    def update(self, preseed_keys, platforms): ## platforms is an array for all platforms in the level that player can get on
+    def update(self, preseed_keys, platforms): ## platforms is an array for all Rect objects in the level that player can get on
         self.move(preseed_keys)
         self.set_gravity()
+        self.check_collision(platforms)
         pygame.draw.rect(self.screen, (255,0,0), (self.x, self.y, 40, 40))
 
     def move(self, pressed_keys):
@@ -32,6 +33,7 @@ class Player():
         if pressed_keys[pygame.K_SPACE] and not self.isJump:
             self.isJump = True
             self.count = 12
+            self.velocity = -10
 
     def jump(self):
         if self.isJump:
@@ -49,3 +51,14 @@ class Player():
         if not self.isJump:
             self.velocity += self.gravity
             self.y += self.velocity
+
+    def check_collision(self, platforms):
+        for platform in platforms:
+            if self.rect().colliderect(platform):
+                if self.velocity > 0:
+                    self.y = platform.top - 40
+                    self.velocity = 0
+                    self.isJump = False
+                elif self.velocity < 0:
+                    self.y = platform.bottom
+                    self.velocity = 0
