@@ -10,12 +10,16 @@ class Player():
         self.screen = pygame.display.set_mode((background_x, background_y))
         self.isJump = False
         self.count = 12 ## count for jumping
+        self.gravity = 0.5
+        self.velocity = 0
 
     
     def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
         return pygame.Rect(self.x, self.y, 40, 40)
 
-    def update(self):
+    def update(self, preseed_keys, platforms): ## platforms is an array for all platforms in the level that player can get on
+        self.move(preseed_keys)
+        self.set_gravity()
         pygame.draw.rect(self.screen, (255,0,0), (self.x, self.y, 40, 40))
 
     def move(self, pressed_keys):
@@ -40,3 +44,8 @@ class Player():
             else:
                 self.isJump = False
                 self.count = 12
+
+    def set_gravity(self):
+        if not self.isJump:
+            self.velocity += self.gravity
+            self.y += self.velocity
