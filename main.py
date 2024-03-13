@@ -3,7 +3,7 @@ import asyncio
 from Utils.Player import Player
 
 background = pygame.Surface((640, 400))
-background.fill((30, 90, 120))
+background.fill((255, 255, 255))
 
 Width, Height = 640, 400
 FPS = 60
@@ -14,6 +14,14 @@ screen = pygame.display.set_mode((Width,Height))
 
 player = Player(50, 270, Width, Height)
 
+platform_color = (41,41,41)
+platforms = [
+    pygame.Rect(0, Height - 20, Width, 20), ## the main platform
+    pygame.Rect(200, 300, 100, 20), ## a random platform - low platform
+    pygame.Rect(50, 200, 100, 20), ## a random platform - middle platform
+    pygame.Rect(200, 100, 100, 20), ## a random platform = high platform
+]
+
 async def main():
     global Width
     global Height
@@ -21,7 +29,6 @@ async def main():
 
     while True:
         screen.blit(background,(0,0))
-        pygame.draw.rect( screen, (0,0,255), player.rect() )
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -30,9 +37,15 @@ async def main():
         clock.tick(FPS)
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
-        player.move(pressed_keys)
-        player.jump()
-        player.update()
+        player.move(pressed_keys, platforms)
+        player.jump(platforms)
+        player.update(platforms)
+
+        for platform in platforms: 
+            pygame.draw.rect(screen, platform_color, platform)
+            
+        pygame.draw.rect( screen, (255,0,0), player.rect() )
+
         pygame.display.update()
 
         await asyncio.sleep(0)
