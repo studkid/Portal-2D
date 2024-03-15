@@ -1,3 +1,8 @@
+IMPORTANT!!! 
+To test database features, you need to start your Apache + MySQL servers in XAMPP.
+You then need to import the database into PHPMyAdmin using the .sql file in this folder.
+Inside the python code, you need to edit the username and password fields to be an account that YOU already have in PHPMyAdmin.
+
 ----------------------------------------------
 v   Database Structure   v
 ----------------------------------------------
