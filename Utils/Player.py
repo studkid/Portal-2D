@@ -21,27 +21,27 @@ class Player():
     def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
-    def update(self, platforms): ## platforms is an array for all Rect objects in the level that player can get on
-        self.set_gravity(platforms)
+    def update(self, platforms, dt): ## platforms is an array for all Rect objects in the level that player can get on
+        self.set_gravity(platforms, dt)
         self.check_collision(platforms, 0, -1)
 
-    def move(self, pressed_keys, platforms):
+    def move(self, pressed_keys, platforms, dt):
         if pressed_keys[pygame.K_d]:
             if self.x + self.size_x != self.background_x:
-                self.x += 5
+                self.x += 0.5 * dt
                 self.check_collision(platforms, 1, 1)
         if pressed_keys[pygame.K_a]:
             if self.x != 0:
-                self.x -= 5
+                self.x -= 0.5 * dt
                 self.check_collision(platforms, -1, 1)
         if pressed_keys[pygame.K_SPACE] and self.canJump:
             self.isJump = True
             self.canJump = False
             self.count = self.jump_count
-            self.velocity = 10
+            self.velocity = 10 * dt * 0.05
             self.check_collision(platforms, 0, 1)
 
-    def jump(self, platforms):
+    def jump(self, platforms, dt):
         if self.isJump:
             if self.count >= -self.jump_count:
                 add_y = 1
@@ -57,12 +57,12 @@ class Player():
                 self.isJump = False
                 self.count = self.jump_count
 
-    def set_gravity(self, platforms):
+    def set_gravity(self, platforms, dt):
         if not self.isJump:
             self.velocity += self.gravity
             for platform in platforms:
                 if not self.rect().colliderect(platform):
-                    self.y += self.velocity
+                    self.y += self.velocity * 0.05 * dt
 
     def check_collision(self, platforms, x, y):
         rect = self.rect()

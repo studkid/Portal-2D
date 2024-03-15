@@ -34,12 +34,12 @@ async def main():
             if event.type == pygame.QUIT:
                 quit()
 
-        clock.tick(FPS)
+        dt = clock.tick(60)
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
-        player.move(pressed_keys, platforms)
-        player.jump(platforms)
-        player.update(platforms)
+        player.move(pressed_keys, platforms, dt)
+        player.jump(platforms, dt)
+        player.update(platforms, dt)
 
         for platform in platforms: 
             pygame.draw.rect(screen, platform_color, platform)
