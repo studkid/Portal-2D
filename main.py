@@ -2,7 +2,7 @@ import asyncio
 import pygame
 import random
 import math
-from Objects.PhysObj import TestObj, collide
+from utils.PhysObj import TestObj
 
 backgroundColor = (255, 255, 255)
 (width, height) = (1280, 720)
@@ -55,7 +55,7 @@ async def main():
                 obj.move(dt)
             obj.bounce(1280, 720, obj.size, dt)
             for obj2 in objList[i+1:]:
-                collide(obj, obj2)
+                obj.physCollide(obj2)
             obj.draw()
         pygame.display.flip()
         

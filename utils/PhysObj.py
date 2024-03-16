@@ -47,25 +47,25 @@ class PhysObj():
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
 
-def collide(obj1, obj2):
-    dx = obj1.x - obj2.x
-    dy = obj1.y - obj2.y 
+    def physCollide(self, obj):
+        dx = self.x - obj.x
+        dy = self.y - obj.y 
 
-    distance = math.hypot(dx, dy)
-    if distance < obj1.size + obj2.size:
-        tangent = math.atan2(dy, dx)
-        obj1.angle = 2 * tangent - obj1.angle
-        obj2.angle = 2 * tangent - obj2.angle
+        distance = math.hypot(dx, dy)
+        if distance < self.size + obj.size:
+            tangent = math.atan2(dy, dx)
+            self.angle = 2 * tangent - self.angle
+            obj.angle = 2 * tangent - obj.angle
 
-        obj1.speed, obj2.speed = obj2.speed, obj1.speed
-        obj1.speed *= obj1.elasticity
-        obj2.speed *= obj2.elasticity
+            self.speed, obj.speed = obj.speed, self.speed
+            self.speed *= self.elasticity
+            obj.speed *= obj.elasticity
 
-        angle = 0.5 * math.pi + tangent
-        obj1.x += math.sin(angle)
-        obj1.y -= math.cos(angle)
-        obj2.x -= math.sin(angle)
-        obj2.y += math.cos(angle)
+            angle = 0.5 * math.pi + tangent
+            self.x += math.sin(angle)
+            self.y -= math.cos(angle)
+            obj.x -= math.sin(angle)
+            obj.y += math.cos(angle)
 
 def addVectors(ang1, len1, ang2, len2):
     x = math.sin(ang1) * len1 + math.sin(ang2) * len2
@@ -89,3 +89,6 @@ class TestObj(PhysObj):
 
     def toString(self) -> str:
         return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
+    
+    def physCollide(self, obj):
+        super().physCollide(obj)
