@@ -67,6 +67,9 @@ class PhysObj():
             obj.x -= math.sin(angle)
             obj.y += math.cos(angle)
 
+    # def wallCollide(self, walls):
+
+
 def addVectors(ang1, len1, ang2, len2):
     x = math.sin(ang1) * len1 + math.sin(ang2) * len2
     y = math.cos(ang1) * len1 + math.cos(ang2) * len2 
@@ -90,5 +93,6 @@ class TestObj(PhysObj):
     def toString(self) -> str:
         return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
     
-    def physCollide(self, obj):
-        super().physCollide(obj)
+    def physCollide(self, objList):
+        for obj2 in objList:
+            super().physCollide(obj2)

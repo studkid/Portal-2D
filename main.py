@@ -54,8 +54,7 @@ async def main():
             if obj != selectedObj:
                 obj.move(dt)
             obj.bounce(1280, 720, obj.size, dt)
-            for obj2 in objList[i+1:]:
-                obj.physCollide(obj2)
+            obj.physCollide(objList[i+1:])
             obj.draw()
         pygame.display.flip()
         
