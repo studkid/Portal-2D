@@ -9,12 +9,12 @@ class MenuButton():
         self.color = color
         self.hover_color = hover_color
         self.rendered_text = self.font.render(self.text, True, self.color)
-        self.rect = self.rendered_text.get_rect(center=(self.x, self.y))
+        self.rect = pygame.Rect(x, y, self.rendered_text.get_width(), self.rendered_text.get_height())
 
     def update(self, screen):
         screen.blit(self.rendered_text, self.rect)
     
-    def check_mouse(self, mouse_pos):
+    def check_click(self, mouse_pos):
         if mouse_pos[0] in range (self.rect.left, self.rect.right) and mouse_pos[1] in range(self.rect.top, self.rect.bottom):
             return True
         return False
