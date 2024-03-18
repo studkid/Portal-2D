@@ -28,10 +28,10 @@ class PhysObj():
     # Height: screen height
     # Size: size object from origin
     # TODO, swap width/height checks with wall collision
-    def bounce(self, width, height, size):
-        rect = pygame.Rect(self.x, self.y, size, size)
+    def bounce(self, width, height):
+        rect = pygame.Rect(self.x, self.y, self.size, self.size)
         if rect.right > width:
-            self.x = width - size
+            self.x = width - self.size
             self.angle = -self.angle
             self.speed *= self.elasticity
         elif rect.left < 0:
@@ -40,7 +40,7 @@ class PhysObj():
             self.speed *= self.elasticity
 
         if rect.bottom > height:
-            self.y = height - size
+            self.y = height - self.size
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
         elif rect.top < 0:
@@ -51,11 +51,18 @@ class PhysObj():
     # Causes obj to collide with other objects
     # obj: object to collie with
     def collide(self, obj):
-        dx = self.x - obj.x
-        dy = self.y - obj.y 
+        rect = pygame.Rect(self.x, self.y, self.size, self.size)
+        rect2 = pygame.Rect(obj.x, obj.y, obj.size, obj.size)
+        
+        midpointx = math.sqrt(self.size) + self.x
+        midpointy = math.sqrt(self.size) + self.y
+        midpointx2 = math.sqrt(obj.size) + obj.x
+        midpointy2 = math.sqrt(obj.size) + obj.y
 
-        distance = math.hypot(dx, dy)
-        if distance < self.size + obj.size:
+        dx = midpointx - midpointx2
+        dy = midpointy - midpointy2
+        
+        if rect.colliderect(rect2):
             tangent = math.atan2(dy, dx)
             self.angle = 2 * tangent - self.angle
             obj.angle = 2 * tangent - obj.angle
@@ -99,4 +106,4 @@ class TestObj(PhysObj):
             super().collide(obj2)
 
     def bounce(self, width, height, wallList):
-        super().bounce(width, height, self.size)
+        super().bounce(width, height)
