@@ -29,21 +29,22 @@ class PhysObj():
     # Size: size object from origin
     # TODO, swap width/height checks with wall collision
     def bounce(self, width, height, size):
-        if self.x > width - size:
-            self.x = 2 * (width - size) - self.x
+        rect = pygame.Rect(self.x, self.y, size, size)
+        if rect.right > width:
+            self.x = width - size
             self.angle = -self.angle
             self.speed *= self.elasticity
-        elif self.x < 0:
-            self.x = 2* size - self.x
+        elif rect.left < 0:
+            self.x = 0
             self.angle = -self.angle
             self.speed *= self.elasticity
 
-        if self.y > height - size:
-            self.y = 2 * (height - size) - self.y
+        if rect.bottom > height:
+            self.y = height - size
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
-        elif self.y < 0:
-            self.y = 2 * size - self.y
+        elif rect.top < 0:
+            self.y = 0
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
 

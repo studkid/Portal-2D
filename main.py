@@ -23,7 +23,7 @@ async def main():
         size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
-        objList.append(TestObj(screen, x, y, size, 0.005, 0.2))
+        objList.append(TestObj(screen, x, y, size, 0.0555, 0.2))
 
     for wall in wallList:
         print(wall)
