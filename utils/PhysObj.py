@@ -28,12 +28,12 @@ class PhysObj():
     # Height: screen height
     # Size: size object from origin
     # TODO, swap width/height checks with wall collision
-    def bounce(self, width, height, size, dt):
+    def bounce(self, width, height, size):
         if self.x > width - size:
             self.x = 2 * (width - size) - self.x
             self.angle = -self.angle
             self.speed *= self.elasticity
-        elif self.x < size:
+        elif self.x < 0:
             self.x = 2* size - self.x
             self.angle = -self.angle
             self.speed *= self.elasticity
@@ -42,12 +42,14 @@ class PhysObj():
             self.y = 2 * (height - size) - self.y
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
-        elif self.y < size:
+        elif self.y < 0:
             self.y = 2 * size - self.y
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
 
-    def physCollide(self, obj):
+    # Causes obj to collide with other objects
+    # obj: object to collie with
+    def collide(self, obj):
         dx = self.x - obj.x
         dy = self.y - obj.y 
 
@@ -66,9 +68,7 @@ class PhysObj():
             self.y -= math.cos(angle)
             obj.x -= math.sin(angle)
             obj.y += math.cos(angle)
-
-    # def wallCollide(self, walls):
-
+        
 
 def addVectors(ang1, len1, ang2, len2):
     x = math.sin(ang1) * len1 + math.sin(ang2) * len2
@@ -88,11 +88,14 @@ class TestObj(PhysObj):
         self.color = (0, 0, 255)
 
     def draw(self):
-        pygame.draw.circle(self.screen, self.color, (int(self.x), int(self.y)), self.size)
+        pygame.draw.rect(self.screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
 
     def toString(self) -> str:
         return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
     
-    def physCollide(self, objList):
+    def collide(self, objList):
         for obj2 in objList:
-            super().physCollide(obj2)
+            super().collide(obj2)
+
+    def bounce(self, width, height, wallList):
+        super().bounce(width, height, self.size)

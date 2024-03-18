@@ -8,6 +8,9 @@ backgroundColor = (255, 255, 255)
 (width, height) = (1280, 720)
 
 objList = []
+wallList = [
+    pygame.Rect(200, 300, 100, 20)
+]
 
 async def main():
     pygame.init()
@@ -17,12 +20,16 @@ async def main():
     clock = pygame.time.Clock()
 
     for _ in range(20):
-        size = random.randint(20, 30)
+        size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
         objList.append(TestObj(screen, x, y, size, 0.005, 0.2))
 
-    pygame.display.flip()
+    for wall in wallList:
+        print(wall)
+        pygame.draw.rect(screen, (41, 41, 41), wall)
+
+    pygame.display.update()
 
     running = True
     while running:
@@ -53,9 +60,10 @@ async def main():
         for i, obj in enumerate(objList):
             if obj != selectedObj:
                 obj.move(dt)
-            obj.bounce(1280, 720, obj.size, dt)
-            obj.physCollide(objList[i+1:])
+            obj.bounce(1280, 720, wallList)
+            obj.collide(objList[i+1:])
             obj.draw()
+            print(obj.toString())
         pygame.display.flip()
         
         await asyncio.sleep(0)
