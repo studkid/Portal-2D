@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Player():
 
@@ -11,6 +12,7 @@ class Player():
         self.size_y = 40 ## change to other number if need ( height size of player )
         self.screen = pygame.display.set_mode((background_x, background_y))
         self.isJump = False
+        self.isJumping = False
         self.canJump = True
         self.jump_count = 14 ## a variable that holds numbers of count jump
         self.count = 14 ## count for jumping ( will be used as countdown in jumping )
@@ -23,46 +25,70 @@ class Player():
 
     def update(self, platforms, dt): ## platforms is an array for all Rect objects in the level that player can get on
         self.set_gravity(platforms, dt)
-        self.check_collision(platforms, 0, -1)
+        if self.isJump:
+            self.check_collision(platforms, 0, 1)
+        else:
+            self.check_collision(platforms, 0, -1)
 
     def move(self, pressed_keys, platforms, dt):
         if pressed_keys[pygame.K_d]:
-            if self.x + self.size_x != self.background_x:
+            if self.x + self.size_x <= self.background_x:
                 self.x += 0.5 * dt
                 self.check_collision(platforms, 1, 1)
         if pressed_keys[pygame.K_a]:
-            if self.x != 0:
+            if self.x >= 0:
                 self.x -= 0.5 * dt
                 self.check_collision(platforms, -1, 1)
         if pressed_keys[pygame.K_SPACE] and self.canJump:
             self.isJump = True
+            self.isJumping = True
             self.canJump = False
             self.count = self.jump_count
             self.velocity = 10 * dt * 0.05
             self.check_collision(platforms, 0, 1)
 
-    def jump(self, platforms, dt):
-        if self.isJump:
-            if self.count >= -self.jump_count:
+    def jump(self, dt):
+        if self.count >= -self.jump_count:
+            if self.count >= 0 and self.isJump:
                 add_y = 1
-                if self.count < 0:
-                    add_y = -1
-                self.check_collision(platforms, 0, 1)
-                if self.y - self.count**2 * 0.1 * add_y > 0:
-                    self.y -= self.count**2 * 0.1 * add_y
-                else:
-                    self.count = 0
-                self.count -= 1
-            else:
+                self.actually_jump(add_y)
+            if self.count < 0:
                 self.isJump = False
-                self.count = self.jump_count
+                add_y = -1
+                self.actually_jump(add_y)
+        else:
+            self.isJumping = False
+            self.isJump = False
+            self.count = self.jump_count
+    
+    def actually_jump(self, add_y):
+        if self.y - self.count**2 * 0.1 * add_y > 0:
+            self.y -= self.count**2 * 0.1 * add_y
+        else:
+            self.count = 0
+        self.count -= 1
 
     def set_gravity(self, platforms, dt):
-        if not self.isJump:
+        if not self.isJump and not self.isJumping:
             self.velocity += self.gravity
             for platform in platforms:
                 if not self.rect().colliderect(platform):
                     self.y += self.velocity * 0.05 * dt
+                else:
+                    break
+            if self.y > self.background_y:
+                self.y = 0
+        elif not self.isJump and self.isJumping:
+            self.velocity += self.gravity
+            on_platform = False
+            for platform in platforms:
+                if self.rect().colliderect(platform):
+                    on_platform = True
+                    break
+            if not on_platform:
+                self.y += self.velocity * 0.05 * dt
+            if self.y > self.background_y:
+                self.y = 0
 
     def check_collision(self, platforms, x, y):
         rect = self.rect()
@@ -70,13 +96,25 @@ class Player():
             if rect.colliderect(platform):
                 if x > 0: 
                     self.x = platform.left - self.size_x
+                    break
                 elif x < 0:
                     self.x = platform.right
+                    break
                 elif y < 0:
                     self.y = platform.top - self.size_y
                     self.velocity = 0
                     self.isJump = False
                     self.canJump = True
+                    break
                 elif y > 0:
                     self.y = platform.bottom
                     self.velocity = 0
+                    break
+            if rect.left >= platform.left and rect.right <= platform.right and y > 1:
+                if rect.top > platform.top and rect.top < platform.bottom + self.size_y / 4:
+                    self.y = platform.bottom
+                    self.velocity = 0
+                    self.count = 0
+                    self.isJump = False
+                    self.canJump = True
+                    break

@@ -1,9 +1,14 @@
 import pygame
 import asyncio
-from Utils.Player import Player
+from Utils.MenuButton import MenuButton
+import test_code
+import connection
+import levels
 
 background = pygame.Surface((640, 400))
-background.fill((255, 255, 255))
+background.fill((41, 41, 41))
+
+pygame.display.set_caption("Portal 2D")
 
 Width, Height = 640, 400
 FPS = 60
@@ -12,39 +17,45 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((Width,Height))
 
-player = Player(50, 270, Width, Height)
+def font(size):
+    return pygame.font.SysFont("Consolas", size)
 
-platform_color = (41,41,41)
-platforms = [
-    pygame.Rect(0, Height - 20, Width, 20), ## the main platform
-    pygame.Rect(200, 300, 100, 20), ## a random platform - low platform
-    pygame.Rect(50, 200, 100, 20), ## a random platform - middle platform
-    pygame.Rect(200, 100, 100, 20), ## a random platform = high platform
-]
+color = (255, 255, 255)
+hover_color = (150, 150 ,150)
 
 async def main():
-    global Width
-    global Height
     global FPS
 
     while True:
-        screen.blit(background,(0,0))
+        screen.blit(background, (0,0))
+
+        clock.tick(FPS)
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        title_text = font(50).render("Portal 2D", True, (255, 255, 255))
+        title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
+
+        connection_button = MenuButton(50, 120, "Connect", font(30), color, hover_color)
+        level_button = MenuButton(50, 170, "Levels", font(30), color, hover_color)
+        test_room_button = MenuButton(50, 220, "Test your code", font(30), color, hover_color)
+
+        screen.blit(title_text, title_rect)
+
+        for button in [connection_button, level_button, test_room_button]:
+            button.check_hover(mouse_pos)
+            button.update(screen)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
-
-        dt = clock.tick(60)
-        pressed_keys = pygame.key.get_pressed()
-        screen.blit(background, (0,0))
-        player.move(pressed_keys, platforms, dt)
-        player.jump(platforms, dt)
-        player.update(platforms, dt)
-
-        for platform in platforms: 
-            pygame.draw.rect(screen, platform_color, platform)
-            
-        pygame.draw.rect( screen, (255,0,0), player.rect() )
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if connection_button.check_click(mouse_pos):
+                    await connection.connect_screen()
+                if level_button.check_click(mouse_pos):
+                    await levels.level_screen()
+                if test_room_button.check_click(mouse_pos):
+                    await test_code.test_screen()
 
         pygame.display.update()
 
