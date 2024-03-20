@@ -28,8 +28,28 @@ class PhysObj():
     # Height: screen height
     # Size: size object from origin
     # TODO, swap width/height checks with wall collision
-    def bounce(self, width, height):
+    def bounce(self, width, height, wallList):
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
+
+        for wall in wallList:
+            if rect.colliderect(wall):
+                if rect.right > wall.left and rect.right < wall.left + 40:
+                    self.x = wall.left - self.size
+                    self.angle = -self.angle
+                    self.speed *= self.elasticity
+                elif rect.left < wall.right and rect.left > wall.right - 40:
+                    self.x = wall.right
+                    self.angle = -self.angle
+                    self.speed *= self.elasticity
+
+                if rect.bottom > wall.top and rect.bottom < wall.top + 40:
+                    self.y = wall.top - self.size
+                    self.angle = math.pi - self.angle
+                    self.speed *= self.elasticity
+                elif rect.top < wall.bottom and rect.top > wall.bottom - 40:
+                    self.y = wall.bottom
+                    self.angle = math.pi - self.angle
+                    self.speed *= self.elasticity
         if rect.right > width:
             self.x = width - self.size
             self.angle = -self.angle

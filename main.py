@@ -5,11 +5,14 @@ import math
 from utils.PhysObj import PhysObj
 
 backgroundColor = (255, 255, 255)
+plaformColor = (41, 41, 41)
 (width, height) = (1280, 720)
 
 objList = []
 wallList = [
-    pygame.Rect(200, 300, 100, 20)
+    pygame.Rect(0, height - 20, width, 20),
+    pygame.Rect(200, 300, 100, 20),
+    pygame.Rect(700, 500, 20, 200),
 ]
 
 # Meant to test PhysObj class
@@ -32,9 +35,7 @@ class TestObj(PhysObj):
             super().collide(obj2)
 
     def bounce(self, width, height, wallList):
-        
-
-        super().bounce(width, height)
+        super().bounce(width, height, wallList)
 
 async def main():
     pygame.init()
@@ -43,15 +44,11 @@ async def main():
     selectedObj = None
     clock = pygame.time.Clock()
 
-    for _ in range(20):
+    for _ in range(1):
         size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
         objList.append(TestObj(screen, x, y, size, 0.0999, 0.2))
-
-    for wall in wallList:
-        print(wall)
-        pygame.draw.rect(screen, (41, 41, 41), wall)
 
     pygame.display.update()
 
@@ -81,6 +78,9 @@ async def main():
             selectedObj.y = mouseY
 
         screen.fill(backgroundColor)
+
+        for wall in wallList:
+            pygame.draw.rect(screen, plaformColor, wall)
         for i, obj in enumerate(objList):
             if obj != selectedObj:
                 obj.move(dt)
