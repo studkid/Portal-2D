@@ -54,29 +54,46 @@ class PhysObj():
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
         rect2 = pygame.Rect(obj.x, obj.y, obj.size, obj.size)
         
-        midpointx = math.sqrt(self.size) + self.x
-        midpointy = math.sqrt(self.size) + self.y
-        midpointx2 = math.sqrt(obj.size) + obj.x
-        midpointy2 = math.sqrt(obj.size) + obj.y
-
-        dx = midpointx - midpointx2
-        dy = midpointy - midpointy2
-        
         if rect.colliderect(rect2):
-            tangent = math.atan2(dy, dx)
-            self.angle = 2 * tangent - self.angle
-            obj.angle = 2 * tangent - obj.angle
+            print(f"{rect.left} > {rect2.right}")
+            if rect.bottom > rect2.top and rect.bottom < rect2.top + 20:
+                self.y = rect2.top - self.size + 1
 
-            self.speed, obj.speed = obj.speed, self.speed
-            self.speed *= self.elasticity
-            obj.speed *= obj.elasticity
+                self.angle = math.pi - self.angle
+                obj.angle = math.pi - obj.angle
 
-            angle = 0.5 * math.pi + tangent
-            self.x += math.sin(angle)
-            self.y -= math.cos(angle)
-            obj.x -= math.sin(angle)
-            obj.y += math.cos(angle)
-        
+                self.speed, obj.speed = obj.speed, self.speed
+                self.speed *= self.elasticity
+                obj.speed *= obj.elasticity
+            elif rect.top < rect2.bottom and rect.top > rect2.bottom - 20:
+                obj.y = rect.top - 1
+
+                self.angle = math.pi - self.angle
+                obj.angle = math.pi - obj.angle
+
+                self.speed, obj.speed = obj.speed, self.speed
+                self.speed *= self.elasticity
+                obj.speed *= obj.elasticity
+            elif rect.left < rect2.right and rect.left > rect2.right - 20:
+                self.x = rect2.right - 1
+                
+                self.angle = math.pi - self.angle
+                obj.angle = math.pi - obj.angle
+
+                self.speed, obj.speed = obj.speed, self.speed
+                self.speed *= self.elasticity
+                obj.speed *= obj.elasticity
+            elif rect.right > rect2.left and rect.right > rect2.left + 20:
+                self.x = rect2.right - self.size + 1
+                
+                self.angle = math.pi - self.angle
+                obj.angle = math.pi - obj.angle
+
+                self.speed, obj.speed = obj.speed, self.speed
+                self.speed *= self.elasticity
+                obj.speed *= obj.elasticity
+
+        print(self.x)
 
 def addVectors(ang1, len1, ang2, len2):
     x = math.sin(ang1) * len1 + math.sin(ang2) * len2
