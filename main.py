@@ -2,7 +2,7 @@ import asyncio
 import pygame
 import random
 import math
-from utils.PhysObj import TestObj
+from utils.PhysObj import PhysObj
 
 backgroundColor = (255, 255, 255)
 (width, height) = (1280, 720)
@@ -11,6 +11,30 @@ objList = []
 wallList = [
     pygame.Rect(200, 300, 100, 20)
 ]
+
+# Meant to test PhysObj class
+import random
+class TestObj(PhysObj):
+    def __init__(self, screen, x, y, size, weight, elasticity) -> None:
+        self.screen = screen
+        super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
+        self.size = size
+        self.color = (0, 0, 255)
+
+    def draw(self):
+        pygame.draw.rect(self.screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
+
+    def toString(self) -> str:
+        return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
+    
+    def collide(self, objList):
+        for obj2 in objList:
+            super().collide(obj2)
+
+    def bounce(self, width, height, wallList):
+        
+
+        super().bounce(width, height)
 
 async def main():
     pygame.init()
