@@ -55,7 +55,6 @@ class PhysObj():
         rect2 = pygame.Rect(obj.x, obj.y, obj.size, obj.size)
         
         if rect.colliderect(rect2):
-            print(f"{rect.left} > {rect2.right}")
             if rect.bottom > rect2.top and rect.bottom < rect2.top + 20:
                 self.y = rect2.top - self.size + 1
 
@@ -66,7 +65,7 @@ class PhysObj():
                 self.speed *= self.elasticity
                 obj.speed *= obj.elasticity
             elif rect.top < rect2.bottom and rect.top > rect2.bottom - 20:
-                obj.y = rect.top - 1
+                obj.y = rect.top - self.size - 1
 
                 self.angle = math.pi - self.angle
                 obj.angle = math.pi - obj.angle
@@ -93,34 +92,9 @@ class PhysObj():
                 self.speed *= self.elasticity
                 obj.speed *= obj.elasticity
 
-        print(self.x)
-
 def addVectors(ang1, len1, ang2, len2):
     x = math.sin(ang1) * len1 + math.sin(ang2) * len2
     y = math.cos(ang1) * len1 + math.cos(ang2) * len2 
     length = math.hypot(x, y)
     angle = 0.5 * math.pi - math.atan2(y, x)
     return (angle, length)
-
-# Remove/move to a separate file eventually
-# Meant to test PhysObj class
-import random
-class TestObj(PhysObj):
-    def __init__(self, screen, x, y, size, weight, elasticity) -> None:
-        self.screen = screen
-        super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
-        self.size = size
-        self.color = (0, 0, 255)
-
-    def draw(self):
-        pygame.draw.rect(self.screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
-
-    def toString(self) -> str:
-        return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
-    
-    def collide(self, objList):
-        for obj2 in objList:
-            super().collide(obj2)
-
-    def bounce(self, width, height, wallList):
-        super().bounce(width, height)

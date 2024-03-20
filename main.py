@@ -43,7 +43,7 @@ async def main():
     selectedObj = None
     clock = pygame.time.Clock()
 
-    for _ in range(2):
+    for _ in range(20):
         size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
