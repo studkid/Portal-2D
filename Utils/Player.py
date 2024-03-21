@@ -14,6 +14,7 @@ class Player():
         self.isJump = False
         self.isJumping = False
         self.canJump = True
+        self.hitPlatform = False
         self.jump_count = 14 ## a variable that holds numbers of count jump
         self.count = 14 ## count for jumping ( will be used as countdown in jumping )
         self.gravity = 0.5
@@ -73,11 +74,12 @@ class Player():
             self.velocity += self.gravity
             for platform in platforms:
                 if not self.rect().colliderect(platform):
-                    self.y += self.velocity * 0.05 * dt
+                    if self.hitPlatform == True:
+                        self.y += self.velocity * 0.02 * dt
+                    else:
+                        self.y += self.velocity * 0.05 * dt
                 else:
                     break
-            if self.y > self.background_y:
-                self.y = 0
         elif not self.isJump and self.isJumping:
             self.velocity += self.gravity
             on_platform = False
@@ -87,8 +89,8 @@ class Player():
                     break
             if not on_platform:
                 self.y += self.velocity * 0.05 * dt
-            if self.y > self.background_y:
-                self.y = 0
+        if self.y > self.background_y:
+            self.y = 0
 
     def check_collision(self, platforms, x, y):
         rect = self.rect()
@@ -105,16 +107,17 @@ class Player():
                     self.velocity = 0
                     self.isJump = False
                     self.canJump = True
+                    self.hitPlatform = False
                     break
                 elif y > 0:
                     self.y = platform.bottom
-                    self.velocity = 0
                     break
-            if rect.left >= platform.left and rect.right <= platform.right and y > 1:
-                if rect.top > platform.top and rect.top < platform.bottom + self.size_y / 4:
+            if rect.left >= platform.left - self.size_x and rect.right <= platform.right + self.size_x and y > 0:
+                if rect.top > platform.top and rect.top < platform.bottom + 1:
                     self.y = platform.bottom
-                    self.velocity = 0
                     self.count = 0
                     self.isJump = False
-                    self.canJump = True
+                    self.isJumping = False
+                    self.canJump = False
+                    self.hitPlatform = True
                     break
