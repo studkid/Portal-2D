@@ -31,7 +31,8 @@ class PhysObj():
     def bounce(self, width, height, wallList):
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
 
-        for wall in wallList:
+        for plat in wallList:
+            wall = plat.rect
             if rect.colliderect(wall):
                 if rect.right > wall.left and rect.right < wall.left + 40:
                     self.x = wall.left - self.size

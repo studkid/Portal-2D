@@ -94,7 +94,8 @@ class Player():
 
     def check_collision(self, platforms, x, y):
         rect = self.rect()
-        for platform in platforms:
+        for platformObj in platforms:
+            platform = platformObj.rect
             if rect.colliderect(platform):
                 if x > 0: 
                     self.x = platform.left - self.size_x

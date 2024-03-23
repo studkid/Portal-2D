@@ -10,6 +10,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from Utils.PhysObj import PhysObj
 from Utils.ButtonObject import ButtonObject
+from Utils.Platform import Platform
 
 backgroundColor = (255, 255, 255)
 plaformColor = (41, 41, 41)
@@ -17,9 +18,9 @@ plaformColor = (41, 41, 41)
 
 objList = []
 wallList = [
-    pygame.Rect(0, height - 20, width, 20),
-    pygame.Rect(200, 300, 100, 20),
-    pygame.Rect(700, 500, 20, 200),
+    Platform(0, height - 20, width, 20, True, None),
+    Platform(200, 300, 100, 20, True, None),
+    Platform(700, 500, 20, 200, False, None),
 ]
 
 # Meant to test PhysObj class
@@ -97,7 +98,7 @@ async def PhysTest():
         screen.fill(backgroundColor)
 
         for wall in wallList:
-            pygame.draw.rect(screen, plaformColor, wall)
+            wall.draw(screen)
         for i, obj in enumerate(objList):
             if obj != selectedObj:
                 obj.move(dt)
