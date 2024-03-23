@@ -43,9 +43,11 @@ async def test_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.K_ESCAPE:
-                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
+            print(pygame.K_ESCAPE)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons["phys_test_button"].check_click(mouse_pos):
                     await Test.PhysTest.PhysTest()
