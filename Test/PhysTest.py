@@ -37,14 +37,14 @@ class TestObj(PhysObj):
     def bounce(self, width, height, wallList):
         super().bounce(width, height, wallList)
 
-async def main():
+async def PhysTest():
     pygame.init()
     screen = pygame.display.set_mode((width, height))
     screen.fill(backgroundColor)
     selectedObj = None
     clock = pygame.time.Clock()
 
-    for _ in range(1):
+    for _ in range(20):
         size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
@@ -60,12 +60,16 @@ async def main():
             # Exit handler
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.K_ESCAPE:
+                running = False
+                
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 selectedObj = findObject(objList, mouseX, mouseY)
             elif event.type == pygame.MOUSEBUTTONUP:
                 selectedObj = None
+
         
         # Move Object
         if selectedObj:
@@ -96,5 +100,3 @@ def findObject(objects, x, y):
         if math.hypot(obj.x-x, obj.y-y) <= obj.size:
             return obj
     return None
-
-asyncio.run(main())
