@@ -1,100 +1,64 @@
-import asyncio
 import pygame
-import random
-import math
-from utils.PhysObj import PhysObj
+import asyncio
+from Utils.MenuButton import MenuButton
+import test_code
+import connection
+import levels
 
-backgroundColor = (255, 255, 255)
-plaformColor = (41, 41, 41)
-(width, height) = (1280, 720)
+background = pygame.Surface((640, 400))
+background.fill((41, 41, 41))
 
-objList = []
-wallList = [
-    pygame.Rect(0, height - 20, width, 20),
-    pygame.Rect(200, 300, 100, 20),
-    pygame.Rect(700, 500, 20, 200),
-]
+pygame.display.set_caption("Portal 2D")
 
-# Meant to test PhysObj class
-import random
-class TestObj(PhysObj):
-    def __init__(self, screen, x, y, size, weight, elasticity) -> None:
-        self.screen = screen
-        super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
-        self.size = size
-        self.color = (0, 0, 255)
+Width, Height = 640, 400
+FPS = 60
 
-    def draw(self):
-        pygame.draw.rect(self.screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
+pygame.init()
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((Width,Height))
 
-    def toString(self) -> str:
-        return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
-    
-    def collide(self, objList):
-        for obj2 in objList:
-            super().collide(obj2)
+def font(size):
+    return pygame.font.SysFont("Consolas", size)
 
-    def bounce(self, width, height, wallList):
-        super().bounce(width, height, wallList)
+color = (255, 255, 255)
+hover_color = (150, 150 ,150)
 
 async def main():
-    pygame.init()
-    screen = pygame.display.set_mode((width, height))
-    screen.fill(backgroundColor)
-    selectedObj = None
-    clock = pygame.time.Clock()
+    global FPS
 
-    for _ in range(1):
-        size = random.randint(40, 50)
-        x = random.randint(size, width-size)
-        y = random.randint(size, height-size)
-        objList.append(TestObj(screen, x, y, size, 0.0999, 0.2))
+    while True:
+        screen.blit(background, (0,0))
 
-    pygame.display.update()
+        clock.tick(FPS)
 
-    running = True
-    while running:
-        dt = clock.tick(60)
+        mouse_pos = pygame.mouse.get_pos()
+
+        title_text = font(50).render("Portal 2D", True, (255, 255, 255))
+        title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
+
+        connection_button = MenuButton(50, 120, "Connect", font(30), color, hover_color)
+        level_button = MenuButton(50, 170, "Levels", font(30), color, hover_color)
+        test_room_button = MenuButton(50, 220, "Test your code", font(30), color, hover_color)
+
+        screen.blit(title_text, title_rect)
+
+        for button in [connection_button, level_button, test_room_button]:
+            button.check_hover(mouse_pos)
+            button.update(screen)
 
         for event in pygame.event.get():
-            # Exit handler
             if event.type == pygame.QUIT:
-                running = False
-            # Check for mouse input
+                quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouseX, mouseY = pygame.mouse.get_pos()
-                selectedObj = findObject(objList, mouseX, mouseY)
-            elif event.type == pygame.MOUSEBUTTONUP:
-                selectedObj = None
-        
-        # Move Object
-        if selectedObj:
-            mouseX, mouseY = pygame.mouse.get_pos()
-            dx = mouseX - selectedObj.x
-            dy = mouseY - selectedObj.y
-            selectedObj.angle = math.atan2(dy, dx) + 0.5 * math.pi
-            selectedObj.speed = math.hypot(dx, dy) * 0.1
-            selectedObj.x = mouseX
-            selectedObj.y = mouseY
+                if connection_button.check_click(mouse_pos):
+                    await connection.connect_screen()
+                if level_button.check_click(mouse_pos):
+                    await levels.level_screen()
+                if test_room_button.check_click(mouse_pos):
+                    await test_code.test_screen()
 
-        screen.fill(backgroundColor)
+        pygame.display.update()
 
-        for wall in wallList:
-            pygame.draw.rect(screen, plaformColor, wall)
-        for i, obj in enumerate(objList):
-            if obj != selectedObj:
-                obj.move(dt)
-            obj.bounce(1280, 720, wallList)
-            obj.collide(objList[i+1:])
-            obj.draw()
-        pygame.display.flip()
-        
         await asyncio.sleep(0)
-
-def findObject(objects, x, y):
-    for obj in objects:
-        if math.hypot(obj.x-x, obj.y-y) <= obj.size:
-            return obj
-    return None
 
 asyncio.run(main())
