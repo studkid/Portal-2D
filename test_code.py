@@ -3,7 +3,7 @@ import asyncio
 from typing import Dict
 
 from Utils.MenuButton import MenuButton
-import Test.PhysTest
+from Test import PhysTest
 
 background = pygame.Surface((640, 400))
 background.fill((0, 0, 255)) ## change bg color if you want to for testing
@@ -42,15 +42,14 @@ async def test_screen():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
-            print(pygame.K_ESCAPE)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons["phys_test_button"].check_click(mouse_pos):
-                    await Test.PhysTest.PhysTest()
+                    await PhysTest.PhysTest()
                     pygame.display.set_mode((Width,Height))
 
         pygame.display.update()

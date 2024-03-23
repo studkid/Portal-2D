@@ -69,7 +69,7 @@ class PhysObj():
             self.speed *= self.elasticity
 
     # Causes obj to collide with other objects
-    # obj: object to collie with
+    # obj: object to collide with
     def collide(self, obj):
         rect = pygame.Rect(self.x, self.y, self.size, self.size)
         rect2 = pygame.Rect(obj.x, obj.y, obj.size, obj.size)

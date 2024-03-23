@@ -2,7 +2,14 @@ import asyncio
 import pygame
 import random
 import math
+
+import sys
+import os
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 from Utils.PhysObj import PhysObj
+from Utils.ButtonObject import ButtonObject
 
 backgroundColor = (255, 255, 255)
 plaformColor = (41, 41, 41)
@@ -18,14 +25,13 @@ wallList = [
 # Meant to test PhysObj class
 import random
 class TestObj(PhysObj):
-    def __init__(self, screen, x, y, size, weight, elasticity) -> None:
-        self.screen = screen
+    def __init__(self, x, y, size, weight, elasticity) -> None:
         super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
         self.size = size
         self.color = (0, 0, 255)
 
-    def draw(self):
-        pygame.draw.rect(self.screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
 
     def toString(self) -> str:
         return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
@@ -44,12 +50,13 @@ async def PhysTest():
     selectedObj = None
     clock = pygame.time.Clock()
 
-    for _ in range(20):
+    for _ in range(1):
         size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
-        objList.append(TestObj(screen, x, y, size, 0.0999, 0.2))
+        objList.append(TestObj(x, y, size, 0.0999, 0.2))
 
+    button = ButtonObject(230, 285, 0)
     pygame.display.update()
 
     running = True
@@ -59,7 +66,7 @@ async def PhysTest():
         for event in pygame.event.get():
             # Exit handler
             if event.type == pygame.QUIT:
-                running = False
+                quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
@@ -67,9 +74,14 @@ async def PhysTest():
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
-                selectedObj = findObject(objList, mouseX, mouseY)
+                if event.button == 1:
+                    selectedObj = findObject(objList, mouseX, mouseY)
+                elif event.button == 3:
+                    size = random.randint(40, 50)
+                    objList.append(TestObj(mouseX, mouseY, size, 0.0999, 0.2))
             elif event.type == pygame.MOUSEBUTTONUP:
-                selectedObj = None
+                if event.button == 1:
+                    selectedObj = None
 
         
         # Move Object
@@ -91,7 +103,9 @@ async def PhysTest():
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
             obj.collide(objList[i+1:])
-            obj.draw()
+            obj.draw(screen)
+        button.checkActive(objList)
+        button.draw(screen)
         pygame.display.flip()
         
         await asyncio.sleep(0)
