@@ -1,7 +1,7 @@
 import pygame
 import asyncio
 
-Width, Height = 640, 400
+Width, Height = 1280, 720
 
 background = pygame.Surface((Width, Height))
 background.fill((41, 41, 41))

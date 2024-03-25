@@ -4,7 +4,7 @@ from typing import Dict
 from Utils.MenuButton import MenuButton
 import host
 
-Width, Height = 640, 400
+Width, Height = 1280, 720
 
 background = pygame.Surface((Width, Height))
 background.fill((41, 41, 41))
@@ -24,8 +24,8 @@ color = (255, 255, 255)
 hover_color = (0, 255 ,255)
 
 buttons: Dict[str, MenuButton] = {
-    "host_button":  MenuButton(Width / 2 - 40, Height / 2 - 75, "HOST", font(40), color, hover_color),
-    "connect_button":  MenuButton(Width / 2 - 75, Height / 2 , "CONNECT", font(40), color, hover_color),
+    "host_button":  MenuButton(Width / 2 - 35, Height / 2 - 75, "HOST", font(40), color, hover_color),
+    "connect_button":  MenuButton(Width / 2 - 70, Height / 2 , "CONNECT", font(40), color, hover_color),
 }
 
 async def connect(user_input):

@@ -10,7 +10,6 @@ background.fill((255, 255, 255)) ## change bg color if you want to for testing
 
 pygame.display.set_caption("Portal 2D - Player Test")
 
-Width, Height = 1280, 720
 FPS = 60
 
 pygame.init()
@@ -38,7 +37,7 @@ async def PlayerTest():
 
         ### your test code here
 
-        dt = clock.tick(60)
+        dt = clock.tick(FPS)
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
         player.move(pressed_keys, platforms, dt)

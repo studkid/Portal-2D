@@ -5,7 +5,7 @@ from Utils.MenuButton import MenuButton
 from Test import PhysTest
 from Test import PlayerTest
 
-Width, Height = 640, 400
+Width, Height = 1280, 720
 
 background = pygame.Surface((Width, Height))
 background.fill((41, 41, 41))
@@ -40,7 +40,7 @@ async def test_screen():
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(background, (0,0))
         
-        title_text = font(40).render("Portal 2D - Test code", True, (255, 255, 255))
+        title_text = font(50).render("Test code", True, (255, 255, 255))
         title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
 
         screen.blit(title_text, title_rect)
