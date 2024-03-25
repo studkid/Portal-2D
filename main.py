@@ -5,12 +5,13 @@ import test_code
 import connection
 import levels
 
-background = pygame.Surface((640, 400))
+Width, Height = 640, 400
+
+background = pygame.Surface((Width, Height))
 background.fill((41, 41, 41))
 
 pygame.display.set_caption("Portal 2D")
 
-Width, Height = 640, 400
 FPS = 60
 
 pygame.init()
