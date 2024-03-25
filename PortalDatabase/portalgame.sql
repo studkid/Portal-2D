@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2024 at 04:19 PM
+-- Generation Time: Mar 25, 2024 at 03:23 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -38,16 +38,16 @@ CREATE TABLE IF NOT EXISTS `gameuser` (
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gameuser`
 --
 
 INSERT INTO `gameuser` (`userID`, `username`, `password`) VALUES
-(1, 'bob', 'password'),
-(2, 'jim', 'abc123'),
-(3, 'admin', 'coolguy98');
+(30, 'Admin', 'c1c224b03cd9bc7b6a86d77f5dace40191766c485cd55dc48caf9ac873335d6f'),
+(31, 'testguy', '10e45d1d6e046e3a9040d5aa5649f972dd9a54ba1245d2249fdba7cd8f9a8947'),
+(32, 'Joe', '6dd8b7d7d3c5c4689b33e51b9f10bc6a9be89fe8fa2a127c8c6c03cd05d68ace');
 
 -- --------------------------------------------------------
 
