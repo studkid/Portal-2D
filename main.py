@@ -21,7 +21,7 @@ def font(size):
     return pygame.font.SysFont("Consolas", size)
 
 color = (255, 255, 255)
-hover_color = (150, 150 ,150)
+hover_color = (0, 255 ,255)
 
 async def main():
     global FPS
