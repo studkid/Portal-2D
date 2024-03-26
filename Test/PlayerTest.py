@@ -5,7 +5,7 @@ from Utils.Platform import Platform
 from Utils import GlobalVariables
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
-background.fill(GlobalVariables.Background_Color)
+background.fill((255, 255, 255))
 
 pygame.display.set_caption("Portal 2D - Player Test")
 pygame.init()
