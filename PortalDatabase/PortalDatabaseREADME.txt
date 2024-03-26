@@ -8,7 +8,8 @@ IMPORTANT!!! HOW TO RUN DATABASE ON YOUR MACHINE
 7. Go back to the main page, then to the 'Import' tab.
 8. Hit 'Choose File', then navigate to the 'portalgame.sql' file in this PortalDatabase folder.
 9. Scroll down and hit 'Import'.
-10. In VSCode, run 'LoginRegister.py'. If you see a list of a few registered users, everything was set up correctly.
+10. Open command prompt as administrator, then run the commands 'pip install mysqlclient' and 'pip install mysql-connector'.
+11. In VSCode, run 'LoginRegister.py'. If you see a list of a few registered users, everything was set up correctly.
 
 
 ----------------------------------------------
