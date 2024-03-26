@@ -3,29 +3,20 @@ import asyncio
 from typing import Dict
 from Utils.MenuButton import MenuButton
 import host
+from Utils import GlobalVariables
 
-Width, Height = 1280, 720
-
-background = pygame.Surface((Width, Height))
-background.fill((41, 41, 41))
+background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
+background.fill(GlobalVariables.Background_Color)
 
 pygame.display.set_caption("Portal 2D - Connect")
 
-FPS = 60
-
-def font(size):
-    return pygame.font.SysFont("Consolas", size)
-
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((Width,Height))
-
-color = (255, 255, 255)
-hover_color = (0, 255 ,255)
+screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 buttons: Dict[str, MenuButton] = {
-    "host_button":  MenuButton(Width / 2 - 38, Height / 2 - 75, "HOST", font(40), color, hover_color),
-    "connect_button":  MenuButton(Width / 2 - 73, Height / 2 , "CONNECT", font(40), color, hover_color),
+    "host_button":  MenuButton(GlobalVariables.Width / 2 - 38, GlobalVariables.Height / 2 - 75, "HOST", GlobalVariables.font(40), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "connect_button":  MenuButton(GlobalVariables.Width / 2 - 73, GlobalVariables.Height / 2 , "CONNECT", GlobalVariables.font(40), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
 }
 
 async def connect(user_input):
@@ -33,19 +24,17 @@ async def connect(user_input):
     return
 
 async def connect_screen():
-    global FPS
-
     user_input = "enter room code"
-    textbox = pygame.Rect(Width / 2 - 150, Height / 2 + 50, 300, 50)
+    textbox = pygame.Rect(GlobalVariables.Width / 2 - 150, GlobalVariables.Height / 2 + 50, 300, 50)
     textbox_active = False
-    textbox_border_color = (255,255,255)
+    textbox_border_color = GlobalVariables.Text_Hovercolor
 
     running = True
     while running:
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(background, (0,0))
         
-        title_text = font(50).render("Connection", True, (255, 255, 255))
+        title_text = GlobalVariables.font(50).render("Connection", True, (255, 255, 255))
         title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
 
         screen.blit(title_text, title_rect)
@@ -60,12 +49,12 @@ async def connect_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons["host_button"].check_click(mouse_pos):
                     await host.host_screen()
-                    pygame.display.set_mode((Width,Height))
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["connect_button"].check_click(mouse_pos):
 
                     ### TODO - add a statement that calls connect()
 
-                    pygame.display.set_mode((Width,Height))
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if textbox.collidepoint(event.pos):
                     textbox_active = True
                 else:
@@ -92,7 +81,7 @@ async def connect_screen():
                 user_input = "enter room code"
 
         pygame.draw.rect(screen, textbox_border_color, textbox, 2)
-        text = font(25).render(user_input, True, (255, 255, 255))
+        text = GlobalVariables.font(25).render(user_input, True, (255, 255, 255))
         text_x = textbox.x + (textbox.width - text.get_width()) / 2
         text_y = textbox.y + (textbox.height - text.get_height()) / 2
         screen.blit(text, (text_x, text_y))

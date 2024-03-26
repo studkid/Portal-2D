@@ -2,34 +2,28 @@ import pygame
 import asyncio
 from Utils.Player import Player
 from Utils.Platform import Platform
+from Utils import GlobalVariables
 
-Width, Height = 1280, 720
-
-background = pygame.Surface((Width, Height))
-background.fill((255, 255, 255)) ## change bg color if you want to for testing
+background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
+background.fill(GlobalVariables.Background_Color)
 
 pygame.display.set_caption("Portal 2D - Player Test")
-
-FPS = 60
-
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((Width,Height))
+screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 async def PlayerTest():
-    global FPS
-
     platform_color = (41,41,41)
     platforms = [
-        Platform(0, Height - 20, Width, 20, True, None), ## the main platform
-        Platform(200, Height - 100, 100, 20, True, None),
-        Platform(400, Height - 200, 100, 20, True, None),
-        Platform(600, Height - 300, 100, 20, True, None),
-        Platform(800, Height - 400, 100, 20, True, None),
-        Platform(1000, Height - 500, 100, 20, True, None),
+        Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, True, None), ## the main platform
+        Platform(200, GlobalVariables.Height - 100, 100, 20, True, None),
+        Platform(400, GlobalVariables.Height - 200, 100, 20, True, None),
+        Platform(600, GlobalVariables.Height - 300, 100, 20, True, None),
+        Platform(800, GlobalVariables.Height - 400, 100, 20, True, None),
+        Platform(1000, GlobalVariables.Height - 500, 100, 20, True, None),
     ]
 
-    player = Player(50, 270, Width, Height)
+    player = Player(50, 270, GlobalVariables.Width, GlobalVariables.Height)
 
     running = True
     while running:
@@ -37,7 +31,7 @@ async def PlayerTest():
 
         ### your test code here
 
-        dt = clock.tick(FPS)
+        dt = clock.tick(GlobalVariables.FPS)
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
         player.move(pressed_keys, platforms, dt)

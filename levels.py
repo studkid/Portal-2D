@@ -1,23 +1,17 @@
 import pygame
 import asyncio
+from Utils import GlobalVariables
 
-Width, Height = 1280, 720
-
-background = pygame.Surface((Width, Height))
-background.fill((41, 41, 41))
+background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
+background.fill(GlobalVariables.Background_Color)
 
 pygame.display.set_caption("Portal 2D - Levels")
 
-Width, Height = 640, 400
-FPS = 60
-
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((Width,Height))
+screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 async def level_screen():
-    global FPS
-
     running = True
     while running:
         screen.blit(background, (0,0))
