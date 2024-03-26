@@ -29,7 +29,7 @@ async def test_screen():
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(background, (0,0))
         
-        title_text = GlobalVariables.font(50).render("Test code", True, (255, 255, 255))
+        title_text = GlobalVariables.font(50).render("Test code", True, GlobalVariables.Text_Forecolor)
         title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
 
         screen.blit(title_text, title_rect)

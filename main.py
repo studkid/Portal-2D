@@ -5,7 +5,7 @@ from Utils.MenuButton import MenuButton
 import connection
 import levels
 import test_code
-import signup
+import account
 from Utils import GlobalVariables
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
@@ -17,7 +17,6 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
-
 buttons: Dict[str, MenuButton] = {
     "connect_button":  MenuButton(50, 120, "Connection", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "levels_button":  MenuButton(50, 170, "Levels", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
@@ -27,15 +26,17 @@ buttons: Dict[str, MenuButton] = {
 
 async def main():
     
-    sign_up_button = MenuButton(GlobalVariables.Width - 150, 50, "Sign up", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
-    log_off_button = MenuButton(GlobalVariables.Width - 150, 90, "Log off", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
+    sign_up_button = MenuButton(GlobalVariables.Width - 150, 50, "Sign up", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor, False)
+    log_in_button = MenuButton(GlobalVariables.Width - 150, 90, "Log in", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor, False)
+    log_off_button = MenuButton(GlobalVariables.Width - 150, 90, "Log off", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor, False)
 
     sign_up_button.rect.right = GlobalVariables.Width - 50
+    log_in_button.rect.right = GlobalVariables.Width - 50
     log_off_button.rect.right = GlobalVariables.Width - 50
 
-    logged = GlobalVariables.Account_Username is not ""
-
     while True:
+        logged = GlobalVariables.Account_Username is not ""
+
         screen.blit(background, (0,0))
 
         clock.tick(GlobalVariables.FPS)
@@ -51,13 +52,23 @@ async def main():
         screen.blit(title_text, title_rect)
 
         if logged:
+            log_off_button.active = True
+            sign_up_button.active = False
+            log_in_button.active = False
+
             screen.blit(user_text, user_rect)
             log_off_button.check_hover(mouse_pos)
             log_off_button.update(screen)
 
         else:
+            log_off_button.active = False
+            sign_up_button.active = True
+            log_in_button.active = True
+
             sign_up_button.check_hover(mouse_pos)
             sign_up_button.update(screen)
+            log_in_button.check_hover(mouse_pos)
+            log_in_button.update(screen)
 
         for key in buttons:
             buttons[key].check_hover(mouse_pos)
@@ -76,10 +87,13 @@ async def main():
                 if buttons["test_button"].check_click(mouse_pos):
                     await test_code.test_screen()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
-                if sign_up_button.check_click(mouse_pos):
-                    await signup.sign_up()
+                if sign_up_button.check_click(mouse_pos) and sign_up_button.active == True:
+                    await account.sign_up()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
-                if log_off_button.check_click(mouse_pos):
+                if log_in_button.check_click(mouse_pos) and log_in_button.active == True:
+                    await account.log_in()
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if log_off_button.check_click(mouse_pos) and log_off_button.active == True:
                     GlobalVariables.Account_ID = ""
                     GlobalVariables.Account_Username = ""
                     logged = False
