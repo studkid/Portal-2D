@@ -1,7 +1,15 @@
-IMPORTANT!!! 
-To test database features, you need to start your Apache + MySQL servers in XAMPP.
-You then need to import the database into PHPMyAdmin using the .sql file in this folder.
-Inside the python code, you need to edit the username and password fields to be an account that YOU already have in PHPMyAdmin.
+IMPORTANT!!! HOW TO RUN DATABASE ON YOUR MACHINE
+1. Open XAMPP, then start the Apache and MySQL servers. 
+2. Click the 'Admin' button in the MySQL row to bring up the PHPMyAdmin webpage.
+3. Navigate to the 'User Accounts' tab, then click 'Add New User'.
+4. Set the username to 'user' and the password to 'Password123$'. just copy/paste from here to prevent typos
+5. Go down to 'Global Privileges' and check the 'Check All' box to give the account full admin perms.
+6. Scroll down and hit 'Go' to create the account.
+7. Go back to the main page, then to the 'Import' tab.
+8. Hit 'Choose File', then navigate to the 'portalgame.sql' file in this PortalDatabase folder.
+9. Scroll down and hit 'Import'.
+10. In VSCode, run 'LoginRegister.py'. If you see a list of a few registered users, everything was set up correctly.
+
 
 ----------------------------------------------
 v   Database Structure   v
