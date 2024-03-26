@@ -72,12 +72,15 @@ class Player():
     def set_gravity(self, platforms, dt):
         if not self.isJump and not self.isJumping:
             self.velocity += self.gravity
+            count = 0
             for platform in platforms:
                 if not self.rect().colliderect(platform):
                     if self.hitPlatform == True:
                         self.y += self.velocity * 0.02 * dt
                     else:
-                        self.y += self.velocity * 0.05 * dt
+                        if count <= 3:
+                            self.y += self.velocity * 0.05 * dt
+                            count+= 1
                 else:
                     break
         elif not self.isJump and self.isJumping:
