@@ -24,8 +24,8 @@ color = (255, 255, 255)
 hover_color = (0, 255 ,255)
 
 buttons: Dict[str, MenuButton] = {
-    "host_button":  MenuButton(Width / 2 - 35, Height / 2 - 75, "HOST", font(40), color, hover_color),
-    "connect_button":  MenuButton(Width / 2 - 70, Height / 2 , "CONNECT", font(40), color, hover_color),
+    "host_button":  MenuButton(Width / 2 - 38, Height / 2 - 75, "HOST", font(40), color, hover_color),
+    "connect_button":  MenuButton(Width / 2 - 73, Height / 2 , "CONNECT", font(40), color, hover_color),
 }
 
 async def connect(user_input):
@@ -35,7 +35,7 @@ async def connect(user_input):
 async def connect_screen():
     global FPS
 
-    user_input = ""
+    user_input = "enter room code"
     textbox = pygame.Rect(Width / 2 - 150, Height / 2 + 50, 300, 50)
     textbox_active = False
     textbox_border_color = (255,255,255)
@@ -83,8 +83,13 @@ async def connect_screen():
         
         if textbox_active:
             textbox_border_color = (0, 255, 255)
+            
+            if user_input == "enter room code":
+                user_input = ""
         else:
             textbox_border_color = (255, 255, 255)
+            if len(user_input) == 0:
+                user_input = "enter room code"
 
         pygame.draw.rect(screen, textbox_border_color, textbox, 2)
         text = font(25).render(user_input, True, (255, 255, 255))
