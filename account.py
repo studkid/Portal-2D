@@ -38,6 +38,8 @@ async def sign_up():
     error_txt = GlobalVariables.font(24).render("the username is unavailable", True, GlobalVariables.Text_Forecolor)
     error_rect = pygame.Rect(GlobalVariables.Width / 2 - 250, GlobalVariables.Height / 2 - 150, pwd_text.get_width(), pwd_text.get_height())
 
+    error = False
+
     running = True
     while running:
         mouse_pos = pygame.mouse.get_pos()
@@ -52,6 +54,9 @@ async def sign_up():
 
         signup_button.check_hover(mouse_pos)
         signup_button.update(screen)
+
+        if error:
+            screen.blit(error_txt, error_rect)
 
         for key in inputs:
             inputs[key].draw(screen)
@@ -69,7 +74,7 @@ async def sign_up():
                         clear_textboxes()
                         running = False
                     else:
-                        screen.blit(error_txt, error_rect)
+                        error = True
             for key in inputs:
                 inputs[key].handle_event(event)
         
@@ -89,8 +94,10 @@ async def log_in():
         "password":  InputBox(GlobalVariables.Width / 2, GlobalVariables.Height / 2 + 25, 300, 50, "", True),
     }
     
-    error_txt = GlobalVariables.font(24).render("cannot find the account", True, GlobalVariables.Text_Forecolor)
+    error_txt = GlobalVariables.font(24).render("either username or password was incorrect", True, GlobalVariables.Text_Forecolor)
     error_rect = pygame.Rect(GlobalVariables.Width / 2 - 250, GlobalVariables.Height / 2 - 150, pwd_text.get_width(), pwd_text.get_height())
+
+    error = False
     
     def clear_textboxes(): 
         for key in inputs:
@@ -112,6 +119,9 @@ async def log_in():
         login_button.check_hover(mouse_pos)
         login_button.update(screen)
 
+        if error:
+            screen.blit(error_txt, error_rect)
+
         for key in inputs:
             inputs[key].draw(screen)
 
@@ -128,7 +138,7 @@ async def log_in():
                         clear_textboxes()
                         running = False
                     else:
-                        screen.blit(error_txt, error_rect)
+                        error = True
             for key in inputs:
                 inputs[key].handle_event(event)
         
