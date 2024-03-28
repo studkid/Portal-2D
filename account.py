@@ -69,7 +69,7 @@ async def sign_up():
                     running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if signup_button.check_click(mouse_pos):
-                    if(DatabaseUtil.create_user(inputs["username"].text, inputs["password"].text)):
+                    if(DatabaseUtil.create_user(inputs["username"].text, inputs["password"].pwd_txt)):
                         GlobalVariables.Account_Username = inputs["username"].text
                         clear_textboxes()
                         running = False
@@ -133,7 +133,7 @@ async def log_in():
                     running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if login_button.check_click(mouse_pos):
-                    if(DatabaseUtil.authenticate_user(inputs["username"].text, inputs["password"].text)):
+                    if(DatabaseUtil.authenticate_user(inputs["username"].text, inputs["password"].pwd_txt)):
                         GlobalVariables.Account_Username = inputs["username"].text
                         clear_textboxes()
                         running = False
