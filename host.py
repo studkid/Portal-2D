@@ -11,7 +11,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
-async def level_screen():
+async def host_screen():
     running = True
     while running:
         screen.blit(background, (0,0))
