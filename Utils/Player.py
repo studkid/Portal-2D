@@ -24,11 +24,14 @@ class Player():
         self.running = False
         self.runningAnim = False
         self.allowAnim = False
-        self.standingImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarStandingStill.png')).convert_alpha()
-        self.standingImage = pygame.transform.scale(self.standingImage, (self.size_x, self.size_y))
-        self.runningImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarRunning.png')).convert_alpha()
-        self.runningImage = pygame.transform.scale(self.runningImage, (self.size_x, self.size_y))
-        self.image = self.standingImage
+        self.rightStandingImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarStandingStill.png')).convert_alpha()
+        self.rightStandingImage = pygame.transform.scale(self.rightStandingImage, (self.size_x, self.size_y))
+        self.leftStandingImage = pygame.transform.flip(self.rightStandingImage, True, False)
+        self.leftSide = False
+        self.rightRunningImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarRunning.png')).convert_alpha()
+        self.rightRunningImage = pygame.transform.scale(self.rightRunningImage, (self.size_x, self.size_y))
+        self.leftRunningImage = pygame.transform.flip(self.rightRunningImage, True, False)
+        self.image = self.rightStandingImage
 
     def draw(self, screen):
         return screen.blit(self.image, (self.x, self.y))
@@ -49,6 +52,7 @@ class Player():
                 self.x += 0.5 * dt
                 self.check_collision(platforms, 1, 1)
                 self.running = True
+                self.leftSide = False
                 if self.allowAnim:
                     self.runningAnim = True
                 else:
@@ -58,6 +62,7 @@ class Player():
             if self.x >= 0:
                 self.x -= 0.5 * dt
                 self.running = True
+                self.leftSide = True
                 if self.allowAnim:
                     self.runningAnim = True
                 else:
@@ -72,11 +77,17 @@ class Player():
             self.velocity = 10 * dt * 0.05
             self.check_collision(platforms, 0, 1)
         if self.runningCount >= 5 and self.running and self.runningAnim:
-            self.image = self.runningImage
+            if self.leftSide:
+                self.image = self.leftRunningImage
+            else:
+                self.image = self.rightRunningImage
             self.runningCount = 0
             self.allowAnim = False
         elif self.runningCount >= 5 and self.running and not self.runningAnim:
-            self.image = self.standingImage
+            if self.leftSide:
+                self.image = self.leftStandingImage
+            else:
+                self.image = self.rightStandingImage
             self.runningCount = 0
             self.allowAnim = True
         if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
@@ -84,7 +95,10 @@ class Player():
             self.allowAnim = False
             self.runningAnim = False
             self.runningCount = 0
-            self.image = self.standingImage
+            if self.leftSide:
+                self.image = self.leftStandingImage
+            else:
+                self.image = self.rightStandingImage
 
     def jump(self, dt):
         if self.count >= -self.jump_count:
