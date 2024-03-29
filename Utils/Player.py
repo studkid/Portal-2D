@@ -1,3 +1,4 @@
+import sys
 import pygame
 import os
 
@@ -8,8 +9,8 @@ class Player():
         self.y = y
         self.background_x = background_x
         self.background_y = background_y
-        self.size_x = 40 ## change to other number if need ( width size of player )
-        self.size_y = 40 ## change to other number if need ( height size of player )
+        self.size_x = 64 ## change to other number if need ( width size of player )
+        self.size_y = 64 ## change to other number if need ( height size of player )
         self.screen = pygame.display.set_mode((background_x, background_y))
         self.isJump = False
         self.isJumping = False
@@ -19,8 +20,12 @@ class Player():
         self.count = 14 ## count for jumping ( will be used as countdown in jumping )
         self.gravity = 0.5
         self.velocity = 0
+        self.image = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatar(StandingStill).png')).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.size_x, self.size_y))
 
-    
+    def draw(self, screen):
+        return screen.blit(self.image, (self.x, self.y))
+
     def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 

@@ -25,6 +25,8 @@ async def PlayerTest():
 
     player = Player(50, 270, GlobalVariables.Width, GlobalVariables.Height)
 
+    objGroup = pygame.sprite.Group()
+
     running = True
     while running:
         screen.blit(background, (0,0))
@@ -37,11 +39,12 @@ async def PlayerTest():
         player.move(pressed_keys, platforms, dt)
         player.jump(dt)
         player.update(platforms, dt)
+        player.draw(screen)
 
         for platform in platforms: 
             pygame.draw.rect(screen, platform_color, platform)
             
-        pygame.draw.rect( screen, (255,0,0,0), player.rect() )
+        ## pygame.draw.rect( screen, (255,0,0,0), player.rect() )
 
         ### end of test code
 
