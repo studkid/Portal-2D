@@ -8,7 +8,7 @@ import os
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from Utils.PhysObj import PhysObj
+from Utils.PhysObj import PhysObj, CubeObj
 from Utils.ButtonObject import ButtonObject
 from Utils.Platform import Platform
 
@@ -16,7 +16,7 @@ backgroundColor = (255, 255, 255)
 plaformColor = (41, 41, 41)
 (width, height) = (1280, 720)
 
-objList = []
+objGroup = pygame.sprite.Group()
 wallList = [
     Platform(0, height - 20, width, 20, True, None),
     Platform(200, 300, 100, 20, True, None),
@@ -55,7 +55,9 @@ async def PhysTest():
         size = random.randint(40, 50)
         x = random.randint(size, width-size)
         y = random.randint(size, height-size)
-        objList.append(TestObj(x, y, size, 0.0999, 0.2))
+        print(f"{x} {y}")
+        # objList.append(TestObj(x, y, size, 0.0999, 0.2))
+        objGroup.add(CubeObj(x, y, 0.0999, 0.2))
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -76,10 +78,9 @@ async def PhysTest():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 if event.button == 1:
-                    selectedObj = findObject(objList, mouseX, mouseY)
+                    selectedObj = findObject(objGroup.sprites(), mouseX, mouseY)
                 elif event.button == 3:
-                    size = random.randint(40, 50)
-                    objList.append(TestObj(mouseX, mouseY, size, 0.0999, 0.2))
+                    objGroup.add(CubeObj(mouseX, mouseY, 0.0999, 0.2))
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
@@ -97,16 +98,20 @@ async def PhysTest():
 
         screen.fill(backgroundColor)
 
-        for wall in wallList:
-            wall.draw(screen)
-        for i, obj in enumerate(objList):
+        for i, obj in enumerate(objGroup.sprites()):
             if obj != selectedObj:
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
-            obj.collide(objList[i+1:])
+            obj.collide(objGroup.sprites()[i+1:])
             obj.draw(screen)
-        button.checkActive(objList)
+        objGroup.update()
+        objGroup.draw(screen)
+
+        button.checkActive(objGroup.sprites())
         button.draw(screen)
+        
+        for wall in wallList:
+            wall.draw(screen)
         pygame.display.flip()
         
         await asyncio.sleep(0)

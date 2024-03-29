@@ -1,5 +1,7 @@
 import pygame
 import math
+import sys
+import os
 
 # Code based off of: https://www.petercollingridge.co.uk/tutorials/pygame-physics-simulation/
 class PhysObj():
@@ -119,3 +121,30 @@ def addVectors(ang1, len1, ang2, len2):
     length = math.hypot(x, y)
     angle = 0.5 * math.pi - math.atan2(y, x)
     return (angle, length)
+
+class CubeObj(PhysObj, pygame.sprite.Sprite):
+    def __init__(self, x, y, weight, elasticity) -> None:
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(os.path.join(sys.path[0], './Assets/CompanionCube_Asset.png'))
+        self.rect = self.image.get_rect()
+
+        # pygame.draw.rect(self.image, (0, 0, 255), pygame.Rect(x, y, 32, 32))
+
+        PhysObj.__init__(self, x, y, 0, 0, weight, elasticity)
+        self.size = 32
+        self.color = (0, 0, 255)
+        print(self.x)
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
+        # pygame.draw.
+
+    def toString(self) -> str:
+        return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
+    
+    def collide(self, objList):
+        for obj2 in objList:
+            super().collide(obj2)
+
+    def bounce(self, width, height, wallList):
+        super().bounce(width, height, wallList)
