@@ -103,7 +103,6 @@ async def PhysTest():
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
             obj.collide(objGroup.sprites()[i+1:])
-            obj.draw(screen)
         objGroup.update()
         objGroup.draw(screen)
 
