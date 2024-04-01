@@ -1,3 +1,4 @@
+import sys
 import pygame
 import os
 
@@ -8,8 +9,8 @@ class Player():
         self.y = y
         self.background_x = background_x
         self.background_y = background_y
-        self.size_x = 40 ## change to other number if need ( width size of player )
-        self.size_y = 40 ## change to other number if need ( height size of player )
+        self.size_x = 64 ## change to other number if need ( width size of player )
+        self.size_y = 64 ## change to other number if need ( height size of player )
         self.screen = pygame.display.set_mode((background_x, background_y))
         self.isJump = False
         self.isJumping = False
@@ -17,10 +18,24 @@ class Player():
         self.hitPlatform = False
         self.jump_count = 14 ## a variable that holds numbers of count jump
         self.count = 14 ## count for jumping ( will be used as countdown in jumping )
+        self.runningCount = 0
         self.gravity = 0.5
         self.velocity = 0
+        self.running = False
+        self.runningAnim = False
+        self.allowAnim = False
+        self.rightStandingImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarStandingStill.png')).convert_alpha()
+        self.rightStandingImage = pygame.transform.scale(self.rightStandingImage, (self.size_x, self.size_y))
+        self.leftStandingImage = pygame.transform.flip(self.rightStandingImage, True, False)
+        self.leftSide = False
+        self.rightRunningImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarRunning.png')).convert_alpha()
+        self.rightRunningImage = pygame.transform.scale(self.rightRunningImage, (self.size_x, self.size_y))
+        self.leftRunningImage = pygame.transform.flip(self.rightRunningImage, True, False)
+        self.image = self.rightStandingImage
 
-    
+    def draw(self, screen):
+        return screen.blit(self.image, (self.x, self.y))
+
     def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
@@ -36,10 +51,24 @@ class Player():
             if self.x + self.size_x <= self.background_x:
                 self.x += 0.5 * dt
                 self.check_collision(platforms, 1, 1)
+                self.running = True
+                self.leftSide = False
+                if self.allowAnim:
+                    self.runningAnim = True
+                else:
+                    self.runningAnim = False
+                self.runningCount += 1
         if pressed_keys[pygame.K_a]:
             if self.x >= 0:
                 self.x -= 0.5 * dt
+                self.running = True
+                self.leftSide = True
+                if self.allowAnim:
+                    self.runningAnim = True
+                else:
+                    self.runningAnim = False
                 self.check_collision(platforms, -1, 1)
+                self.runningCount += 1
         if pressed_keys[pygame.K_SPACE] and self.canJump:
             self.isJump = True
             self.isJumping = True
@@ -47,6 +76,29 @@ class Player():
             self.count = self.jump_count
             self.velocity = 10 * dt * 0.05
             self.check_collision(platforms, 0, 1)
+        if self.runningCount >= 5 and self.running and self.runningAnim:
+            if self.leftSide:
+                self.image = self.leftRunningImage
+            else:
+                self.image = self.rightRunningImage
+            self.runningCount = 0
+            self.allowAnim = False
+        elif self.runningCount >= 5 and self.running and not self.runningAnim:
+            if self.leftSide:
+                self.image = self.leftStandingImage
+            else:
+                self.image = self.rightStandingImage
+            self.runningCount = 0
+            self.allowAnim = True
+        if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
+            self.running = False
+            self.allowAnim = False
+            self.runningAnim = False
+            self.runningCount = 0
+            if self.leftSide:
+                self.image = self.leftStandingImage
+            else:
+                self.image = self.rightStandingImage
 
     def jump(self, dt):
         if self.count >= -self.jump_count:
@@ -72,12 +124,15 @@ class Player():
     def set_gravity(self, platforms, dt):
         if not self.isJump and not self.isJumping:
             self.velocity += self.gravity
+            count = 0
             for platform in platforms:
                 if not self.rect().colliderect(platform):
                     if self.hitPlatform == True:
                         self.y += self.velocity * 0.02 * dt
                     else:
-                        self.y += self.velocity * 0.05 * dt
+                        if count <= 3:
+                            self.y += self.velocity * 0.05 * dt
+                            count+= 1
                 else:
                     break
         elif not self.isJump and self.isJumping:
