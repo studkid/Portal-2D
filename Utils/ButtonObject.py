@@ -24,8 +24,7 @@ class ButtonObject:
     def checkActive(self, objList):
         hitbox = pygame.Rect(self.x, self.y, 40, 15)
         for obj in objList:
-            rect = pygame.Rect(obj.x, obj.y, obj.size, obj.size)
-            if hitbox.colliderect(rect):
+            if hitbox.colliderect(obj.rect):
                 self.Active = True
                 return
             
