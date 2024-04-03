@@ -39,7 +39,7 @@ class Player():
     def draw(self, screen):
         return screen.blit(self.image, (self.x, self.y))
 
-    def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
+    def rect(self):
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
     def update(self, platforms, dt): ## platforms is an array for all Rect objects in the level that player can get on
@@ -53,7 +53,7 @@ class Player():
         if pressed_keys[pygame.K_d]:
             if self.x + self.size_x <= self.background_x:
                 self.x += 0.5 * dt
-                self.check_collision(platforms, 1, 1)
+                self.check_collision(platforms, 1, 0)
                 self.running = True
                 self.leftSide = False
                 if self.allowAnim:
@@ -70,7 +70,7 @@ class Player():
                     self.runningAnim = True
                 else:
                     self.runningAnim = False
-                self.check_collision(platforms, -1, 1)
+                self.check_collision(platforms, -1, 0)
                 self.runningCount += 1
         if pressed_keys[pygame.K_SPACE] and self.canJump:
             self.isJump = True
@@ -94,14 +94,14 @@ class Player():
             self.runningCount = 0
             self.allowAnim = True
         if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
-            self.running = False
-            self.allowAnim = False
-            self.runningAnim = False
-            self.runningCount = 0
             if self.leftSide:
                 self.image = self.leftStandingImage
             else:
                 self.image = self.rightStandingImage
+            self.running = False
+            self.allowAnim = False
+            self.runningAnim = False
+            self.runningCount = 0
 
     def jump(self, dt):
         if self.count >= -self.jump_count:
@@ -150,6 +150,7 @@ class Player():
         if self.y > self.background_y:
             self.y = 0
 
+    
     def check_collision(self, platforms, x, y):
         rect = self.rect()
         for platformObj in platforms:
