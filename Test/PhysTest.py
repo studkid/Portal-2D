@@ -100,7 +100,6 @@ async def PhysTest():
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
             obj.collide(dropper.sprites()[i+1:])
-            obj.drawHitbox(screen)
         dropper.update()
         dropper.draw(screen)
         dropper.drawHitbox(screen)

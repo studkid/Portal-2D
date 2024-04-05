@@ -28,3 +28,5 @@ class CubeDropper(pygame.sprite.GroupSingle):
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
         pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)
+        for _, obj in enumerate(super().sprites()):
+            obj.drawHitbox(screen)

@@ -130,7 +130,8 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
         self.y = y
 
     def drawHitbox(self, screen):
-        pygame.draw.rect(screen, (0, 0, 255), self.rect, 2, 1)
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
+        pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)
 
     def toString(self) -> str:
         return f"({self.rect.x}, {self.rect.y}) Weight: {self.weight} Radius: {self.size}"
