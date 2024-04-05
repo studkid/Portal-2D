@@ -34,37 +34,38 @@ class PhysObj():
             wall = plat.rect
             if self.rect.colliderect(wall):
                 if self.rect.right > wall.left and self.rect.right < wall.left + 40:
-                    self.rect.x = wall.left - self.size
+                    self.rect.right = wall.left
                     self.angle = -self.angle
                     self.speed *= self.elasticity
                 elif self.rect.left < wall.right and self.rect.left > wall.right - 40:
-                    self.rect.x = wall.right
+                    self.rect.left = wall.right
                     self.angle = -self.angle
                     self.speed *= self.elasticity
 
                 if self.rect.bottom > wall.top and self.rect.bottom < wall.top + 40:
-                    self.rect.y = wall.top - self.size
+                    self.rect.bottom = wall.top
                     self.angle = math.pi - self.angle
                     self.speed *= self.elasticity
                 elif self.rect.top < wall.bottom and self.rect.top > wall.bottom - 40:
-                    self.rect.y = wall.bottom
+                    self.rect.top = wall.bottom
                     self.angle = math.pi - self.angle
                     self.speed *= self.elasticity
         if self.rect.right > width:
-            self.rect.x = width - self.size
+            self.rect.right = width
             self.angle = -self.angle
             self.speed *= self.elasticity
         elif self.rect.left < 0:
-            self.rect.x = 0
+            self.rect.left = 0
             self.angle = -self.angle
             self.speed *= self.elasticity
 
         if self.rect.bottom > height:
-            self.y = height - self.size
+            self.rect.bottom = height
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
         elif self.rect.top < 0:
-            self.y = 0
+            print(self.rect.top)
+            self.rect.top = 0
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
 
