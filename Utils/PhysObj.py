@@ -122,10 +122,15 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
     def __init__(self, x, y, weight, elasticity) -> None:
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(os.path.join(sys.path[0], './Assets/CompanionCube_Asset.png'))
+        self.size = self.image.get_rect().width * 2
+        self.image = pygame.transform.scale(self.image, (self.size, self.size))
 
-        PhysObj.__init__(self, pygame.Rect(x, y, 64, 64), 0, 0, weight, elasticity)
-        self.size = 64
-        self.color = (0, 0, 255)
+        PhysObj.__init__(self, self.image.get_rect(), 0, 0, weight, elasticity)
+        self.x = x
+        self.y = y
+
+    def drawHitbox(self, screen):
+        pygame.draw.rect(screen, (0, 0, 255), self.rect, 2, 1)
 
     def toString(self) -> str:
         return f"({self.rect.x}, {self.rect.y}) Weight: {self.weight} Radius: {self.size}"

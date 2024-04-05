@@ -52,7 +52,7 @@ async def PhysTest():
     selectedObj = None
     clock = pygame.time.Clock()
 
-    dropper = CubeDropper(1160, -15, 135)
+    dropper = CubeDropper(1130, 0, 90, 3)
     dropper.add(CubeObj(0, 0, 0.0999, 0.2))
     dropper.spawnCube()
 
@@ -78,7 +78,6 @@ async def PhysTest():
                     selectedObj = findObject(dropper.sprites(), mouseX, mouseY)
                 elif event.button == 3:
                     dropper.spawnCube()
-                    print(dropper.rect.center)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
@@ -101,8 +100,10 @@ async def PhysTest():
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
             obj.collide(dropper.sprites()[i+1:])
+            obj.drawHitbox(screen)
         dropper.update()
         dropper.draw(screen)
+        dropper.drawHitbox(screen)
 
         button.checkActive(dropper.sprites())
         button.draw(screen)

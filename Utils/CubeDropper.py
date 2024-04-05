@@ -4,11 +4,12 @@ import sys
 import os
 
 class CubeDropper(pygame.sprite.GroupSingle):
-    def __init__(self, x, y, rotation):
+    def __init__(self, x, y, rotation, size):
         super().__init__(self)
         self.image = pygame.image.load(os.path.join(sys.path[0], './Assets/Cube_Spawner.png'))
 
         self.rotation = rotation
+        self.image = pygame.transform.scale(self.image, (26 * size, 32 * size))
         self.image = pygame.transform.rotate(self.image, rotation)
 
         self.rect = self.image.get_rect()
@@ -23,3 +24,7 @@ class CubeDropper(pygame.sprite.GroupSingle):
     def draw(self, screen):
         super().draw(screen)
         screen.blit(self.image, self.rect)
+
+    def drawHitbox(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
+        pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)
