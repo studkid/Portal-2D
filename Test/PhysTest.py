@@ -8,15 +8,16 @@ import os
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from Utils.PhysObj import PhysObj
+from Utils.PhysObj import CubeObj
 from Utils.ButtonObject import ButtonObject
 from Utils.Platform import Platform
+from Utils.CubeDropper import CubeDropper
 
 backgroundColor = (255, 255, 255)
 plaformColor = (41, 41, 41)
 (width, height) = (1280, 720)
 
-objList = []
+# dropper = pygame.sprite.Group()
 wallList = [
     Platform(0, height - 20, width, 20, True, None),
     Platform(200, 300, 100, 20, True, None),
@@ -24,25 +25,25 @@ wallList = [
 ]
 
 # Meant to test PhysObj class
-import random
-class TestObj(PhysObj):
-    def __init__(self, x, y, size, weight, elasticity) -> None:
-        super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
-        self.size = size
-        self.color = (0, 0, 255)
+# import random
+# class TestObj(PhysObj):
+#     def __init__(self, x, y, size, weight, elasticity) -> None:
+#         super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
+#         self.size = size
+#         self.color = (0, 0, 255)
 
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
+#     def draw(self, screen):
+#         pygame.draw.rect(screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
 
-    def toString(self) -> str:
-        return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
+#     def toString(self) -> str:
+#         return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
     
-    def collide(self, objList):
-        for obj2 in objList:
-            super().collide(obj2)
+#     def collide(self, objList):
+#         for obj2 in objList:
+#             super().collide(obj2)
 
-    def bounce(self, width, height, wallList):
-        super().bounce(width, height, wallList)
+#     def bounce(self, width, height, wallList):
+#         super().bounce(width, height, wallList)
 
 async def PhysTest():
     pygame.init()
@@ -51,11 +52,9 @@ async def PhysTest():
     selectedObj = None
     clock = pygame.time.Clock()
 
-    for _ in range(1):
-        size = random.randint(40, 50)
-        x = random.randint(size, width-size)
-        y = random.randint(size, height-size)
-        objList.append(TestObj(x, y, size, 0.0999, 0.2))
+    dropper = CubeDropper(1160, -15, 135)
+    dropper.add(CubeObj(0, 0, 0.0999, 0.2))
+    dropper.spawnCube()
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -76,10 +75,10 @@ async def PhysTest():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 if event.button == 1:
-                    selectedObj = findObject(objList, mouseX, mouseY)
+                    selectedObj = findObject(dropper.sprites(), mouseX, mouseY)
                 elif event.button == 3:
-                    size = random.randint(40, 50)
-                    objList.append(TestObj(mouseX, mouseY, size, 0.0999, 0.2))
+                    dropper.spawnCube()
+                    print(dropper.rect.center)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
@@ -88,31 +87,34 @@ async def PhysTest():
         # Move Object
         if selectedObj:
             mouseX, mouseY = pygame.mouse.get_pos()
-            dx = mouseX - selectedObj.x
-            dy = mouseY - selectedObj.y
+            dx = mouseX - selectedObj.rect.x
+            dy = mouseY - selectedObj.rect.y
             selectedObj.angle = math.atan2(dy, dx) + 0.5 * math.pi
             selectedObj.speed = math.hypot(dx, dy) * 0.1
-            selectedObj.x = mouseX
-            selectedObj.y = mouseY
+            selectedObj.rect.x = mouseX
+            selectedObj.rect.y = mouseY
 
         screen.fill(backgroundColor)
 
-        for wall in wallList:
-            wall.draw(screen)
-        for i, obj in enumerate(objList):
+        for i, obj in enumerate(dropper.sprites()):
             if obj != selectedObj:
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
-            obj.collide(objList[i+1:])
-            obj.draw(screen)
-        button.checkActive(objList)
+            obj.collide(dropper.sprites()[i+1:])
+        dropper.update()
+        dropper.draw(screen)
+
+        button.checkActive(dropper.sprites())
         button.draw(screen)
+        
+        for wall in wallList:
+            wall.draw(screen)
         pygame.display.flip()
         
         await asyncio.sleep(0)
 
 def findObject(objects, x, y):
     for obj in objects:
-        if math.hypot(obj.x-x, obj.y-y) <= obj.size:
+        if math.hypot(obj.rect.x-x, obj.rect.y-y) <= obj.size:
             return obj
     return None
