@@ -1,17 +1,17 @@
 import sys
 import pygame
 import os
+from Utils import GlobalVariables
 
 class Player():
 
-    def __init__(self, x, y, background_x, background_y):
+    def __init__(self, x, y, first_player = True):
         self.x = x
         self.y = y
-        self.background_x = background_x
-        self.background_y = background_y
-        self.size_x = 64 ## change to other number if need ( width size of player )
-        self.size_y = 64 ## change to other number if need ( height size of player )
-        self.screen = pygame.display.set_mode((background_x, background_y))
+        self.background_x = GlobalVariables.Width
+        self.background_y = GlobalVariables.Height
+        self.size_x = GlobalVariables.Player_size_X
+        self.size_y = GlobalVariables.Player_size_Y
         self.isJump = False
         self.isJumping = False
         self.canJump = True
@@ -24,19 +24,22 @@ class Player():
         self.running = False
         self.runningAnim = False
         self.allowAnim = False
-        self.rightStandingImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarStandingStill.png')).convert_alpha()
-        self.rightStandingImage = pygame.transform.scale(self.rightStandingImage, (self.size_x, self.size_y))
-        self.leftStandingImage = pygame.transform.flip(self.rightStandingImage, True, False)
+        self.rightStandingImage = GlobalVariables.FirstPlayer_RightStandingImage
+        self.leftStandingImage = GlobalVariables.FirstPlayer_LeftStandingImage
+        self.rightRunningImage = GlobalVariables.FirstPlayer_RightRunningImage
+        self.leftRunningImage = GlobalVariables.FirstPlayer_LeftRunningImage
+        if not first_player:
+            self.rightStandingImage = GlobalVariables.SecondPlayer_RightStandingImage
+            self.leftStandingImage = GlobalVariables.SecondPlayer_LeftStandingImage
+            self.rightRunningImage = GlobalVariables.SecondPlayer_RightRunningImage
+            self.leftRunningImage = GlobalVariables.SecondPlayer_LeftRunningImage
         self.leftSide = False
-        self.rightRunningImage = pygame.image.load(os.path.join(sys.path[0], './Assets/8BitAvatarRunning.png')).convert_alpha()
-        self.rightRunningImage = pygame.transform.scale(self.rightRunningImage, (self.size_x, self.size_y))
-        self.leftRunningImage = pygame.transform.flip(self.rightRunningImage, True, False)
         self.image = self.rightStandingImage
 
     def draw(self, screen):
         return screen.blit(self.image, (self.x, self.y))
 
-    def rect(self): ## is only used when setting up the display such as pygame.draw.rect( screen, (0,0,255), player.rect() )
+    def rect(self):
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
     def update(self, platforms, dt): ## platforms is an array for all Rect objects in the level that player can get on
@@ -50,7 +53,7 @@ class Player():
         if pressed_keys[pygame.K_d]:
             if self.x + self.size_x <= self.background_x:
                 self.x += 0.5 * dt
-                self.check_collision(platforms, 1, 1)
+                self.check_collision(platforms, 1, 0)
                 self.running = True
                 self.leftSide = False
                 if self.allowAnim:
@@ -67,7 +70,7 @@ class Player():
                     self.runningAnim = True
                 else:
                     self.runningAnim = False
-                self.check_collision(platforms, -1, 1)
+                self.check_collision(platforms, -1, 0)
                 self.runningCount += 1
         if pressed_keys[pygame.K_SPACE] and self.canJump:
             self.isJump = True
@@ -91,14 +94,14 @@ class Player():
             self.runningCount = 0
             self.allowAnim = True
         if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
-            self.running = False
-            self.allowAnim = False
-            self.runningAnim = False
-            self.runningCount = 0
             if self.leftSide:
                 self.image = self.leftStandingImage
             else:
                 self.image = self.rightStandingImage
+            self.running = False
+            self.allowAnim = False
+            self.runningAnim = False
+            self.runningCount = 0
 
     def jump(self, dt):
         if self.count >= -self.jump_count:
@@ -147,6 +150,7 @@ class Player():
         if self.y > self.background_y:
             self.y = 0
 
+    
     def check_collision(self, platforms, x, y):
         rect = self.rect()
         for platformObj in platforms:

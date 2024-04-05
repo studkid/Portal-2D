@@ -23,7 +23,7 @@ async def PlayerTest():
         Platform(1000, GlobalVariables.Height - 500, 100, 20, True, None),
     ]
 
-    player = Player(50, 270, GlobalVariables.Width, GlobalVariables.Height)
+    player = Player(50, 270, True)
 
     objGroup = pygame.sprite.Group()
 
