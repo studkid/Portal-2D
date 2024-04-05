@@ -18,7 +18,7 @@ class CubeDropper(pygame.sprite.GroupSingle):
 
     def spawnCube(self):
         self.sprite.rect.center = self.rect.center
-        self.sprite.speed = 2
+        self.sprite.speed = 1.5
         self.sprite.angle = math.pi / 180 * (360 - self.rotation)
 
     def draw(self, screen):

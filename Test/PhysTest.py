@@ -86,12 +86,11 @@ async def PhysTest():
         # Move Object
         if selectedObj:
             mouseX, mouseY = pygame.mouse.get_pos()
-            dx = mouseX - selectedObj.rect.x
-            dy = mouseY - selectedObj.rect.y
+            dx = mouseX - selectedObj.rect.centerx
+            dy = mouseY - selectedObj.rect.centery
             selectedObj.angle = math.atan2(dy, dx) + 0.5 * math.pi
             selectedObj.speed = math.hypot(dx, dy) * 0.1
-            selectedObj.rect.x = mouseX
-            selectedObj.rect.y = mouseY
+            selectedObj.rect.center = (mouseX, mouseY)
 
         screen.fill(backgroundColor)
 
