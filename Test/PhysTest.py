@@ -52,7 +52,7 @@ async def PhysTest():
     selectedObj = None
     clock = pygame.time.Clock()
 
-    dropper = CubeDropper(1130, 0, 90, 3)
+    dropper = CubeDropper(1130, 0, 135, 3)
     dropper.add(CubeObj(0, 0, 0.0999, 0.2))
     dropper.spawnCube()
 
