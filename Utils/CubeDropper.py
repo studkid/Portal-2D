@@ -8,9 +8,9 @@ class CubeDropper(pygame.sprite.GroupSingle):
         super().__init__(self)
         self.image = pygame.image.load(os.path.join(sys.path[0], './Assets/Cube_Spawner.png'))
 
-        self.rotation = rotation
+        self.rotation = rotation % 360
         self.image = pygame.transform.scale(self.image, (26 * size, 32 * size))
-        self.image = pygame.transform.rotate(self.image, rotation)
+        self.image = pygame.transform.rotate(self.image, self.rotation)
 
         self.rect = self.image.get_rect()
         self.rect.x = x
