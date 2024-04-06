@@ -13,8 +13,8 @@ class Platform():
     # Draws wall
     def draw(self, screen):
         if self.isPortable:
-            color = (10, 10, 10)
+            color = (150, 150, 150)
         else:
-            color = (41, 41, 41)
+            color = (10, 10, 10)
 
         pygame.draw.rect(screen, color, self.rect)
