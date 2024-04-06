@@ -2,13 +2,16 @@ import mysql.connector #for database connection
 import hashlib #for password encryption
 
 
-#initialize the database
-mydb = mysql.connector.connect(
-    host="localhost", # <---- can replace localhost with the ipv4 address of the machine hosting the server, but localhost works for testing
-    user="user", # <---- username for the MySQL account. YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS USERNAME
-    password="Password123$", # <---- password for the MySQL account.  YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS PASSWORD
-    database="portalgame" # <---- password for the MySQL account.  YOU MUST HAVE THIS DATABASE IN PHPMYADMIN
-)
+try:
+    #initialize the database
+    mydb = mysql.connector.connect(
+        host="localhost", # <---- can replace localhost with the ipv4 address of the machine hosting the server, but localhost works for testing
+        user="user", # <---- username for the MySQL account. YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS USERNAME
+        password="Password123$", # <---- password for the MySQL account.  YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS PASSWORD
+        database="portalgame" # <---- password for the MySQL account.  YOU MUST HAVE THIS DATABASE IN PHPMYADMIN
+    )
+except:
+    print("could not connect to the database. check if you have the xampp server running and the database imported")
 
 def create_user(username, password):
 
