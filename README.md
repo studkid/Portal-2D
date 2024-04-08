@@ -15,7 +15,7 @@ Portal 2D will be developed using:
 
 &middot; Python, Pygame - Creating game logic
 
-&middot; Pygbag - Web integration for Pygame 
+&middot; Socket - Multiplayer connectivity
 
 &middot; MySQL - Database for persistent data
 
@@ -69,7 +69,5 @@ Whenever possible, follow the Python code style - https://peps.python.org/pep-00
 &middot; Python Documentation - https://docs.python.org/3/reference/index.html
 
 &middot; Pygame Documentation - https://www.pygame.org/docs/ref/pygame.html
-
-&middot; Pygbag Reference - https://pygame-web.github.io/
 
 &middot; MySQL Documentation - https://dev.mysql.com/doc/refman/8.0/en/sql-statements.html
