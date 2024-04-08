@@ -163,17 +163,20 @@ class Portal( pygame.sprite.Sprite ):
     def portal_count( self ):
         if pygame.mouse.get_pressed() == ( 1, 0, 0 ): #( 1, 0, 0 ) means left click
             self.spawned_portals = self.spawned_portals + 1
+            print( self.spawned_portals )
 
 
     def max_portals( self ):
         
-        if self.spawned_portals == 2:
+        if self.spawned_portals >= 2:
             self.kill()
-            self.spawned_portals = SPAWNED_PORTALS
-            print( 'iwork' )
+            self.spawned_portals = 0
+            print( self.spawned_portals )
     
 
-
+    def update( self ):
+        self.portal_count()
+        self.max_portals()
 
         
 
@@ -185,8 +188,3 @@ all_sprites_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 
 all_sprites_group.add( pgun )
-
-    all_sprites_group.draw(screen)
-    all_sprites_group.update()
-    pygame.display.update()
-    clock.tick( FPS )
