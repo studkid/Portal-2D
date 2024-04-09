@@ -14,6 +14,7 @@ from Utils.ButtonObject import ButtonObject
 from Utils.Platform import Platform
 from Utils.CubeDropper import CubeDropper
 from Utils.Player import Player
+from Utils.PlayerButton import PlayerButton
 
 backgroundColor = (255, 255, 255)
 plaformColor = (41, 41, 41)
@@ -60,6 +61,7 @@ async def PhysTest():
     dropper.spawnCube()
 
     player = Player(50, 270, True)
+    pButton = PlayerButton(200, height - 50, 60)
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -115,6 +117,8 @@ async def PhysTest():
         player.update(wallList, dt)
         player.draw(screen)
         player.drawHitbox(screen)
+
+        pButton.draw(screen)
 
         for wall in wallList:
             wall.draw(screen)
