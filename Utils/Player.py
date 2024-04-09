@@ -103,6 +103,7 @@ class Player():
             self.runningAnim = False
             self.runningCount = 0
 
+
     def jump(self, dt):
         if self.count >= -self.jump_count:
             if self.count >= 0 and self.isJump:
@@ -181,6 +182,11 @@ class Player():
                     self.canJump = False
                     self.hitPlatform = True
                     break
+
+    def interactButton(self, pressed_keys, button) -> bool:
+        if pressed_keys[pygame.K_e] and self.rect().colliderect(button.rect):
+            return button.activate()
+        return False
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect(), 2, 1)

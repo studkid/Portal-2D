@@ -61,7 +61,7 @@ async def PhysTest():
     dropper.spawnCube()
 
     player = Player(50, 270, True)
-    pButton = PlayerButton(200, height - 50, 60)
+    pButton = PlayerButton(200, height - 50, 30)
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -112,13 +112,18 @@ async def PhysTest():
         button.checkActive(dropper.sprites())
         button.draw(screen)
         
-        player.move(pygame.key.get_pressed(), wallList, dt)
+        pressed_keys = pygame.key.get_pressed()
+        player.move(pressed_keys, wallList, dt)
         player.jump(dt)
         player.update(wallList, dt)
         player.draw(screen)
         player.drawHitbox(screen)
 
+        if player.interactButton(pressed_keys, pButton):
+            dropper.spawnCube()
+
         pButton.draw(screen)
+        # pButton.drawHitbox(screen)
 
         for wall in wallList:
             wall.draw(screen)
