@@ -168,7 +168,7 @@ class Portal( pygame.sprite.Sprite ):
 
     def max_portals( self ):
         
-        if self.spawned_portals >= 2:
+        if self.spawned_portals >= 6:
             self.kill()
             self.spawned_portals = 0
             print( self.spawned_portals )
@@ -188,3 +188,4 @@ all_sprites_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 
 all_sprites_group.add( pgun )
+

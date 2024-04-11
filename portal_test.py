@@ -31,7 +31,7 @@ while True:
     pygame.draw.rect(screen, BLACK, platform)
 
 
-    pygame.display.flip()
+    
     all_sprites_group.draw(screen)
     all_sprites_group.update()
     pygame.display.update()
