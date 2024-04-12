@@ -130,6 +130,8 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
+        self.runPhysics = True
+
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
         pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)

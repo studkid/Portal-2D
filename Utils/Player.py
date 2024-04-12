@@ -1,6 +1,7 @@
 import sys
 import pygame
 import os
+import math
 from Utils import GlobalVariables
 
 class Player():
@@ -35,8 +36,11 @@ class Player():
             self.leftRunningImage = GlobalVariables.SecondPlayer_LeftRunningImage
         self.leftSide = False
         self.image = self.rightStandingImage
+        self.cube = None
 
     def draw(self, screen):
+        if self.cube:
+            self.cube.rect.center = self.rect().center
         return screen.blit(self.image, (self.x, self.y))
 
     def rect(self):
@@ -187,6 +191,21 @@ class Player():
         if pressed_keys[pygame.K_e] and self.rect().colliderect(button.rect):
             return button.activate()
         return False
+    
+    def pickupCube(self, mouse, cube):
+        if not self.cube and mouse == 3 and self.rect().colliderect(cube.rect):
+            cube.runPhysics = False
+            self.cube = cube
+        elif self.cube and mouse == 3:
+            mouseX, mouseY = pygame.mouse.get_pos()
+            dx = abs(self.rect().centerx - mouseX)
+            dy = abs(self.rect().centery - mouseY)
+            print(f"{dy}/{dx} = {dy/dx}")
+
+            self.cube.runPhysics = True
+            self.cube.speed = 2
+            # self.cube.angle = math.acos(dx/dy)
+            self.cube = None
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect(), 2, 1)

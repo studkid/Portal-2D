@@ -81,10 +81,9 @@ async def PhysTest():
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
+                player.pickupCube(event.button, dropper.sprite)
                 if event.button == 1:
                     selectedObj = findObject(dropper.sprites(), mouseX, mouseY)
-                elif event.button == 3:
-                    dropper.spawnCube()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
@@ -101,7 +100,7 @@ async def PhysTest():
         screen.fill(backgroundColor)
 
         for i, obj in enumerate(dropper.sprites()):
-            if obj != selectedObj:
+            if obj != selectedObj and obj.runPhysics:
                 obj.move(dt)
             obj.bounce(1280, 720, wallList)
             obj.collide(dropper.sprites()[i+1:])
