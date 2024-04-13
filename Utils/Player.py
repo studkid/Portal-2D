@@ -198,13 +198,15 @@ class Player():
             self.cube = cube
         elif self.cube and mouse == 3:
             mouseX, mouseY = pygame.mouse.get_pos()
-            dx = abs(self.rect().centerx - mouseX)
-            dy = abs(self.rect().centery - mouseY)
-            print(f"{dy}/{dx} = {dy/dx}")
+            dx = self.rect().centerx - mouseX
+            dy = self.rect().centery - mouseY
 
             self.cube.runPhysics = True
             self.cube.speed = 2
-            # self.cube.angle = math.acos(dx/dy)
+            self.cube.angle = math.atan2(-dy,-dx) + math.pi/2
+            # if dy < 0:
+            #     self.cube.angle += math.pi
+            print(self.cube.angle * (180 / math.pi))
             self.cube = None
 
     def drawHitbox(self, screen):
