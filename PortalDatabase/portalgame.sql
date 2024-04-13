@@ -83,10 +83,8 @@ CREATE TABLE IF NOT EXISTS `leveltime` (
 --
 -- Constraints for table `leveltime`
 --
-ALTER TABLE `leveltime`
-  ADD CONSTRAINT `levelID_FK` FOREIGN KEY (`levelID`) REFERENCES `level` (`levelID`),
-  ADD CONSTRAINT `userID_FK` FOREIGN KEY (`userID`) REFERENCES `gameuser` (`userID`);
-COMMIT;
+ALTER TABLE LevelTime
+ADD PRIMARY KEY (userID, levelID);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
