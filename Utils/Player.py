@@ -204,9 +204,6 @@ class Player():
             self.cube.runPhysics = True
             self.cube.speed = 2
             self.cube.angle = math.atan2(-dy,-dx) + math.pi/2
-            # if dy < 0:
-            #     self.cube.angle += math.pi
-            print(self.cube.angle * (180 / math.pi))
             self.cube = None
 
     def drawHitbox(self, screen):
