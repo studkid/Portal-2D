@@ -34,7 +34,7 @@ async def DoorTest():
 
     objGroup = pygame.sprite.Group()
 
-    dropper = CubeDropper(1160, -15, 135)
+    dropper = CubeDropper(1160, -15, 135, 3)
     dropper.add(CubeObj(0, 0, 0.0999, 0.2))
     dropper.spawnCube()
 
