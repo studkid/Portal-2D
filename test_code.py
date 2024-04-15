@@ -50,7 +50,6 @@ async def test_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if buttons["phys_test_button"].check_click(mouse_pos):
                     await PhysTest.PhysTest()
-                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["player_test_button"].check_click(mouse_pos):
                     await PlayerTest.PlayerTest()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
