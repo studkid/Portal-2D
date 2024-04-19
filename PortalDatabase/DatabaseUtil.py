@@ -84,6 +84,40 @@ def get_levels():
     result = cursor.fetchall()
 
     return result
+
+def get_level_times(username):
+    #get all of the leveltimes for that user
+
+    user_id = -1
+
+    #create the queries with blank spaces for the data
+    get_user_id = ("SELECT * FROM GameUser "
+                "WHERE username = %s")
+    get_level_times = ("SELECT * FROM LevelTime "
+                "WHERE userID = %s")
+    
+    #execute first query and get the result
+    cursor = mydb.cursor()
+    get_user_id_data = (username,)
+    cursor.execute(get_user_id, get_user_id_data)
+    user_data = cursor.fetchall()
+
+    #if the query comes back empty, the user is not logged in somehow (should be impossible)
+    if user_data == []:
+        print("ERROR: user not logged in, could not get level times.")
+        return None
+    #if the query does NOT come back empty, grab the userID
+    else:
+        user_id = user_data[0][0]
+
+        #execute second query and get the result
+        get_level_times_data = (user_id,)
+        cursor.execute(get_level_times, get_level_times_data)
+        level_times = cursor.fetchall()
+
+        #if the query comes back empty, the user has not completed the any levels before
+        return level_times
+
     
 def update_level_time(username, level_id, level_time):   
 
