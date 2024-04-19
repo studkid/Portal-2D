@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2024 at 03:23 PM
+-- Generation Time: Apr 19, 2024 at 06:34 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -23,22 +23,18 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `portalgame` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `portalgame`;
 
-DROP TABLE IF EXISTS `leveltime`;
-DROP TABLE IF EXISTS `gameuser`;
-DROP TABLE IF EXISTS `level`;
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `gameuser`
 --
 
-CREATE TABLE IF NOT EXISTS `gameuser` (
-  `userID` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `gameuser`;
+CREATE TABLE `gameuser` (
+  `userID` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gameuser`
@@ -55,12 +51,23 @@ INSERT INTO `gameuser` (`userID`, `username`, `password`) VALUES
 -- Table structure for table `level`
 --
 
-CREATE TABLE IF NOT EXISTS `level` (
-  `levelID` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `level`;
+CREATE TABLE `level` (
+  `levelID` int(11) NOT NULL,
   `levelName` varchar(100) DEFAULT NULL,
-  `targetTime` int(11) DEFAULT NULL,
-  PRIMARY KEY (`levelID`)
+  `targetTime` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `level`
+--
+
+INSERT INTO `level` (`levelID`, `levelName`, `targetTime`) VALUES
+(1, 'Beginner\'s Luck', 15),
+(2, 'Trials and Tribulations', 18),
+(3, 'The End of the Beginning', 31),
+(4, 'The Beginning of the End', 41),
+(5, 'Finale', 38);
 
 -- --------------------------------------------------------
 
@@ -68,23 +75,61 @@ CREATE TABLE IF NOT EXISTS `level` (
 -- Table structure for table `leveltime`
 --
 
-CREATE TABLE IF NOT EXISTS `leveltime` (
+DROP TABLE IF EXISTS `leveltime`;
+CREATE TABLE `leveltime` (
   `userID` int(11) NOT NULL,
   `levelID` int(11) NOT NULL,
-  `completionTime` int(11) DEFAULT NULL,
-  KEY `userID_FK` (`userID`),
-  KEY `levelID_FK` (`levelID`)
+  `completionTime` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Constraints for dumped tables
+-- Dumping data for table `leveltime`
+--
+
+INSERT INTO `leveltime` (`userID`, `levelID`, `completionTime`) VALUES
+(30, 1, 9),
+(30, 2, 33);
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Constraints for table `leveltime`
+-- Indexes for table `gameuser`
 --
-ALTER TABLE LevelTime
-ADD PRIMARY KEY (userID, levelID);
+ALTER TABLE `gameuser`
+  ADD PRIMARY KEY (`userID`);
+
+--
+-- Indexes for table `level`
+--
+ALTER TABLE `level`
+  ADD PRIMARY KEY (`levelID`);
+
+--
+-- Indexes for table `leveltime`
+--
+ALTER TABLE `leveltime`
+  ADD PRIMARY KEY (`userID`,`levelID`),
+  ADD KEY `userID_FK` (`userID`),
+  ADD KEY `levelID_FK` (`levelID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `gameuser`
+--
+ALTER TABLE `gameuser`
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `level`
+--
+ALTER TABLE `level`
+  MODIFY `levelID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

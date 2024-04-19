@@ -6,8 +6,8 @@ try:
     #initialize the database
     mydb = mysql.connector.connect(
         host="localhost", # <---- can replace localhost with the ipv4 address of the machine hosting the server, but localhost works for testing
-        user="user", # <---- username for the MySQL account. YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS USERNAME
-        password="Password123$", # <---- password for the MySQL account.  YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS PASSWORD
+        user="root", # <---- username for the MySQL account. YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS USERNAME
+        password="", # <---- password for the MySQL account.  YOU MUST HAVE A PHPMYADMIN ACCOUNT WITH THIS PASSWORD
         database="portalgame" # <---- password for the MySQL account.  YOU MUST HAVE THIS DATABASE IN PHPMYADMIN
     )
 except:
@@ -73,6 +73,17 @@ def authenticate_user(username, password):
     else:
         print("successfully authenticated. login complete")
         return True
+    
+def get_levels():
+    #get an array of all levels
+    get_levels = ("SELECT * FROM Level")
+    
+    #execute query and get the result
+    cursor = mydb.cursor()
+    cursor.execute(get_levels)
+    result = cursor.fetchall()
+
+    return result
     
 def update_level_time(username, level_id, level_time):   
 
