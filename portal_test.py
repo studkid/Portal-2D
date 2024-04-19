@@ -29,6 +29,7 @@ while True:
     
     screen.fill(WHITE)
     pygame.draw.rect(screen, BLACK, platform)
+    screen.blit( portal, ( portal_pos ) )
 
 
     
