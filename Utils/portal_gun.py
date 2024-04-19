@@ -9,6 +9,10 @@ pygame.init()
 #platforms
 platform = pygame.Rect( 100,300,200,50 )
 
+#portal setup
+portal_pos = 300, 300
+portal_img = pygame.image.load( "img/Portal_Blue.png" )
+portal = pygame.transform.rotozoom( portal_img, 30, PORTAL_SCALE ) #middle number is angle
 
 #tab/window settings
 screen = pygame.display.set_mode( ( WIDTH, HEIGHT ) )
@@ -79,8 +83,9 @@ class Pgun( pygame.sprite.Sprite ):
             self.bullet = Bullet( spawn_bullet_pos[0], spawn_bullet_pos[1], self.angle )
             bullet_group.add( self.bullet )
             all_sprites_group.add( self.bullet )
+            #print( 'test' )
 
-            
+         
 #moves hitbox
     def move( self ):
         self.pos += pygame.math.Vector2( self.velocity_x, self.velocity_y )
@@ -91,6 +96,7 @@ class Pgun( pygame.sprite.Sprite ):
         self.user_input()
         self.move()
         self.pgun_rotation()
+        #self.pgun_col()
 
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
@@ -102,9 +108,9 @@ class Bullet( pygame.sprite.Sprite ):
         self.image = pygame.image.load( "img/pgun/bullet.png" ).convert_alpha()
         self.image = pygame.transform.rotozoom( self.image, 0, BULLET_SCALE ) #adjust bullet size
         self.rect = self.image.get_rect()
-        self.rect.center = ( x, y )
         self.x = x
         self.y = y
+        self.rect.center = ( x, y )
         self.angle = angle
         self.speed = BULLET_SPEED
         self.x_vel = math.cos( self.angle * ( 2*math.pi/360 ) ) * self.speed #adjust the x velocity for the bullet when shot
@@ -112,6 +118,8 @@ class Bullet( pygame.sprite.Sprite ):
         self.bullet_lifetime = BULLET_LIFETIME
         self.spawn_time = pygame.time.get_ticks() #gets the time that the bullet was created
         self.collide = False
+        self.bullet_offset = pygame.math.Vector2( 0, 0 )
+
 
 
     def bullet_movement( self ):  
@@ -124,23 +132,22 @@ class Bullet( pygame.sprite.Sprite ):
         if pygame.time.get_ticks() - self.spawn_time > self.bullet_lifetime: #despawn bullet if it goes to far
             self.kill() 
         
-        if self.rect.colliderect(platform):
+        if self.rect.colliderect( platform ):
             self.collide = True
             self.bullet_col()
-            #test code
             #print( 'nice' )
         else:
             self.collide = False
 
  #gets rid of bullet image and spawns portal
     def bullet_col( self ):
-        spawn_portal_pos =  self.x, self.y
-        self.bullet = Portal( spawn_portal_pos[0], spawn_portal_pos[1], self.angle )
-        bullet_group.add( self.bullet )
-        all_sprites_group.add( self.bullet )
+        shot_portal =  self.rect.center + self.bullet_offset.rotate( self.angle )
+        self.portal_pos_upd = Portal( shot_portal[0], shot_portal[1], self.angle )
+        portal_pos = shot_portal #portal_pos is not being called right need to fix this!!
+        bullet_group.add( self.portal_pos_upd )
+        all_sprites_group.add( self.portal_pos_upd )
         self.kill() 
         self.collide = False
-      
 
     def update( self ):
         self.bullet_movement()
@@ -150,39 +157,57 @@ class Portal( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle ):
         super().__init__()
         self.image = pygame.image.load( "img/Portal_Blue.png" ).convert_alpha()
-        self.image = pygame.transform.rotozoom( self.image, 0, PORTAL_SCALE ) #adjust portal size
+        self.image = portal
         self.rect = self.image.get_rect()
-        self.rect.center = ( x, y )
+        self.rect.center = portal_pos
         self.x = x
         self.y = y
         self.angle = angle
         self.spawn_time = pygame.time.get_ticks()
-        self.spawned_portals = SPAWNED_PORTALS
+        self.spawned_portals = 0
+        self.p_shoot = False
 
 
     def portal_count( self ):
         if pygame.mouse.get_pressed() == ( 1, 0, 0 ): #( 1, 0, 0 ) means left click
+            self.p_shoot = True  
+            print( self.spawned_portals )
+            self.shoot_portal()
+
+        else:
+            self.p_shoot = False
+
+    
+    def shoot_portal( self ):
+        if self.p_shoot == True:
+            self.p_shoot = False
             self.spawned_portals = self.spawned_portals + 1
 
+            if self.spawned_portals >= PORTAL_COOLDOWN:
+                self.kill()
+                self.spawned_portals = 0
+                print( 'test' )
+        else:
+            self.p_shoot = False
 
-    def max_portals( self ):
-        
-        if self.spawned_portals == 2:
+        keys = pygame.key.get_pressed()
+        if keys[ pygame.K_k ]:  #despawn all portals
             self.kill()
-            self.spawned_portals = SPAWNED_PORTALS
-            print( 'iwork' )
-    
 
-
+    def update( self ):
+        self.portal_count()
+        #self.shoot_portal()
 
         
 
 
 
 pgun = Pgun()
+#portal = Portal()
 
 all_sprites_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
+#collision_sprites = pygame.sprite.Group()
 
 all_sprites_group.add( pgun )
 
