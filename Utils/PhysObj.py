@@ -33,23 +33,24 @@ class PhysObj():
         for plat in wallList:
             wall = plat.rect
             if self.rect.colliderect(wall):
-                if self.rect.right > wall.left and self.rect.right < wall.left + 40:
+                if self.rect.bottom > wall.top and self.rect.bottom < wall.top + 20:
+                    self.rect.bottom = wall.top
+                    self.angle = math.pi - self.angle
+                    self.speed *= self.elasticity
+                elif self.rect.top < wall.bottom and self.rect.top > wall.bottom - 20:
+                    self.rect.top = wall.bottom
+                    self.angle = math.pi - self.angle
+                    self.speed *= self.elasticity
+        
+                elif self.rect.right > wall.left and self.rect.right < wall.left + 20:
                     self.rect.right = wall.left
                     self.angle = -self.angle
                     self.speed *= self.elasticity
-                elif self.rect.left < wall.right and self.rect.left > wall.right - 40:
+                elif self.rect.left < wall.right and self.rect.left > wall.right - 20:
                     self.rect.left = wall.right
                     self.angle = -self.angle
                     self.speed *= self.elasticity
 
-                if self.rect.bottom > wall.top and self.rect.bottom < wall.top + 40:
-                    self.rect.bottom = wall.top
-                    self.angle = math.pi - self.angle
-                    self.speed *= self.elasticity
-                elif self.rect.top < wall.bottom and self.rect.top > wall.bottom - 40:
-                    self.rect.top = wall.bottom
-                    self.angle = math.pi - self.angle
-                    self.speed *= self.elasticity
         if self.rect.right > width:
             self.rect.right = width
             self.angle = -self.angle
