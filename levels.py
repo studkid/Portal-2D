@@ -1,8 +1,10 @@
 import pygame
 import asyncio
 import account
+import connection
 from Utils import GlobalVariables
 from PortalDatabase import DatabaseUtil
+from Utils.MenuButton import MenuButton
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
@@ -62,6 +64,8 @@ async def level_screen():
                             userTimeCompleted = GlobalVariables.font(24).render("Completed in : " + str(minutesTime) + ":0" + str(secondsTime), True, GlobalVariables.Text_Forecolor)
                         else:
                             userTimeCompleted = GlobalVariables.font(24).render("Completed in : " + str(minutesTime) + ":" + str(secondsTime), True, GlobalVariables.Text_Forecolor)
+                        if user_times[completed_levels.index(levels[i][0])][2] < levels[i][2]:
+                            screen.blit(GlobalVariables.Medal_Image, (x + 255, y - 2))
                     else:
                         userTimeCompleted = GlobalVariables.font(24).render("Not completed", True, GlobalVariables.Text_Forecolor)
                 except IndexError:
@@ -85,19 +89,31 @@ async def level_screen():
     else:
         running = True
 
+    connect_button = MenuButton(GlobalVariables.Width - 150, 50, "Connect/Host", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
+    connect_button.rect.right = GlobalVariables.Width - 50
+
     while running:
         screen.blit(background, (0,0))
+
+        mouse_pos = pygame.mouse.get_pos()
 
         title_text = GlobalVariables.font(50).render("Levels", True, GlobalVariables.Text_Forecolor)
         title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
 
         screen.blit(title_text, title_rect)
 
+        connect_button.check_hover(mouse_pos)
+        connect_button.update(screen)
+
         printLevels()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if connect_button.check_click(mouse_pos):
+                    await connection.connect_screen()
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
