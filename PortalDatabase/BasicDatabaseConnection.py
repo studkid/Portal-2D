@@ -26,3 +26,8 @@ mydb = mysql.connector.connect(
 levels = DatabaseUtil.get_levels()
 for level in levels:
   print(level)
+
+#returns an array of completed level ids and their completion times. will be Null if no levels have been completed
+times = DatabaseUtil.get_level_times("Admin")
+for time in times:
+    print("completed level " + str(time[1]) + " in " + str(time[2]) + " seconds!")
