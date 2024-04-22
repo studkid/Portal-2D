@@ -9,10 +9,19 @@ pygame.init()
 #platforms
 platform = pygame.Rect( 100,300,200,50 )
 
+#bullet pos
+bullet_x = 0
+bullet_y = 0
+bullet_pos = bullet_x, bullet_y
+bullet_img = pygame.image.load( "img/pgun/bullet.png" )
+bullet_var = pygame.transform.rotozoom( bullet_img, 30, BULLET_SCALE )
+
 #portal setup
-portal_pos = 300, 300
+portal_x = 300
+portal_y = 0
+portal_pos = portal_x, portal_y
 portal_img = pygame.image.load( "img/Portal_Blue.png" )
-portal = pygame.transform.rotozoom( portal_img, 30, PORTAL_SCALE ) #middle number is angle
+portal_var = pygame.transform.rotozoom( portal_img, 30, PORTAL_SCALE ) #middle number is angle
 
 #tab/window settings
 screen = pygame.display.set_mode( ( WIDTH, HEIGHT ) )
@@ -105,8 +114,7 @@ class Pgun( pygame.sprite.Sprite ):
 class Bullet( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle ):
         super().__init__()
-        self.image = pygame.image.load( "img/pgun/bullet.png" ).convert_alpha()
-        self.image = pygame.transform.rotozoom( self.image, 0, BULLET_SCALE ) #adjust bullet size
+        self.image = bullet_var
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -123,6 +131,7 @@ class Bullet( pygame.sprite.Sprite ):
 
 
     def bullet_movement( self ):  
+        global portal_pos
         self.x += self.x_vel
         self.y += self.y_vel
 
@@ -135,7 +144,8 @@ class Bullet( pygame.sprite.Sprite ):
         if self.rect.colliderect( platform ):
             self.collide = True
             self.bullet_col()
-            #print( 'nice' )
+            portal_pos = ( self.rect.x, self.rect.y )
+            print( portal_pos )
         else:
             self.collide = False
 
@@ -143,7 +153,7 @@ class Bullet( pygame.sprite.Sprite ):
     def bullet_col( self ):
         shot_portal =  self.rect.center + self.bullet_offset.rotate( self.angle )
         self.portal_pos_upd = Portal( shot_portal[0], shot_portal[1], self.angle )
-        portal_pos = shot_portal #portal_pos is not being called right need to fix this!!
+ #portal_pos is not being called right need to fix this!!
         bullet_group.add( self.portal_pos_upd )
         all_sprites_group.add( self.portal_pos_upd )
         self.kill() 
@@ -157,9 +167,9 @@ class Portal( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle ):
         super().__init__()
         self.image = pygame.image.load( "img/Portal_Blue.png" ).convert_alpha()
-        self.image = portal
+        self.image = portal_var
         self.rect = self.image.get_rect()
-        self.rect.center = portal_pos
+        self.rect.center = ( x, y )
         self.x = x
         self.y = y
         self.angle = angle
