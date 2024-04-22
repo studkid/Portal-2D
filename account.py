@@ -88,6 +88,7 @@ async def sign_up():
 async def log_in():
 
     login_button = MenuButton(GlobalVariables.Width / 2 - 50, GlobalVariables.Height / 2 + 150, "LOG IN", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
+    signup_button = MenuButton(GlobalVariables.Width / 2 - 150, GlobalVariables.Height / 2 + 200, "Don't have an account? Sign up", GlobalVariables.font(18), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
 
     inputs: Dict[str, InputBox] = {
         "username":  InputBox(GlobalVariables.Width / 2, GlobalVariables.Height / 2 - 50, 300, 50, ""),
@@ -118,6 +119,8 @@ async def log_in():
 
         login_button.check_hover(mouse_pos)
         login_button.update(screen)
+        signup_button.check_hover(mouse_pos)
+        signup_button.update(screen)
 
         if error:
             screen.blit(error_txt, error_rect)
@@ -139,6 +142,9 @@ async def log_in():
                         running = False
                     else:
                         error = True
+                if signup_button.check_click(mouse_pos):
+                     running = False
+                     await sign_up()
             for key in inputs:
                 inputs[key].handle_event(event)
         
