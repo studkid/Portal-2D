@@ -20,6 +20,10 @@ Text_Hovercolor = (0, 255, 255)
 def font(size):
     return pygame.font.SysFont("Consolas", size)
 
+def complete_level(levelID, time):
+    ## TODO - calls databaseutils complete level function
+    return
+
 Account_Username = ""
 Account_ID = ""
 

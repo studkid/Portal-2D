@@ -178,7 +178,7 @@ class Player():
                     self.y = platform.bottom
                     break
             if rect.left >= platform.left - self.size_x and rect.right <= platform.right + self.size_x and y > 0:
-                if rect.top > platform.top and rect.top < platform.bottom + 1:
+                if rect.top - platform.bottom + 2 > platform.top and rect.top < platform.bottom + 1:
                     self.y = platform.bottom
                     self.count = 0
                     self.isJump = False
