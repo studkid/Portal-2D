@@ -43,3 +43,5 @@ SecondPlayer_LeftStandingImage = pygame.transform.flip(SecondPlayer_RightStandin
 SecondPlayer_RightRunningImage = pygame.image.load(os.path.join(sys.path[0], './Assets/Cut_AvatarSprite_Running_Orange.png')).convert_alpha()
 SecondPlayer_RightRunningImage = pygame.transform.scale(SecondPlayer_RightRunningImage, (Player_size_X, Player_size_Y))
 SecondPlayer_LeftRunningImage = pygame.transform.flip(SecondPlayer_RightRunningImage, True, False)
+
+Medal_Image = pygame.image.load(os.path.join(sys.path[0], './Assets/medal.png')).convert_alpha()
