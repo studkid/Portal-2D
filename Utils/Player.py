@@ -37,6 +37,7 @@ class Player():
         self.leftSide = False
         self.image = self.rightStandingImage
         self.cube = None
+        self.completed = False
 
     def draw(self, screen):
         if self.cube:

@@ -39,6 +39,7 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
     button = ButtonObject(680, GlobalVariables.Height - 35, 0)
 
     player = Player(50, 270, True)
+    playerTwo = Player(50, 270, True)
 
     door = ExitDoor(1100, GlobalVariables.Height - 150)
 
@@ -58,7 +59,11 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         door.door_status(button)
         door.update(screen)
         if door.try_exit(player, pressed_keys):
+            player.completed = True
             GlobalVariables.complete_level(1, 10) ## TODO - the 10 is time, edit this when the timer is set up
+            if player.completed and playerTwo.completed:
+                running = False
+                return
 
         for platform in platforms: 
             pygame.draw.rect(screen, platform_color, platform)
@@ -84,9 +89,11 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
 
         pButton.draw(screen)
 
-        player.move(pressed_keys, platforms, dt)
-        player.jump(dt)
-        player.update(platforms, dt)
+        if not player.completed:
+            player.move(pressed_keys, platforms, dt)
+            player.jump(dt)
+            player.update(platforms, dt)
+
         player.draw(screen)
         
         if player.interactButton(pressed_keys, pButton):
