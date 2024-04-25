@@ -14,7 +14,7 @@ from Utils import GlobalVariables
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill((255, 255, 255))
 
-pygame.display.set_caption("Portal 2D - Door Test")
+pygame.display.set_caption("Portal 2D - Level four")
 pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
@@ -23,9 +23,9 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
     platform_color = (41,41,41)
     platforms = [
         Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, None),
-        Platform(600, GlobalVariables.Height - 200, 20, 180, False, None),
-        Platform(0, GlobalVariables.Height - 200, 20, 180, True, None),
-        Platform(GlobalVariables.Width - 20, 0, 20, 250, True, None),
+        ## Platform(600, GlobalVariables.Height - 200, 20, 180, False, None),
+        ## Platform(0, GlobalVariables.Height - 200, 20, 180, True, None),
+        ## Platform(GlobalVariables.Width - 20, 0, 20, 250, True, None),
     ]
 
     selectedObj = None
@@ -39,7 +39,7 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
     button = ButtonObject(680, GlobalVariables.Height - 35, 0)
 
     player = Player(50, 270, True)
-    playerTwo = Player(50, 270, True)
+    playerTwo = Player(50, 270, False)
 
     door = ExitDoor(1100, GlobalVariables.Height - 150)
 
@@ -58,7 +58,7 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
 
         door.door_status(button)
         door.update(screen)
-        if door.try_exit(player, pressed_keys):
+        if not player.completed and door.try_exit(player, pressed_keys):
             player.completed = True
             GlobalVariables.complete_level(1, 10) ## TODO - the 10 is time, edit this when the timer is set up
             if player.completed and playerTwo.completed:
