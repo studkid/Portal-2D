@@ -1,6 +1,5 @@
 import pygame
 from sys import exit
-import math
 from game_settings import *
 from Utils.portal_gun import *
 
@@ -29,10 +28,10 @@ while True:
     
     screen.fill(WHITE)
     pygame.draw.rect(screen, BLACK, platform)
-    screen.blit( portal, ( portal_pos ) )
+    screen.blit( portal_var, ( portal_pos ) )
+    screen.blit( bullet_var, ( bullet_pos ) )
 
 
-    
     all_sprites_group.draw(screen)
     all_sprites_group.update()
     pygame.display.update()
