@@ -17,7 +17,7 @@ bullet_img = pygame.image.load( "img/pgun/bullet.png" )
 bullet_var = pygame.transform.rotozoom( bullet_img, 30, BULLET_SCALE )
 
 #portal setup
-portal_x = 300
+portal_x = 200
 portal_y = 0
 portal_pos = portal_x, portal_y
 portal_img = pygame.image.load( "img/Portal_Blue.png" )
@@ -143,19 +143,20 @@ class Bullet( pygame.sprite.Sprite ):
         
         if self.rect.colliderect( platform ):
             self.collide = True
-            self.bullet_col()
             portal_pos = ( self.rect.x, self.rect.y )
+            self.bullet_col()
             print( portal_pos )
+            print( portal_var )
         else:
             self.collide = False
 
  #gets rid of bullet image and spawns portal
     def bullet_col( self ):
         shot_portal =  self.rect.center + self.bullet_offset.rotate( self.angle )
-        self.portal_pos_upd = Portal( shot_portal[0], shot_portal[1], self.angle )
+        #self.portal_pos_upd = Portal( shot_portal[0], shot_portal[1], self.angle )
  #portal_pos is not being called right need to fix this!!
-        bullet_group.add( self.portal_pos_upd )
-        all_sprites_group.add( self.portal_pos_upd )
+        #bullet_group.add( self.portal_pos_upd )
+        #all_sprites_group.add( self.portal_pos_upd )
         self.kill() 
         self.collide = False
 
@@ -166,12 +167,10 @@ class Bullet( pygame.sprite.Sprite ):
 class Portal( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle ):
         super().__init__()
-        self.image = pygame.image.load( "img/Portal_Blue.png" ).convert_alpha()
-        self.image = portal_var
-        self.rect = self.image.get_rect()
-        self.rect.center = ( x, y )
-        self.x = x
-        self.y = y
+        global portal_var
+        global portal_pos
+        self.rect = portal_var
+        self.pos = portal_pos
         self.angle = angle
         self.spawn_time = pygame.time.get_ticks()
         self.spawned_portals = 0
@@ -220,4 +219,3 @@ bullet_group = pygame.sprite.Group()
 #collision_sprites = pygame.sprite.Group()
 
 all_sprites_group.add( pgun )
-
