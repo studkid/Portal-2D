@@ -117,7 +117,7 @@ async def PhysTest():
         dropper.draw(screen)
         dropper.drawHitbox(screen)
 
-        button.checkActive(dropper.sprites(), player)
+        button.checkActive(dropper.sprites(), [player])
         button.draw(screen)
         
         pressed_keys = pygame.key.get_pressed()
