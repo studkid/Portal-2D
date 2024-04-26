@@ -101,7 +101,7 @@ async def PhysTest():
             selectedObj.speed = math.hypot(dx, dy) * 0.1
             selectedObj.rect.center = (mouseX, mouseY)
 
-        if button.active:
+        if button.Active:
             wallList[2].active = False
         else:
             wallList[2].active = True
