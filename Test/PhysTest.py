@@ -26,6 +26,10 @@ wallList = [
     Platform(0, height - 20, width, 20, True, None),
     Platform(200, 300, 100, 20, True, None),
     Platform(700, 500, 20, 200, False, None),
+    Platform(150, 400, 100, 20, True, None),
+    Platform(100, 500, 100, 20, True, None),
+    Platform(150, 600, 100, 20, True, None),
+    Platform(200, 700, 100, 20, True, None),
 ]
 
 # Meant to test PhysObj class
@@ -113,7 +117,7 @@ async def PhysTest():
         dropper.draw(screen)
         dropper.drawHitbox(screen)
 
-        button.checkActive(dropper.sprites())
+        button.checkActive(dropper.sprites(), player)
         button.draw(screen)
         
         pressed_keys = pygame.key.get_pressed()
