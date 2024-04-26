@@ -160,7 +160,7 @@ class Player():
         rect = self.rect()
         for platformObj in platforms:
             platform = platformObj.rect
-            if rect.colliderect(platform) and platformObj.active and not platformObj.collision == 2:
+            if rect.colliderect(platform) and platformObj.active and (not platformObj.collision == 2 or self.cube != None):
                 if x > 0: 
                     self.x = platform.left - self.size_x
                     break
