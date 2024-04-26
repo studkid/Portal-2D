@@ -20,13 +20,13 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
-    platform_color = (41,41,41)
     platforms = [
-        Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, None),
-        Platform(600, GlobalVariables.Height - 200, 20, 180, True, None),
-        Platform(400, GlobalVariables.Height - 200, 200, 20, False, None),
-        Platform(0, 300, 20, 210, True, None),
-        Platform(0, 510, 200, 20, False, None),
+        Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, 0),
+        Platform(600, GlobalVariables.Height - 200, 20, 180, True, 0),
+        Platform(400, GlobalVariables.Height - 200, 200, 20, False, 2),
+        Platform(0, 300, 20, 210, True, 0),
+        Platform(0, 510, 200, 20, False, 1),
+        Platform(900, GlobalVariables.Height - 200, 20, 180, False, 2),
     ]
 
     selectedObj = None
@@ -39,8 +39,7 @@ async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
 
     button = ButtonObject(490, GlobalVariables.Height - 215, 0)
 
-    player = Player(50, 520, True)
-    playerTwo = Player(50, 520, False)
+    players = [ Player(50, 520, True), Player(50, 520, False) ]
 
     door = ExitDoor(1100, GlobalVariables.Height - 150)
 
@@ -59,15 +58,15 @@ async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
 
         door.door_status(button)
         door.update(screen)
-        if not player.completed and door.try_exit(player, pressed_keys):
-            player.completed = True
+        if not players[0].completed and door.try_exit(players[0], pressed_keys):
+            players[0].completed = True
             GlobalVariables.complete_level(1, 10) ## TODO - the 10 is time, edit this when the timer is set up
-            if player.completed and playerTwo.completed:
+            if players[0].completed and players[1].completed:
                 running = False
                 return
 
         for platform in platforms: 
-            pygame.draw.rect(screen, platform_color, platform)
+            platform.draw(screen)
 
         if selectedObj:
             mouseX, mouseY = pygame.mouse.get_pos()
@@ -85,19 +84,19 @@ async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
         dropper.update()
         dropper.draw(screen)
 
-        button.checkActive(dropper.sprites())
+        button.checkActive(dropper.sprites(), players)
         button.draw(screen)
 
         pButton.draw(screen)
 
-        if not player.completed:
-            player.move(pressed_keys, platforms, dt)
-            player.jump(dt)
-            player.update(platforms, dt)
+        if not players[0].completed:
+            players[0].move(pressed_keys, platforms, dt)
+            players[0].jump(dt)
+            players[0].update(platforms, dt)
 
-        player.draw(screen)
+        players[0].draw(screen)
         
-        if player.interactButton(pressed_keys, pButton):
+        if players[0].interactButton(pressed_keys, pButton):
             if count == 0:
                 dropper.add(CubeObj(0, 0, 0.0999, 0.2))
                 count += 1
@@ -121,7 +120,7 @@ async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
                 if count > 0:
-                    player.pickupCube(event.button, dropper.sprite)
+                    players[0].pickupCube(event.button, dropper.sprite)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None

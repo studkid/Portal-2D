@@ -135,7 +135,7 @@ class Player():
             self.velocity += self.gravity
             count = 0
             for platform in platforms:
-                if not self.rect().colliderect(platform):
+                if not self.rect().colliderect(platform.rect) or not platform.active or (platform.collision == 2 and self.cube == None):
                     if self.hitPlatform == True:
                         self.y += self.velocity * 0.02 * dt
                     else:
@@ -148,7 +148,7 @@ class Player():
             self.velocity += self.gravity
             on_platform = False
             for platform in platforms:
-                if self.rect().colliderect(platform):
+                if self.rect().colliderect(platform.rect) and platform.active and (not platform.collision == 2 or self.cube != None):
                     on_platform = True
                     break
             if not on_platform:
