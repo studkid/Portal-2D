@@ -23,20 +23,23 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
     platform_color = (41,41,41)
     platforms = [
         Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, None),
-        ## Platform(600, GlobalVariables.Height - 200, 20, 180, False, None),
-        ## Platform(0, GlobalVariables.Height - 200, 20, 180, True, None),
-        ## Platform(GlobalVariables.Width - 20, 0, 20, 250, True, None),
+        Platform(400, 0, 20, 200, False, None),
+        Platform(400, 200, 100, 20, False, None),
+        Platform(700, 0, 20, 250, True, None),
+        Platform(600, 250, 120, 20, False, None),
+        Platform(0, GlobalVariables.Height - 200, 20, 180, True, None),
+        Platform(900, 400, 200, 20, False, None),
     ]
 
     selectedObj = None
 
-    dropper = CubeDropper(150, 0, 180, 3)
-    dropper.add(CubeObj(0, 0, 0.0999, 0.2))
-    dropper.spawnCube()
-    
-    pButton = PlayerButton(300, GlobalVariables.Height - 75, 30)
+    dropper = CubeDropper(0, 0, 225, 3)
 
-    button = ButtonObject(680, GlobalVariables.Height - 35, 0)
+    count = 0
+    
+    pButton = PlayerButton(450, 220 - 75, 30)
+
+    button = ButtonObject(980, 385, 0)
 
     player = Player(50, 520, True)
     playerTwo = Player(50, 520, False)
@@ -97,6 +100,9 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         player.draw(screen)
         
         if player.interactButton(pressed_keys, pButton):
+            if count == 0:
+                dropper.add(CubeObj(0, 0, 0.0999, 0.2))
+                count += 1
             dropper.spawnCube()
         
         for wall in platforms:
@@ -116,7 +122,8 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
-                player.pickupCube(event.button, dropper.sprite)
+                if count > 0:
+                    player.pickupCube(event.button, dropper.sprite)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
