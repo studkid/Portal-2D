@@ -1,7 +1,7 @@
 import pygame
 from sys import exit
 import math
-from game_settings import *
+from Utils.game_settings import *
 
 
 pygame.init()
@@ -13,15 +13,16 @@ platform = pygame.Rect( 100,300,200,50 )
 bullet_x = 0
 bullet_y = 0
 bullet_pos = bullet_x, bullet_y
-bullet_img = pygame.image.load( "img/pgun/bullet.png" )
+bullet_img = pygame.image.load( "Assets/bullet.png" )
 bullet_var = pygame.transform.rotozoom( bullet_img, 30, BULLET_SCALE )
 
 #portal setup
 portal_x = 200
 portal_y = 0
 portal_pos = portal_x, portal_y
-portal_img = pygame.image.load( "img/Portal_Blue.png" )
+portal_img = pygame.image.load( "Assets/8bitPortal_Sprite_Blue.png" )
 portal_var = pygame.transform.rotozoom( portal_img, 30, PORTAL_SCALE ) #middle number is angle
+
 
 #tab/window settings
 screen = pygame.display.set_mode( ( WIDTH, HEIGHT ) )
@@ -33,7 +34,7 @@ class Pgun( pygame.sprite.Sprite ):
     def __init__( self ):
         super().__init__()
         self.pos = pygame.math.Vector2( PGUN_START_X, PGUN_START_Y ) #sets position when you first load the game
-        self.image = pygame.transform.rotozoom( pygame.image.load( "img/pgun/pgun.png" ).convert_alpha(), 0, PGUN_SIZE )
+        self.image = pygame.transform.rotozoom( pygame.image.load( "Assets/8bitPortalGun_Sprite_Blue.png" ).convert_alpha(), 0, PGUN_SIZE )
         self.base_pgun_image = self.image
         self.hitbox_rect = self.base_pgun_image.get_rect( center = self.pos )
         self.rect = self.hitbox_rect.copy()
@@ -153,10 +154,10 @@ class Bullet( pygame.sprite.Sprite ):
  #gets rid of bullet image and spawns portal
     def bullet_col( self ):
         shot_portal =  self.rect.center + self.bullet_offset.rotate( self.angle )
-        #self.portal_pos_upd = Portal( shot_portal[0], shot_portal[1], self.angle )
+        self.portal_pos_upd = Portal( shot_portal[0], shot_portal[1], self.angle )
  #portal_pos is not being called right need to fix this!!
-        #bullet_group.add( self.portal_pos_upd )
-        #all_sprites_group.add( self.portal_pos_upd )
+        bullet_group.add( self.portal_pos_upd )
+        all_sprites_group.add( self.portal_pos_upd )
         self.kill() 
         self.collide = False
 
@@ -169,10 +170,17 @@ class Portal( pygame.sprite.Sprite ):
         super().__init__()
         global portal_var
         global portal_pos
-        self.rect = portal_var
-        self.pos = portal_pos
+        self.image = pygame.image.load( "Assets/8bitPortal_Sprite_Blue.png" ).convert_alpha()
+        self.image = pygame.transform.rotozoom( self.image, 0, PORTAL_SCALE ) #adjust portal size
+        self.image = portal_var
+        self.rect = self.image.get_rect()
+        self.rect.center = ( x, y )
+        self.rect.center = portal_pos
+        self.x = x
+        self.y = y
         self.angle = angle
         self.spawn_time = pygame.time.get_ticks()
+        self.spawned_portals = SPAWNED_PORTALS
         self.spawned_portals = 0
         self.p_shoot = False
 
@@ -219,3 +227,4 @@ bullet_group = pygame.sprite.Group()
 #collision_sprites = pygame.sprite.Group()
 
 all_sprites_group.add( pgun )
+
