@@ -38,8 +38,8 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
 
     button = ButtonObject(680, GlobalVariables.Height - 35, 0)
 
-    player = Player(50, 270, True)
-    playerTwo = Player(50, 270, False)
+    player = Player(50, 520, True)
+    playerTwo = Player(50, 520, False)
 
     door = ExitDoor(1100, GlobalVariables.Height - 150)
 

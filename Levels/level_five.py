@@ -23,23 +23,27 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
     platform_color = (41,41,41)
     platforms = [
         Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, None),
-        ## Platform(600, GlobalVariables.Height - 200, 20, 180, False, None),
-        ## Platform(0, GlobalVariables.Height - 200, 20, 180, True, None),
-        ## Platform(GlobalVariables.Width - 20, 0, 20, 250, True, None),
+        Platform(630, 0, 20, (GlobalVariables.Height/2 + 50), True, None),
+        Platform(0, GlobalVariables.Height - 200, 20, 180, True, None),
+        Platform(500, GlobalVariables.Height/2 + 50, 150, 20, False, None),
+        Platform(900, 0, 20, 500, False, None),
+        Platform(900, 580, 20, 140, False, None),
+        Platform(0, 150, 250, 20, False, None),
+        Platform(GlobalVariables.Width - 20, 270, 20, 180, True, None),
     ]
 
     selectedObj = None
 
-    dropper = CubeDropper(150, 0, 180, 3)
-    dropper.add(CubeObj(0, 0, 0.0999, 0.2))
-    dropper.spawnCube()
+    dropper = CubeDropper(735, 0, 180, 3)
+
+    count = 0
     
-    pButton = PlayerButton(300, GlobalVariables.Height - 75, 30)
+    pButton = PlayerButton(520, GlobalVariables.Height/2 - 15, 30)
 
-    button = ButtonObject(680, GlobalVariables.Height - 35, 0)
+    button = ButtonObject(170, 135, 0)
 
-    player = Player(50, 270, True)
-    playerTwo = Player(50, 270, False)
+    player = Player(50, 520, True)
+    playerTwo = Player(50, 520, False)
 
     door = ExitDoor(1100, GlobalVariables.Height - 150)
 
@@ -97,6 +101,9 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
         player.draw(screen)
         
         if player.interactButton(pressed_keys, pButton):
+            if count == 0:
+                dropper.add(CubeObj(0, 0, 0.0999, 0.2))
+                count += 1
             dropper.spawnCube()
         
         for wall in platforms:
@@ -116,7 +123,8 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
-                player.pickupCube(event.button, dropper.sprite)
+                if count > 0:
+                    player.pickupCube(event.button, dropper.sprite)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None

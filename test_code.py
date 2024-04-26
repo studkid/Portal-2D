@@ -5,12 +5,8 @@ from Utils.MenuButton import MenuButton
 from Test import PhysTest
 from Test import PlayerTest
 from Test import DoorTest
-from Levels import level_one
-from Levels import level_two
-from Levels import level_three
-from Levels import level_four
-from Levels import level_five
 from Utils import GlobalVariables
+from Levels import PlayLevel
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
@@ -67,19 +63,19 @@ async def test_screen():
                     await DoorTest.DoorTest()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_one_button"].check_click(mouse_pos):
-                    await level_one.Level()
+                    await PlayLevel.play_level(1)
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_two_button"].check_click(mouse_pos):
-                    await level_two.Level()
+                    await PlayLevel.play_level(2)
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_three_button"].check_click(mouse_pos):
-                    await level_three.Level()
+                    await PlayLevel.play_level(3)
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_four_button"].check_click(mouse_pos):
-                    await level_four.Level()
+                    await PlayLevel.play_level(4)
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_five_button"].check_click(mouse_pos):
-                    await level_five.Level()
+                    await PlayLevel.play_level(5)
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
 
         pygame.display.update()

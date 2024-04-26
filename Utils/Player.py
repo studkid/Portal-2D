@@ -153,8 +153,8 @@ class Player():
                     break
             if not on_platform:
                 self.y += self.velocity * 0.05 * dt
-        if self.y > self.background_y:
-            self.y = 0
+        if self.y > self.background_y - 20:
+            self.y = self.background_y - 20 - self.size_y
 
     
     def check_collision(self, platforms, x, y):
