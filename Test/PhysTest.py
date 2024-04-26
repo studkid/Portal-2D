@@ -23,13 +23,13 @@ screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height)
 
 # dropper = pygame.sprite.Group()
 wallList = [
-    Platform(0, height - 20, width, 20, True, None),
-    Platform(200, 300, 100, 20, True, None),
-    Platform(700, 500, 20, 200, False, None),
-    Platform(150, 400, 100, 20, True, None),
-    Platform(100, 500, 100, 20, True, None),
-    Platform(150, 600, 100, 20, True, None),
-    Platform(200, 700, 100, 20, True, None),
+    Platform(0, height - 20, width, 20, True, 0),
+    Platform(200, 300, 100, 20, True, 0),
+    Platform(700, 500, 20, 200, False, 2),
+    Platform(150, 400, 100, 20, True, 1),
+    Platform(100, 500, 100, 20, True, 1),
+    Platform(150, 600, 100, 20, True, 1),
+
 ]
 
 # Meant to test PhysObj class
