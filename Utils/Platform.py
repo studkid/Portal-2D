@@ -9,9 +9,13 @@ class Platform():
         self.rect = pygame.Rect(x, y, width, length)
         self.isPortable = isPortable
         self.collision = collision
+        self.active = True
 
     # Draws wall
     def draw(self, screen):
+        if not self.active:
+            return
+
         if self.isPortable:
             color = (150, 150, 150)
         else:

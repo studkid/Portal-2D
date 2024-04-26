@@ -11,11 +11,11 @@ class ButtonObject:
         self.x = x
         self.y = y
         self.type = type
-        self.Active = False
+        self.active = False
 
     # Draws button
     def draw(self, screen):
-        if self.Active:
+        if self.active:
             pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(self.x, self.y + 10, 40, 5))
         else:
             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(self.x, self.y, 40, 15))
@@ -25,8 +25,8 @@ class ButtonObject:
         hitbox = pygame.Rect(self.x, self.y, 40, 15)
         for obj in objList:
             if hitbox.colliderect(obj.rect):
-                self.Active = True
+                self.active = True
                 return
             
-        self.Active = False
+        self.active = False
             

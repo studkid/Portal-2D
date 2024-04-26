@@ -97,6 +97,11 @@ async def PhysTest():
             selectedObj.speed = math.hypot(dx, dy) * 0.1
             selectedObj.rect.center = (mouseX, mouseY)
 
+        if button.active:
+            wallList[2].active = False
+        else:
+            wallList[2].active = True
+
         screen.fill(backgroundColor)
 
         for i, obj in enumerate(dropper.sprites()):
