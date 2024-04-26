@@ -4,10 +4,10 @@ class Platform():
     # Constructor
     # x, y, width, length for Rect constructor
     # isPortable: determines if platform can have a portal
-    # collision: determines what can interact with the platform
-    #       0 = Both player and cube
-    #       1 = Only cube
-    #       2 = Only player
+    # collision: determines what can collide with the platform
+    #       0 = Both player and cube collide
+    #       1 = Only player collide, cube passes through
+    #       2 = Only cube collides, player passes through
     # active: determins if the platform should be rendered/collided with
     def __init__(self, x, y, width, length, isPortable, collision):
         self.surface = pygame.Surface((width, length))
