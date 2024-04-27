@@ -126,6 +126,7 @@ async def Level(): ### TODO - MAKE A LEVEL TWO DESIGN
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    Timer.timer_started = False
                     running = False
 
             # Check for mouse input
