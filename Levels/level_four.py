@@ -12,6 +12,7 @@ from Utils.CubeDropper import CubeDropper
 from Utils.ExitDoor import ExitDoor
 from Utils.PlayerButton import PlayerButton
 from Utils import GlobalVariables
+from Laser import Laser
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill((255, 255, 255))
@@ -31,6 +32,8 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         Platform(0, GlobalVariables.Height - 200, 20, 180, True, 0),
         Platform(900, 400, 200, 20, False, 2),
     ]
+
+    laser = Laser.Laser((0, 300), 0, platforms, screen)
 
     selectedObj = None
 
@@ -98,10 +101,16 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         dropper.update()
         dropper.draw(screen)
 
+        laser.draw()
+
         button.checkActive(dropper.sprites(), players)
         button.draw(screen)
 
         pButton.draw(screen)
+
+        if players[0].rect().colliderect(laser.bounding_rect):
+            players[0].x = 50
+            players[0].y = 520
 
         if not players[0].completed:
             players[0].move(pressed_keys, platforms, dt)

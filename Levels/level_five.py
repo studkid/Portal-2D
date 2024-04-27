@@ -13,6 +13,8 @@ from Utils.ExitDoor import ExitDoor
 from Utils.PlayerButton import PlayerButton
 from Utils import GlobalVariables
 
+from Laser import Laser
+
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill((255, 255, 255))
 
@@ -27,11 +29,11 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
         Platform(630, 0, 20, (GlobalVariables.Height/2 + 50), True, 0),
         Platform(0, GlobalVariables.Height - 200, 20, 180, True, 0),
         Platform(500, GlobalVariables.Height/2 + 50, 150, 20, False, 1),
-        Platform(900, 0, 20, 500, False, 0),
-        Platform(900, 580, 20, 140, False, 0),
         Platform(0, 150, 250, 20, False, 2),
         Platform(GlobalVariables.Width - 20, 270, 20, 180, True, 0),
     ]
+
+    laser = Laser.Laser((900, 0), 90, platforms, screen)
 
     selectedObj = None
 
@@ -99,10 +101,16 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
         dropper.update()
         dropper.draw(screen)
 
+        laser.draw()
+
         button.checkActive(dropper.sprites(), players)
         button.draw(screen)
 
         pButton.draw(screen)
+
+        if players[0].rect().colliderect(laser.bounding_rect):
+            players[0].x = 50
+            players[0].y = 520
 
         if not players[0].completed:
             players[0].move(pressed_keys, platforms, dt)

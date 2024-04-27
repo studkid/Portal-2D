@@ -9,11 +9,12 @@ class Laser:
         self.screen = screen
         self.color = color
         self.end_pos = self.calculate_end_pos()
+        self.bounding_rect = pygame.Rect(self.start_pos, (1, 1)).union(pygame.Rect(self.end_pos, (1, 1)))
 
     def calculate_end_pos(self):
         x, y = self.start_pos
         angle = self.direction
-        length = 1000  # ajust to the scale of the game is needed
+        length = 1280  # ajust to the scale of the game is needed
         end_x = x + length * math.cos(math.radians(angle))
         end_y = y + length * math.sin(math.radians(angle))
 
@@ -29,9 +30,9 @@ class Laser:
             # incrementally check for collision
             check_x = int(x + dx * step)
             check_y = int(y + dy * step)
-            if any(obstacle.collidepoint(check_x, check_y) for obstacle in self.obstacles):
-                closest_point = (check_x, check_y)
-                break
+            ##if any(obstacle.collidepoint(check_x, check_y) for obstacle in self.obstacles):
+                ##closest_point = (check_x, check_y)
+                ##break
 
         return closest_point
 
