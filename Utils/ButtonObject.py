@@ -21,17 +21,12 @@ class ButtonObject:
             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(self.x, self.y, 40, 15))
 
     # TODO - Add check for player and button type
-    def checkActive(self, objList, playerList):
+    def checkActive(self, objList):
         hitbox = pygame.Rect(self.x, self.y, 40, 15)
         for obj in objList:
-            if hitbox.colliderect(obj.rect) and not self.type == 2:
+            if hitbox.colliderect(obj.rect):
                 self.Active = True
                 return
             
-        for player in playerList:    
-            if hitbox.colliderect(player.rect()) and not self.type == 1:
-                self.Active = True
-                return
-        
         self.Active = False
             

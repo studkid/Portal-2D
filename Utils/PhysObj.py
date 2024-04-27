@@ -32,25 +32,24 @@ class PhysObj():
     def bounce(self, width, height, wallList):
         for plat in wallList:
             wall = plat.rect
-            if self.rect.colliderect(wall) and plat.active and not plat.collision == 1:
-                if self.rect.bottom > wall.top and self.rect.bottom < wall.top + 30:
-                    self.rect.bottom = wall.top
-                    self.angle = math.pi - self.angle
-                    self.speed *= self.elasticity
-                elif self.rect.top < wall.bottom and self.rect.top > wall.bottom - 30:
-                    self.rect.top = wall.bottom
-                    self.angle = math.pi - self.angle
-                    self.speed *= self.elasticity
-        
-                elif self.rect.right > wall.left and self.rect.right < wall.left + 30:
+            if self.rect.colliderect(wall):
+                if self.rect.right > wall.left and self.rect.right < wall.left + 40:
                     self.rect.right = wall.left
                     self.angle = -self.angle
                     self.speed *= self.elasticity
-                elif self.rect.left < wall.right and self.rect.left > wall.right - 30:
+                elif self.rect.left < wall.right and self.rect.left > wall.right - 40:
                     self.rect.left = wall.right
                     self.angle = -self.angle
                     self.speed *= self.elasticity
 
+                if self.rect.bottom > wall.top and self.rect.bottom < wall.top + 40:
+                    self.rect.bottom = wall.top
+                    self.angle = math.pi - self.angle
+                    self.speed *= self.elasticity
+                elif self.rect.top < wall.bottom and self.rect.top > wall.bottom - 40:
+                    self.rect.top = wall.bottom
+                    self.angle = math.pi - self.angle
+                    self.speed *= self.elasticity
         if self.rect.right > width:
             self.rect.right = width
             self.angle = -self.angle

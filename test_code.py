@@ -6,6 +6,7 @@ from Test import PhysTest
 from Test import PlayerTest
 from Test import DoorTest
 from Utils import GlobalVariables
+from Test import Portal_test
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
