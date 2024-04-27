@@ -2,6 +2,8 @@ import pygame
 import asyncio
 import math
 
+from Utils import Timer
+
 from Utils.Player import Player
 from Utils.PhysObj import CubeObj
 from Utils.ButtonObject import ButtonObject
@@ -58,10 +60,25 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         door.update(screen)
         if not players[0].completed and door.try_exit(players[0], pressed_keys):
             players[0].completed = True
-            GlobalVariables.complete_level(1, 10) ## TODO - the 10 is time, edit this when the timer is set up
+            Timer.stop_timer()
+            GlobalVariables.complete_level(1, Timer.elapsed_time // 1000)
             if players[0].completed and players[1].completed:
                 running = False
+                Timer.start_time = 0
+                Timer.elapsed_time = 0
                 return
+            
+        if not Timer.timer_started:
+            Timer.start_timer()
+
+        if Timer.timer_started and Timer.elapsed_time == 0:
+            current_time = pygame.time.get_ticks() - Timer.start_time
+            timer_text = GlobalVariables.font(36).render("Time: " + str(current_time // 1000) + "s", True, (0, 0, 0))
+            screen.blit(timer_text, (GlobalVariables.Width - 200, 20))
+
+        if not Timer.timer_started and Timer.elapsed_time != 0:
+            timer_text = GlobalVariables.font(36).render("Time: " + str(Timer.elapsed_time // 1000) + "s", True, (0, 0, 0))
+            screen.blit(timer_text, (GlobalVariables.Width - 200, 20))
 
         for platform in platforms: 
             platform.draw(screen)

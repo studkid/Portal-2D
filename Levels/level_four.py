@@ -2,6 +2,8 @@ import pygame
 import asyncio
 import math
 
+from Utils import Timer
+
 from Utils.Player import Player
 from Utils.PhysObj import CubeObj
 from Utils.ButtonObject import ButtonObject
@@ -22,12 +24,12 @@ screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height)
 async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
     platforms = [
         Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, 0),
-        Platform(400, 0, 20, 200, False, 0),
-        Platform(400, 200, 100, 20, False, 0),
+        Platform(400, 0, 20, 200, False, 1),
+        Platform(400, 200, 100, 20, False, 1),
         Platform(700, 0, 20, 250, True, 0),
-        Platform(600, 250, 120, 20, False, 0),
+        Platform(600, 250, 120, 20, False, 1),
         Platform(0, GlobalVariables.Height - 200, 20, 180, True, 0),
-        Platform(900, 400, 200, 20, False, 0),
+        Platform(900, 400, 200, 20, False, 2),
     ]
 
     selectedObj = None
@@ -61,10 +63,21 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         door.update(screen)
         if not players[0].completed and door.try_exit(players[0], pressed_keys):
             players[0].completed = True
-            GlobalVariables.complete_level(1, 10) ## TODO - the 10 is time, edit this when the timer is set up
+            Timer.stop_timer()
+            GlobalVariables.complete_level(4, Timer.elapsed_time // 1000)
             if players[0].completed and players[1].completed:
                 running = False
+                Timer.start_time = 0
+                Timer.elapsed_time = 0
                 return
+            
+        if not Timer.timer_started:
+            Timer.start_timer()
+
+        if Timer.timer_started and Timer.elapsed_time == 0:
+            current_time = pygame.time.get_ticks() - Timer.start_time
+            timer_text = GlobalVariables.font(36).render("Time: " + str(current_time // 1000) + "s", True, (0, 0, 0))
+            screen.blit(timer_text, (GlobalVariables.Width - 200, 20))
 
         for platform in platforms: 
             platform.draw(screen)
