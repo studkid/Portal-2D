@@ -5,8 +5,9 @@ from Utils.MenuButton import MenuButton
 from Test import PhysTest
 from Test import PlayerTest
 from Test import DoorTest
-from Utils import GlobalVariables
 from Test import Portal_test
+from Utils import GlobalVariables
+from Levels import PlayLevel
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
@@ -22,6 +23,11 @@ buttons: Dict[str, MenuButton] = {
     "player_test_button":  MenuButton(50, 170, "Player Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "door_test_button":  MenuButton(50, 220, "Door Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "portal_test_button":  MenuButton(50, 270, "Portal Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_one_button":  MenuButton(50, 320, "    - Level One", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_two_button":  MenuButton(50, 370, "    - Level Two", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_three_button":  MenuButton(50, 420, "    - Level Three", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_four_button":  MenuButton(50, 470, "    - Level Four", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_five_button":  MenuButton(50, 520, "    - Level Five", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     ### add a key name of button and a value of MenuButton for your code to test with
     ### make sure your MenuButton is 50 extra y value from previous button
     ### will also need to add an if statement on almost bottom for your button
@@ -61,6 +67,20 @@ async def test_screen():
                 if buttons["portal_test_button"].check_click(mouse_pos):
                     await Portal_test.PortalTest()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["level_one_button"].check_click(mouse_pos):
+                    await PlayLevel.play_level(1)
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["level_two_button"].check_click(mouse_pos):
+                    await PlayLevel.play_level(2)
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["level_three_button"].check_click(mouse_pos):
+                    await PlayLevel.play_level(3)
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["level_four_button"].check_click(mouse_pos):
+                    await PlayLevel.play_level(4)
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["level_five_button"].check_click(mouse_pos):
+                    await PlayLevel.play_level(5)
 
         pygame.display.update()
 

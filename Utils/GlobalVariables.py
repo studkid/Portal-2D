@@ -2,6 +2,7 @@
 import pygame
 import sys
 import os
+from PortalDatabase import DatabaseUtil
 
 pygame.init()
 
@@ -22,6 +23,9 @@ def font(size):
 
 Account_Username = ""
 Account_ID = ""
+
+def complete_level(levelID, time):
+    DatabaseUtil.update_level_time(Account_Username, levelID, time)
 
 Player_size_X = 64 * 0.9
 Player_size_Y = 64
