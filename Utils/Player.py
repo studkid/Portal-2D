@@ -37,6 +37,7 @@ class Player():
         self.leftSide = False
         self.image = self.rightStandingImage
         self.cube = None
+        self.completed = False
 
     def draw(self, screen):
         if self.cube:
@@ -134,7 +135,7 @@ class Player():
             self.velocity += self.gravity
             count = 0
             for platform in platforms:
-                if not self.rect().colliderect(platform):
+                if not self.rect().colliderect(platform.rect) or not platform.active or (platform.collision == 2 and self.cube == None):
                     if self.hitPlatform == True:
                         self.y += self.velocity * 0.02 * dt
                     else:
@@ -147,20 +148,20 @@ class Player():
             self.velocity += self.gravity
             on_platform = False
             for platform in platforms:
-                if self.rect().colliderect(platform):
+                if self.rect().colliderect(platform.rect) and platform.active and (not platform.collision == 2 or self.cube != None):
                     on_platform = True
                     break
             if not on_platform:
                 self.y += self.velocity * 0.05 * dt
-        if self.y > self.background_y:
-            self.y = 0
+        if self.y > self.background_y - 20:
+            self.y = self.background_y - 20 - self.size_y
 
     
     def check_collision(self, platforms, x, y):
         rect = self.rect()
         for platformObj in platforms:
             platform = platformObj.rect
-            if rect.colliderect(platform):
+            if rect.colliderect(platform) and platformObj.active and (not platformObj.collision == 2 or self.cube != None):
                 if x > 0: 
                     self.x = platform.left - self.size_x
                     break
@@ -178,7 +179,7 @@ class Player():
                     self.y = platform.bottom
                     break
             if rect.left >= platform.left - self.size_x and rect.right <= platform.right + self.size_x and y > 0:
-                if rect.top > platform.top and rect.top < platform.bottom + 1:
+                if rect.top - platform.bottom + 2 > platform.top and rect.top < platform.bottom + 1:
                     self.y = platform.bottom
                     self.count = 0
                     self.isJump = False

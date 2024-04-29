@@ -4,17 +4,36 @@ class Platform():
     # Constructor
     # x, y, width, length for Rect constructor
     # isPortable: determines if platform can have a portal
-    # collision: Object blacklist for what can collide with it.  None for all objects
+    # collision: determines what can collide with the platform
+    #       0 = Both player and cube collide
+    #       1 = Only player collide, cube passes through
+    #       2 = Only cube collides, player passes through
+    # active: determins if the platform should be rendered/collided with
     def __init__(self, x, y, width, length, isPortable, collision):
-        self.rect = pygame.Rect(x, y, width, length)
+        self.surface = pygame.Surface((width, length))
+        self.rect = self.surface.get_rect()
+        self.rect.x = x
+        self.rect.y = y
         self.isPortable = isPortable
         self.collision = collision
+        self.active = True
 
     # Draws wall
     def draw(self, screen):
-        if self.isPortable:
-            color = (150, 150, 150)
-        else:
-            color = (10, 10, 10)
+        if not self.active:
+            return
 
-        pygame.draw.rect(screen, color, self.rect)
+        if self.collision == 1:
+            self.surface.fill((255, 0, 0))
+            self.surface.set_alpha(128)
+        elif self.collision == 2:
+            self.surface.fill((3, 155, 229))
+            self.surface.set_alpha(128)
+        elif self.isPortable:
+            self.surface.fill((150, 150, 150))
+            self.surface.set_alpha(255)
+        else:
+            self.surface.fill((10, 10, 10))
+            self.surface.set_alpha(255)
+
+        screen.blit(self.surface, (self.rect.x, self.rect.y))
