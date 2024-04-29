@@ -1,7 +1,7 @@
 import pygame
 from sys import exit
-from Utils.game_settings import *
-from Utils.portal_gun import *
+from Utils.Game_settings import *
+from Utils.Portal_gun import *
 from Utils import GlobalVariables
 
 pygame.init()
