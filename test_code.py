@@ -21,6 +21,7 @@ buttons: Dict[str, MenuButton] = {
     "phys_test_button":  MenuButton(50, 120, "Physics Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "player_test_button":  MenuButton(50, 170, "Player Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "door_test_button":  MenuButton(50, 220, "Door Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "portal_test_button":  MenuButton(50, 270, "Portal Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     ### add a key name of button and a value of MenuButton for your code to test with
     ### make sure your MenuButton is 50 extra y value from previous button
     ### will also need to add an if statement on almost bottom for your button
@@ -56,6 +57,9 @@ async def test_screen():
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["door_test_button"].check_click(mouse_pos):
                     await DoorTest.DoorTest()
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["portal_test_button"].check_click(mouse_pos):
+                    await Portal_test.PortalTest()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
 
         pygame.display.update()
