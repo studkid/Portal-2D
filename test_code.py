@@ -22,6 +22,7 @@ buttons: Dict[str, MenuButton] = {
     "phys_test_button":  MenuButton(50, 120, "Physics Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "player_test_button":  MenuButton(50, 170, "Player Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "door_test_button":  MenuButton(50, 220, "Door Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "portal_test_button":  MenuButton(50, 270, "Portal Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "level_one_button":  MenuButton(50, 320, "    - Level One", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "level_two_button":  MenuButton(50, 370, "    - Level Two", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     "level_three_button":  MenuButton(50, 420, "    - Level Three", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
@@ -63,6 +64,9 @@ async def test_screen():
                 if buttons["door_test_button"].check_click(mouse_pos):
                     await DoorTest.DoorTest()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["portal_test_button"].check_click(mouse_pos):
+                    await Portal_test.PortalTest()
+                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_one_button"].check_click(mouse_pos):
                     await PlayLevel.play_level(1)
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
@@ -77,7 +81,6 @@ async def test_screen():
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if buttons["level_five_button"].check_click(mouse_pos):
                     await PlayLevel.play_level(5)
-                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
 
         pygame.display.update()
 
