@@ -5,6 +5,7 @@ from Utils.MenuButton import MenuButton
 from Test import PhysTest
 from Test import PlayerTest
 from Test import DoorTest
+from Test import Portal_test
 from Utils import GlobalVariables
 from Levels import PlayLevel
 
