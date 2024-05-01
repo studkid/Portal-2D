@@ -16,11 +16,22 @@ clock = pygame.time.Clock()
 WHITE = pygame.color.Color( '#ffffff' )
 BLACK = pygame.color.Color( '#0a0a0a' )
 
+platforms = [pygame.Rect( 100,300,700,50 )]
+gun = Pgun(0)
 
 async def PortalTest():
     running = True
     while running:
         keys = pygame.key.get_pressed()
+        print(keys)
+        if keys[ pygame.K_w ]:
+            gun.hitbox_rect.y += -8
+        if keys[ pygame.K_s ]:
+            gun.hitbox_rect.y += 8
+        if keys[ pygame.K_d ]:
+            gun.hitbox_rect.x += 8
+        if keys[ pygame.K_a ]:
+            gun.hitbox_rect.x += -8
 
     #lets you quit
         for event in pygame.event.get():
@@ -30,15 +41,16 @@ async def PortalTest():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-        
-        
+                
         screen.fill(WHITE)
-        pygame.draw.rect(screen, BLACK, platform)
-        screen.blit( portal_var, ( portal_pos ) )
-        screen.blit( bullet_var, ( bullet_pos ) )
+        pygame.draw.rect(screen, BLACK, platforms[0])
+        gun.update(platforms)
+        gun.draw(screen)
+        gun.drawHitbox(screen)
+        
+        # screen.blit( bullet_var, ( bullet_pos ) )
 
-
-        all_sprites_group.draw(screen)
-        all_sprites_group.update()
+        # all_sprites_group.draw(screen)
+        # all_sprites_group.update()
         pygame.display.update()
         clock.tick( FPS )
