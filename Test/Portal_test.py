@@ -3,6 +3,7 @@ from sys import exit
 from Utils.Game_settings import *
 from Utils.Portal_gun import *
 from Utils import GlobalVariables
+from Utils.Platform import Platform
 
 pygame.init()
 
@@ -16,14 +17,13 @@ clock = pygame.time.Clock()
 WHITE = pygame.color.Color( '#ffffff' )
 BLACK = pygame.color.Color( '#0a0a0a' )
 
-platforms = [pygame.Rect( 100,300,700,50 )]
+platforms = [Platform( 100, 300, 700, 50, True, 0 )]
 gun = Pgun(0)
 
 async def PortalTest():
     running = True
     while running:
         keys = pygame.key.get_pressed()
-        print(keys)
         if keys[ pygame.K_w ]:
             gun.hitbox_rect.y += -8
         if keys[ pygame.K_s ]:
@@ -41,9 +41,11 @@ async def PortalTest():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                gun.user_input()
                 
         screen.fill(WHITE)
-        pygame.draw.rect(screen, BLACK, platforms[0])
+        platforms[0].draw(screen)
         gun.update(platforms)
         gun.draw(screen)
         gun.drawHitbox(screen)
