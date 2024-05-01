@@ -85,7 +85,7 @@ async def PhysTest():
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
-                player.pickupCube(event.button, dropper.sprite)
+                player.mouseInput(event.button, dropper.sprite)
                 if event.button == 1:
                     selectedObj = findObject(dropper.sprites(), mouseX, mouseY)
             elif event.type == pygame.MOUSEBUTTONUP:

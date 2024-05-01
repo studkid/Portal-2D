@@ -18,7 +18,7 @@ WHITE = pygame.color.Color( '#ffffff' )
 BLACK = pygame.color.Color( '#0a0a0a' )
 
 platforms = [Platform( 100, 300, 700, 50, True, 0 )]
-gun = Pgun(0)
+gun = Pgun(True)
 
 async def PortalTest():
     running = True
@@ -42,7 +42,7 @@ async def PortalTest():
                 if event.key == pygame.K_ESCAPE:
                     running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                gun.user_input()
+                gun.is_shooting()
                 
         screen.fill(WHITE)
         platforms[0].draw(screen)

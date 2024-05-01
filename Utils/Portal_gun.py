@@ -9,11 +9,14 @@ bulletSprites = [pygame.image.load("Assets/LazerBlast_Blue.png"), pygame.image.l
 
 #portal gun  
 class Pgun( pygame.sprite.GroupSingle ):
-    def __init__( self, playerNum ):
+    def __init__( self, firstPlayer ):
         super().__init__()
-        self.playerNum = playerNum
+        if firstPlayer:
+            self.playerNum = 0
+        else: 
+            self.playerNum = 1
         self.pos = pygame.math.Vector2( PGUN_START_X, PGUN_START_Y ) #sets position when you first load the game
-        self.image = pygame.transform.scale(pGunSprites[playerNum], (32 * 2, 21 * 2))
+        self.image = pygame.transform.scale(pGunSprites[self.playerNum], (32 * 2, 21 * 2))
         self.base_pgun_image = self.image
         self.hitbox_rect = self.base_pgun_image.get_rect( center = self.pos )
         self.rect = self.hitbox_rect.copy()
@@ -28,17 +31,6 @@ class Pgun( pygame.sprite.GroupSingle ):
         self.angle = math.degrees( math.atan2( self.y_change_mouse_pgun, self.x_change_mouse_pgun ) )
         self.image = pygame.transform.rotate( self.base_pgun_image, -self.angle )
         self.rect = self.image.get_rect( center = self.hitbox_rect.center )
-
-    def user_input (self ):
-        self.velocity_x = 0
-        self.velocity_y = 0
-
-        #bullet test code
-        # if keyPress[ pygame.K_h ]:
-        #     BULLET_LIFETIME = 0
-
-        if self.shoot_cooldown < 1: #( 1, 0, 0 ) means left click
-            self.is_shooting()
 
 #sets a delay when you shoot
     def is_shooting( self ): 

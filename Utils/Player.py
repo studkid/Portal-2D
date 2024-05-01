@@ -3,6 +3,7 @@ import pygame
 import os
 import math
 from Utils import GlobalVariables
+from Utils.Portal_gun import Pgun
 
 class Player():
 
@@ -38,8 +39,10 @@ class Player():
         self.image = self.rightStandingImage
         self.cube = None
         self.completed = False
+        self.pGun = Pgun(first_player)
 
     def draw(self, screen):
+        self.pGun.draw(screen)
         if self.cube:
             self.cube.rect.center = self.rect().center
         return screen.blit(self.image, (self.x, self.y))
@@ -53,6 +56,8 @@ class Player():
             self.check_collision(platforms, 0, 1)
         else:
             self.check_collision(platforms, 0, -1)
+        self.pGun.hitbox_rect.center = self.rect().center
+        self.pGun.update(platforms)
 
     def move(self, pressed_keys, platforms, dt):
         if pressed_keys[pygame.K_d]:
@@ -193,7 +198,9 @@ class Player():
             return button.activate()
         return False
     
-    def pickupCube(self, mouse, cube):
+    def mouseInput(self, mouse, cube):
+        if mouse == 1:
+            self.pGun.is_shooting()
         if not self.cube and mouse == 3 and self.rect().colliderect(cube.rect):
             cube.runPhysics = False
             self.cube = cube
