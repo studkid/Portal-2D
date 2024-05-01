@@ -1,5 +1,4 @@
 import pygame
-from sys import exit
 import math
 from Utils.Game_settings import *
 
@@ -120,8 +119,12 @@ class Bullet( pygame.sprite.Sprite ):
             self.kill() 
         
         for platform in platforms:
-            if self.rect.colliderect( platform ):
-                return platform
+            if self.rect.colliderect( platform ) and platform.active:
+                if platform.isPortable:
+                    return platform
+                else:
+                    self.kill()
+                    return None
             
         return None
 
