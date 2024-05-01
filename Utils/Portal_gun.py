@@ -60,9 +60,35 @@ class Pgun( pygame.sprite.GroupSingle ):
             self.shoot_cooldown -= 1
 
         if type(self.sprite) is Bullet:
-            self.sprite.update(platforms)
+            colided = self.sprite.update(platforms)
+            if colided:
+                self.spawnPortal(self.sprite.rect.center, colided)
         elif self.sprite:
             self.sprite.update()
+
+    def spawnPortal(self, center, platform):
+        top = abs(center[1] - platform.rect.top)
+        bottom = abs(center[1] - platform.rect.bottom)
+        left = abs(center[0] - platform.rect.left)
+        right = abs(center[0] - platform.rect.right)
+        collide = min(min(top, bottom), min(left, right))
+        pos = (0, 0)
+        angle = 0
+
+        if collide == top:
+            pos = (center[0], platform.rect.top)
+            angle = 270
+        elif collide == bottom:
+            pos = (center[0], platform.rect.bottom)
+            angle = 90
+        elif collide == left:
+            pos = (platform.rect.left, center[1])
+            angle = 0
+        elif collide == right:
+            pos = (platform.rect.right, center[1])
+            angle = 180
+
+        self.sprite = Portal(pos[0], pos[1], angle, self.playerNum)
 
     def draw(self, screen):
         super().draw(screen)
@@ -71,6 +97,8 @@ class Pgun( pygame.sprite.GroupSingle ):
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
         pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)
+        if self.sprite:
+            self.sprite.drawHitbox(screen)
 
 #sets up shooting the bullet and the bullet movement
 class Bullet( pygame.sprite.Sprite ):
@@ -90,7 +118,6 @@ class Bullet( pygame.sprite.Sprite ):
         self.bullet_offset = pygame.math.Vector2( 0, 0 )
 
     def bullet_movement( self, platforms ) -> bool:  
-        global portal_pos
         self.x += self.x_vel
         self.y += self.y_vel
 
@@ -102,21 +129,24 @@ class Bullet( pygame.sprite.Sprite ):
         
         for platform in platforms:
             if self.rect.colliderect( platform ):
-                portal_pos = ( self.rect.x, self.rect.y )
-                return True
+                return platform
             
-        return False
+        return None
 
     def update( self, platform ) -> bool:
         return self.bullet_movement(platform)
+    
+    def drawHitbox(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
+        pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)
         
 class Portal( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle, playerNum ):
         super().__init__()
-        self.image = portalSprites[playerNum]
+        self.image = pygame.transform.scale(portalSprites[playerNum], (29 * 2, 57 * 2))
+        self.image = pygame.transform.rotate(self.image, -angle)
         self.rect = self.image.get_rect()
         self.rect.center = ( x, y )
-        self.rect.center = portal_pos
         self.x = x
         self.y = y
         self.angle = angle
@@ -134,7 +164,6 @@ class Portal( pygame.sprite.Sprite ):
 
         else:
             self.p_shoot = False
-
     
     def shoot_portal( self ):
         if self.p_shoot == True:
@@ -156,3 +185,6 @@ class Portal( pygame.sprite.Sprite ):
         self.portal_count()
         #self.shoot_portal()
 
+    def drawHitbox(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
+        pygame.draw.circle(screen, (255, 0, 0), self.rect.center, 5)
