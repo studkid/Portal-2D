@@ -67,16 +67,16 @@ class Pgun( pygame.sprite.GroupSingle ):
         angle = 0
 
         if collide == top:
-            pos = (center[0], platform.rect.top)
+            pos = (center[0], platform.rect.top - 10)
             angle = 270
         elif collide == bottom:
-            pos = (center[0], platform.rect.bottom)
+            pos = (center[0], platform.rect.bottom + 10)
             angle = 90
         elif collide == left:
-            pos = (platform.rect.left, center[1])
+            pos = (platform.rect.left - 10, center[1])
             angle = 0
         elif collide == right:
-            pos = (platform.rect.right, center[1])
+            pos = (platform.rect.right + 10, center[1])
             angle = 180
 
         self.sprite = Portal(pos[0], pos[1], angle, self.playerNum)
@@ -139,7 +139,7 @@ class Portal( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle, playerNum ):
         super().__init__()
         self.image = pygame.transform.scale(portalSprites[playerNum], (29 * 2, 57 * 2))
-        self.image = pygame.transform.rotate(self.image, -angle)
+        self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
         self.rect.center = ( x, y )
         self.x = x
