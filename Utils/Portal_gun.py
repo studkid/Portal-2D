@@ -77,19 +77,19 @@ class Bullet( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle , playerNum):
         super().__init__()
         self.image = pygame.transform.scale(bulletSprites[playerNum], (25 * 2, 9 * 2))
+        self.image = pygame.transform.rotate(self.image, -angle)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
         self.rect.center = ( x, y )
-        self.angle = angle
         self.speed = BULLET_SPEED
-        self.x_vel = math.cos( self.angle * ( 2*math.pi/360 ) ) * self.speed #adjust the x velocity for the bullet when shot
-        self.y_vel = math.sin( self.angle * ( 2*math.pi/360 ) ) * self.speed 
+        self.x_vel = math.cos( angle * ( 2*math.pi/360 ) ) * self.speed #adjust the x velocity for the bullet when shot
+        self.y_vel = math.sin( angle * ( 2*math.pi/360 ) ) * self.speed 
         self.bullet_lifetime = BULLET_LIFETIME
         self.spawn_time = pygame.time.get_ticks() #gets the time that the bullet was created
         self.bullet_offset = pygame.math.Vector2( 0, 0 )
 
-    def bullet_movement( self, platforms ):  
+    def bullet_movement( self, platforms ) -> bool:  
         global portal_pos
         self.x += self.x_vel
         self.y += self.y_vel
@@ -103,15 +103,12 @@ class Bullet( pygame.sprite.Sprite ):
         for platform in platforms:
             if self.rect.colliderect( platform ):
                 portal_pos = ( self.rect.x, self.rect.y )
-                self.bullet_col()
+                return True
+            
+        return False
 
- #gets rid of bullet image and spawns portal
-    def bullet_col( self ):
-        
-        self.kill() 
-
-    def update( self, platform ):
-        self.bullet_movement(platform)
+    def update( self, platform ) -> bool:
+        return self.bullet_movement(platform)
         
 class Portal( pygame.sprite.Sprite ):
     def __init__( self, x, y, angle, playerNum ):
