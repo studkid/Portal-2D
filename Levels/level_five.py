@@ -145,6 +145,8 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
                 mouseX, mouseY = pygame.mouse.get_pos()
                 if count > 0:
                     players[0].mouseInput(event.button, dropper.sprite)
+                else:
+                    players[0].mouseInput(event.button)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None

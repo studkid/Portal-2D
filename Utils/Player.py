@@ -198,10 +198,10 @@ class Player():
             return button.activate()
         return False
     
-    def mouseInput(self, mouse, cube):
+    def mouseInput(self, mouse, cube = None):
         if mouse == 1:
             self.pGun.is_shooting()
-        if not self.cube and mouse == 3 and self.rect().colliderect(cube.rect):
+        if not self.cube and mouse == 3 and cube and self.rect().colliderect(cube.rect):
             cube.runPhysics = False
             self.cube = cube
         elif self.cube and mouse == 3:

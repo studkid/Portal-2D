@@ -28,7 +28,7 @@ async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
         Platform(400, GlobalVariables.Height - 200, 200, 20, False, 2),
         Platform(0, 300, 20, 210, True, 0),
         Platform(0, 510, 200, 20, False, 1),
-        Platform(900, GlobalVariables.Height - 200, 20, 180, False, 2),
+        Platform(900, GlobalVariables.Height - 500, 20, 180, True, 0),
     ]
 
     selectedObj = None
@@ -135,6 +135,8 @@ async def Level(): ### TODO - MAKE A LEVEL THREE DESIGN
                 mouseX, mouseY = pygame.mouse.get_pos()
                 if count > 0:
                     players[0].mouseInput(event.button, dropper.sprite)
+                else:
+                    players[0].mouseInput(event.button)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
