@@ -15,6 +15,7 @@ from Utils.Platform import Platform
 from Utils.CubeDropper import CubeDropper
 from Utils.Player import Player
 from Utils.PlayerButton import PlayerButton
+from Utils.Portal_gun import Portal
 
 backgroundColor = (255, 255, 255)
 plaformColor = (41, 41, 41)
@@ -29,29 +30,7 @@ wallList = [
     Platform(150, 400, 100, 20, True, 1),
     Platform(100, 500, 100, 20, True, 1),
     Platform(150, 600, 100, 20, True, 1),
-
 ]
-
-# Meant to test PhysObj class
-# import random
-# class TestObj(PhysObj):
-#     def __init__(self, x, y, size, weight, elasticity) -> None:
-#         super().__init__(x, y, random.uniform(0, math.pi*2), 2, weight, elasticity)
-#         self.size = size
-#         self.color = (0, 0, 255)
-
-#     def draw(self, screen):
-#         pygame.draw.rect(screen, self.color, pygame.Rect(self.x, self.y, self.size, self.size))
-
-#     def toString(self) -> str:
-#         return f"({self.x}, {self.y}) Weight: {self.weight} Radius: {self.size}"
-    
-#     def collide(self, objList):
-#         for obj2 in objList:
-#             super().collide(obj2)
-
-#     def bounce(self, width, height, wallList):
-#         super().bounce(width, height, wallList)
 
 async def PhysTest():
     pygame.init()
@@ -64,8 +43,9 @@ async def PhysTest():
     dropper.add(CubeObj(0, 0, 0.0999, 0.2))
     dropper.spawnCube()
 
-    player = Player(50, 270, True)
+    playerList = [Player(50, 270, True), Player(50, 270, False)]
     pButton = PlayerButton(200, height - 50, 30)
+    playerList[1].pGun.add(Portal(10, 650, 180, 1))
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -85,7 +65,7 @@ async def PhysTest():
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
-                player.mouseInput(event.button, dropper.sprite)
+                playerList[0].mouseInput(event.button, dropper.sprite)
                 if event.button == 1:
                     selectedObj = findObject(dropper.sprites(), mouseX, mouseY)
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -117,17 +97,19 @@ async def PhysTest():
         dropper.draw(screen)
         dropper.drawHitbox(screen)
 
-        button.checkActive(dropper.sprites(), [player])
+        button.checkActive(dropper.sprites(), [playerList[0]])
         button.draw(screen)
         
+        
         pressed_keys = pygame.key.get_pressed()
-        player.move(pressed_keys, wallList, dt)
-        player.jump(dt)
-        player.update(wallList, dt)
-        player.draw(screen)
-        player.drawHitbox(screen)
+        playerList[0].move(pressed_keys, wallList, dt)
+        playerList[0].jump(dt)
+        for player in playerList:
+            player.update(wallList, dt)
+            player.draw(screen)
+            player.drawHitbox(screen)
 
-        if player.interactButton(pressed_keys, pButton):
+        if playerList[0].interactButton(pressed_keys, pButton):
             dropper.spawnCube()
 
         pButton.draw(screen)

@@ -45,7 +45,8 @@ class Pgun( pygame.sprite.GroupSingle ):
         self.rect.center = self.hitbox_rect.center
 
     def update( self, platforms ):
-        self.pgun_rotation()
+        if self.playerNum == 0:
+            self.pgun_rotation()
 
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
