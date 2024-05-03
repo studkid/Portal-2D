@@ -7,7 +7,7 @@ from Utils.Portal_gun import Pgun, Portal
 
 class Player():
 
-    def __init__(self, x, y, first_player = True):
+    def __init__(self, x, y, first_player = True, controllingCube = False):
         self.x = x
         self.y = y
         self.background_x = GlobalVariables.Width
@@ -41,11 +41,16 @@ class Player():
         self.completed = False
         self.pGun = Pgun(first_player)
         self.warpCooldown = 0
+        self.name = ""
+        self.controllingCube = controllingCube
+        self.cubeState = "1"
 
     def draw(self, screen):
         if self.cube:
             self.cube.rect.center = self.rect().center
         screen.blit(self.image, (self.x, self.y))
+        name_text = GlobalVariables.font(24).render(self.name, True, GlobalVariables.Text_NameColor)
+        screen.blit(name_text, (self.x, self.y - 30))
         self.pGun.draw(screen)
 
     def rect(self):
@@ -237,7 +242,7 @@ class Player():
                     elif portals[1].angle == 270: # top
                         self.x = portals[1].rect.centerx - (GlobalVariables.Player_size_X / 2)
                         self.y = portals[1].rect.top + (GlobalVariables.Player_size_Y)
-                    self.warpCooldown = 80
+                    self.warpCooldown = 70
                     self.canJump = False
                     return
                 elif portal.playerNum == 1:
@@ -254,7 +259,7 @@ class Player():
                     elif portals[0].angle == 270:
                         self.x = portals[0].rect.centerx - (GlobalVariables.Player_size_X / 2)
                         self.y = portals[0].rect.top + (GlobalVariables.Player_size_Y)
-                    self.warpCooldown = 80 
+                    self.warpCooldown = 70 
                     self.canJump = False
                     return
 

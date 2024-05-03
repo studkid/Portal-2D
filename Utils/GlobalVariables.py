@@ -3,8 +3,11 @@ import pygame
 import sys
 import os
 from PortalDatabase import DatabaseUtil
+from Utils.Network import Network
 
 pygame.init()
+
+net = Network() ##
 
 Width = 1280
 Height = 720
@@ -17,6 +20,7 @@ Background_Color = (41, 41, 41)
 
 Text_Forecolor = (255, 255, 255)
 Text_Hovercolor = (0, 255, 255)
+Text_NameColor = (50,200,200)
 
 def font(size):
     return pygame.font.SysFont("Consolas", size)

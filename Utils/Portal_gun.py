@@ -45,6 +45,7 @@ class Pgun( pygame.sprite.GroupSingle ):
         self.rect.center = self.hitbox_rect.center
 
     def update( self, platforms ):
+        self.rect.center = self.hitbox_rect.center
         if self.playerNum == 0:
             self.pgun_rotation()
 
