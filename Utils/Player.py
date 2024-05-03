@@ -224,34 +224,38 @@ class Player():
         for portal in portals:
             if self.rect().colliderect(portal):
                 if portal.playerNum == 0:
+                    print(portals[1].angle)
                     if portals[1].angle == 0: # left
-                        self.x = portals[1].rect.centerx - 20
-                        self.y = portals[1].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                        self.x = portals[1].rect.right
+                        self.y = portals[1].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[1].angle == 180: # right
-                        self.x = portals[1].rect.centerx + 20
-                        self.y = portals[1].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                        self.x = portals[1].rect.left + (GlobalVariables.Player_size_X)
+                        self.y = portals[1].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[1].angle == 90: # bottom
-                        self.x = portals[1].rect.centerx + (GlobalVariables.Player_size_X / 2)
+                        self.x = portals[1].rect.centerx - (GlobalVariables.Player_size_X / 2)
                         self.y = portals[1].rect.centery
                     elif portals[1].angle == 270: # top
-                        self.x = portals[1].rect.centerx + (GlobalVariables.Player_size_X / 2)
-                        self.y = portals[1].rect.centery + 40
-                    self.warpCooldown = 100
+                        self.x = portals[1].rect.centerx - (GlobalVariables.Player_size_X / 2)
+                        self.y = portals[1].rect.top + (GlobalVariables.Player_size_Y)
+                    self.warpCooldown = 80
+                    self.canJump = False
                     return
                 elif portal.playerNum == 1:
+                    print(portals[0].angle)
                     if portals[0].angle == 0:
-                        self.x = portals[0].rect.centerx - 20
-                        self.y = portals[0].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                        self.x = portals[0].rect.right
+                        self.y = portals[0].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[0].angle == 180:
-                        self.x = portals[0].rect.centerx + 20
-                        self.y = portals[0].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                        self.x = portals[0].rect.left + (GlobalVariables.Player_size_X)
+                        self.y = portals[0].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[0].angle == 90:
-                        self.x = portals[0].rect.centerx + (GlobalVariables.Player_size_X / 2)
+                        self.x = portals[0].rect.centerx - (GlobalVariables.Player_size_X / 2)
                         self.y = portals[0].rect.centery
                     elif portals[0].angle == 270:
-                        self.x = portals[0].rect.centerx + (GlobalVariables.Player_size_X / 2)
-                        self.y = portals[0].rect.centery + 40
-                    self.warpCooldown = 100 
+                        self.x = portals[0].rect.centerx - (GlobalVariables.Player_size_X / 2)
+                        self.y = portals[0].rect.top + (GlobalVariables.Player_size_Y)
+                    self.warpCooldown = 80 
+                    self.canJump = False
                     return
 
     def drawHitbox(self, screen):
