@@ -33,6 +33,27 @@ async def main():
     log_in_button.rect.right = GlobalVariables.Width - 50
     log_off_button.rect.right = GlobalVariables.Width - 50
 
+    def send_data(): 
+        """
+        Send position to server
+        :return: None
+        """
+        name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170"
+        reply = GlobalVariables.net.send(data)
+        return reply
+
+    @staticmethod
+    def parse_data(data): 
+        #try:
+        pos = data.split(":")[1].split(",")
+        left = data.split(":")[2]
+        name = data.split(":")[3]
+        cube = data.split(":")[4].split(",")
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        #except:
+        #    return 0,0
+
     while True:
         logged = GlobalVariables.Account_Username is not ""
 
@@ -49,6 +70,13 @@ async def main():
         user_rect = user_text.get_rect(right=GlobalVariables.Width - 50, top=50)
 
         screen.blit(title_text, title_rect)
+
+        name = parse_data(send_data())[3]
+        connected = (name != "User" and GlobalVariables.Account_Username != "")
+        connection_text = ("Connected to " + name) if connected else "Searching for a connection..."
+        connection_text = GlobalVariables.font(30).render(connection_text, True, GlobalVariables.Text_Forecolor)
+        connection_rect = pygame.Rect(50, 550, connection_text.get_width(), connection_text.get_height())
+        screen.blit(connection_text, connection_rect)
 
         if logged:
             log_off_button.active = True
@@ -69,6 +97,13 @@ async def main():
             log_in_button.check_hover(mouse_pos)
             log_in_button.update(screen)
 
+        if connected:
+            for key in buttons:
+                buttons[key].active = True
+        else:
+            for key in buttons:
+                buttons[key].active = False
+        
         for key in buttons:
             buttons[key].check_hover(mouse_pos)
             buttons[key].update(screen)
