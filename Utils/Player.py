@@ -3,7 +3,7 @@ import pygame
 import os
 import math
 from Utils import GlobalVariables
-from Utils.Portal_gun import Pgun
+from Utils.Portal_gun import Pgun, Portal
 
 class Player():
 
@@ -40,12 +40,13 @@ class Player():
         self.cube = None
         self.completed = False
         self.pGun = Pgun(first_player)
+        self.warpCooldown = 0
 
     def draw(self, screen):
-        self.pGun.draw(screen)
         if self.cube:
             self.cube.rect.center = self.rect().center
-        return screen.blit(self.image, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y))
+        self.pGun.draw(screen)
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
@@ -58,6 +59,9 @@ class Player():
             self.check_collision(platforms, 0, -1)
         self.pGun.hitbox_rect.center = self.rect().center
         self.pGun.update(platforms)
+
+        if self.warpCooldown > 0:
+            self.warpCooldown -= 1
 
     def move(self, pressed_keys, platforms, dt):
         if pressed_keys[pygame.K_d]:
@@ -213,6 +217,42 @@ class Player():
             self.cube.speed = 2
             self.cube.angle = math.atan2(-dy,-dx) + math.pi/2
             self.cube = None
+
+    def portalWarp(self, portals):
+        if self.warpCooldown > 0:
+            return
+        for portal in portals:
+            if self.rect().colliderect(portal):
+                if portal.playerNum == 0:
+                    if portals[1].angle == 0: # left
+                        self.x = portals[1].rect.centerx - 20
+                        self.y = portals[1].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                    elif portals[1].angle == 180: # right
+                        self.x = portals[1].rect.centerx + 20
+                        self.y = portals[1].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                    elif portals[1].angle == 90: # bottom
+                        self.x = portals[1].rect.centerx + (GlobalVariables.Player_size_X / 2)
+                        self.y = portals[1].rect.centery
+                    elif portals[1].angle == 270: # top
+                        self.x = portals[1].rect.centerx + (GlobalVariables.Player_size_X / 2)
+                        self.y = portals[1].rect.centery + 40
+                    self.warpCooldown = 100
+                    return
+                elif portal.playerNum == 1:
+                    if portals[0].angle == 0:
+                        self.x = portals[0].rect.centerx - 20
+                        self.y = portals[0].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                    elif portals[0].angle == 180:
+                        self.x = portals[0].rect.centerx + 20
+                        self.y = portals[0].rect.centery + (GlobalVariables.Player_size_Y / 2)
+                    elif portals[0].angle == 90:
+                        self.x = portals[0].rect.centerx + (GlobalVariables.Player_size_X / 2)
+                        self.y = portals[0].rect.centery
+                    elif portals[0].angle == 270:
+                        self.x = portals[0].rect.centerx + (GlobalVariables.Player_size_X / 2)
+                        self.y = portals[0].rect.centery + 40
+                    self.warpCooldown = 100 
+                    return
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect(), 2, 1)
