@@ -45,7 +45,7 @@ async def PhysTest():
 
     playerList = [Player(50, 270, True), Player(50, 270, False)]
     pButton = PlayerButton(200, height - 50, 30)
-    playerList[1].pGun.add(Portal(10, 650, 180, 1))
+    playerList[1].pGun.add(Portal(1000, 650, 180, 1))
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -53,6 +53,7 @@ async def PhysTest():
     running = True
     while running:
         dt = clock.tick(60)
+        portals = [playerList[0].pGun.sprite, playerList[1].pGun.sprite]
 
         for event in pygame.event.get():
             # Exit handler
@@ -71,7 +72,14 @@ async def PhysTest():
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
-        
+
+        #teleport
+        if all(isinstance(x, Portal) for x in portals):
+            for player in playerList:
+                player.portalWarp(portals)
+            for i, obj in enumerate(dropper.sprites()):
+                obj.portalWarp(portals)
+
         # Move Object
         if selectedObj:
             mouseX, mouseY = pygame.mouse.get_pos()
@@ -99,7 +107,6 @@ async def PhysTest():
 
         button.checkActive(dropper.sprites(), [playerList[0]])
         button.draw(screen)
-        
         
         pressed_keys = pygame.key.get_pressed()
         playerList[0].move(pressed_keys, wallList, dt)

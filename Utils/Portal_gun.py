@@ -141,6 +141,7 @@ class Portal( pygame.sprite.Sprite ):
         super().__init__()
         self.image = pygame.transform.scale(portalSprites[playerNum], (29 * 2, 57 * 2))
         self.image = pygame.transform.rotate(self.image, angle)
+        self.playerNum = playerNum
         self.rect = self.image.get_rect()
         self.rect.center = ( x, y )
         self.x = x
@@ -150,36 +151,6 @@ class Portal( pygame.sprite.Sprite ):
         self.spawned_portals = SPAWNED_PORTALS
         self.spawned_portals = 0
         self.p_shoot = False
-
-
-    def portal_count( self ):
-        if pygame.mouse.get_pressed() == ( 0, 0, 1 ): #( 1, 0, 0 ) means left click
-            self.p_shoot = True  
-            #print( self.spawned_portals )
-            self.shoot_portal()
-
-        else:
-            self.p_shoot = False
-    
-    def shoot_portal( self ):
-        if self.p_shoot == True:
-            self.p_shoot = False
-            self.spawned_portals = self.spawned_portals + 1
-
-            if self.spawned_portals >= PORTAL_COOLDOWN:
-                self.kill()
-                self.spawned_portals = 0
-                #print( 'test' )
-        else:
-            self.p_shoot = False
-
-        keys = pygame.key.get_pressed()
-        if keys[ pygame.K_k ]:  #despawn all portals
-            self.kill()
-
-    def update( self ):
-        self.portal_count()
-        #self.shoot_portal()
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
