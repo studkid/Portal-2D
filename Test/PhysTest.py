@@ -77,6 +77,8 @@ async def PhysTest():
         if all(isinstance(x, Portal) for x in portals):
             for player in playerList:
                 player.portalWarp(portals)
+            for i, obj in enumerate(dropper.sprites()):
+                obj.portalWarp(portals)
 
         # Move Object
         if selectedObj:

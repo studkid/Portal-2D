@@ -65,7 +65,6 @@ class PhysObj():
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
         elif self.rect.top < 0:
-            print(self.rect.top)
             self.rect.top = 0
             self.angle = math.pi - self.angle
             self.speed *= self.elasticity
@@ -132,6 +131,11 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
         self.y = y
 
         self.runPhysics = True
+        self.warpCooldown = 0
+
+    def update(self):
+        if self.warpCooldown > 0:
+            self.warpCooldown -= 1
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect, 2, 1)
@@ -146,3 +150,19 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
 
     def bounce(self, width, height, wallList):
         super().bounce(width, height, wallList)
+
+    def portalWarp(self, portals):
+        if self.warpCooldown > 0 or not self.runPhysics:
+            return
+        for portal in portals:
+            if self.rect.colliderect(portal):
+                if portal.playerNum == 0:
+                    self.rect.center = portals[1].rect.center
+                    self.angle = (270 - portals[1].angle) % 360 * math.pi / 180
+                    self.warpCooldown = 20
+                    return
+                elif portal.playerNum == 1:
+                    self.rect.center = portals[0].rect.center
+                    self.angle = (270 - portals[0].angle) % 360 * math.pi / 180
+                    self.warpCooldown = 20 
+                    return
