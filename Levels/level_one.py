@@ -132,7 +132,7 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
             # Check for mouse input
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseX, mouseY = pygame.mouse.get_pos()
-                players[0].pickupCube(event.button, dropper.sprite)
+                players[0].mouseInput(event.button, dropper.sprite)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     selectedObj = None
