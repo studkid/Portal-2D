@@ -18,9 +18,9 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 buttons: Dict[str, MenuButton] = {
-    "connect_button":  MenuButton(50, 120, "Connection", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "levels_button":  MenuButton(50, 170, "Levels", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "test_button": MenuButton(50, 220, "Test your code", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    #"connect_button":  MenuButton(50, 120, "Connection", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "stats_button":  MenuButton(50, 120, "Stats", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "play_button": MenuButton(50, 170, "Play", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
 }
 
 async def main():
@@ -39,7 +39,7 @@ async def main():
         :return: None
         """
         name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
-        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170"
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170" + ":-1" + ":0"
         reply = GlobalVariables.net.send(data)
         return reply
 
@@ -50,7 +50,9 @@ async def main():
         left = data.split(":")[2]
         name = data.split(":")[3]
         cube = data.split(":")[4].split(",")
-        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        cubeState = data.split(":")[5]
+        angle = data.split(":")[6]
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)) #TODO: get cube pos, only use it if the current player isnt controlling cube
         #except:
         #    return 0,0
 
@@ -112,13 +114,13 @@ async def main():
             if event.type == pygame.QUIT:
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if buttons["connect_button"].check_click(mouse_pos):
-                    await connection.connect_screen()
-                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
-                if buttons["levels_button"].check_click(mouse_pos):
+                #if buttons["connect_button"].check_click(mouse_pos):
+                #    await connection.connect_screen()
+                #    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["stats_button"].check_click(mouse_pos):
                     await levels.level_screen()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
-                if buttons["test_button"].check_click(mouse_pos):
+                if buttons["play_button"].check_click(mouse_pos):
                     await test_code.test_screen()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if sign_up_button.check_click(mouse_pos) and sign_up_button.active == True:

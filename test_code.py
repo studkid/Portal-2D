@@ -39,10 +39,13 @@ async def test_screen():
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(background, (0,0))
         
-        title_text = GlobalVariables.font(50).render("Test code", True, GlobalVariables.Text_Forecolor)
+        title_text = GlobalVariables.font(50).render("Select a Level", True, GlobalVariables.Text_Forecolor)
         title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
 
         screen.blit(title_text, title_rect)
+
+        esc_text = GlobalVariables.font(24).render("back - ESC", True, GlobalVariables.Text_Forecolor)
+        screen.blit(esc_text, (GlobalVariables.Width - 190, 50))
 
         for key in buttons:
             buttons[key].check_hover(mouse_pos)
