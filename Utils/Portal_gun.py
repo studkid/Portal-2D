@@ -22,6 +22,8 @@ class Pgun( pygame.sprite.GroupSingle ):
         self.shoot_cooldown = 0
         self.angle = 0
         self.gun_barrel_offset = pygame.math.Vector2( 0, 0 ) #sets how far away the portal gun is away from the player
+        self.portalPos = (0,0)
+        self.portalRot = 0
       
 #locks aims the pgun twords wherever the mouse is 
     def pgun_rotation( self ):
@@ -58,9 +60,9 @@ class Pgun( pygame.sprite.GroupSingle ):
             self.shoot_cooldown -= 1
 
         if type(self.sprite) is Bullet:
-            colided = self.sprite.update(platforms)
-            if colided:
-                self.spawnPortal(self.sprite.rect.center, colided)
+            collided = self.sprite.update(platforms)
+            if collided:
+                self.spawnPortal(self.sprite.rect.center, collided)
         elif self.sprite:
             self.sprite.update()
 
@@ -86,6 +88,8 @@ class Pgun( pygame.sprite.GroupSingle ):
             pos = (platform.rect.right + 10, center[1])
             angle = 180
 
+        self.portalPos = pos
+        self.portalRot = angle
         self.sprite = Portal(pos[0], pos[1], angle, self.playerNum)
 
     def draw(self, screen):

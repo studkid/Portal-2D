@@ -30,11 +30,13 @@ class Player():
         self.leftStandingImage = GlobalVariables.FirstPlayer_LeftStandingImage
         self.rightRunningImage = GlobalVariables.FirstPlayer_RightRunningImage
         self.leftRunningImage = GlobalVariables.FirstPlayer_LeftRunningImage
+        self.first_player = first_player
         if not first_player:
             self.rightStandingImage = GlobalVariables.SecondPlayer_RightStandingImage
             self.leftStandingImage = GlobalVariables.SecondPlayer_LeftStandingImage
             self.rightRunningImage = GlobalVariables.SecondPlayer_RightRunningImage
             self.leftRunningImage = GlobalVariables.SecondPlayer_LeftRunningImage
+            self.gravity = 0
         self.leftSide = False
         self.image = self.rightStandingImage
         self.cube = None
@@ -57,11 +59,14 @@ class Player():
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
     def update(self, platforms, dt): ## platforms is an array for all Rect objects in the level that player can get on
+
         self.set_gravity(platforms, dt)
         if self.isJump:
             self.check_collision(platforms, 0, 1)
         else:
             self.check_collision(platforms, 0, -1)
+
+
         self.pGun.hitbox_rect.center = self.rect().center
         self.pGun.update(platforms)
 
@@ -237,10 +242,12 @@ class Player():
             self.cube = None
 
     def portalWarp(self, portals):
-        if self.warpCooldown > 0:
-            return
+        touchingPortal = False
         for portal in portals:
             if self.rect().colliderect(portal):
+                touchingPortal = True
+                if self.warpCooldown > 0:
+                    return
                 if portal.playerNum == 0:
                     print(portals[1].angle)
                     if portals[1].angle == 0: # left
@@ -275,6 +282,8 @@ class Player():
                     self.warpCooldown = 70 
                     self.canJump = False
                     return
+        if not touchingPortal:
+            self.warpCooldown = 0
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect(), 2, 1)

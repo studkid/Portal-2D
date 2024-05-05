@@ -152,10 +152,12 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
         super().bounce(width, height, wallList)
 
     def portalWarp(self, portals):
-        if self.warpCooldown > 0 or not self.runPhysics:
-            return
+        touchedPortal = False
         for portal in portals:
             if self.rect.colliderect(portal):
+                touchedPortal = True
+                if self.warpCooldown > 0 or not self.runPhysics:
+                    return
                 if portal.playerNum == 0:
                     self.rect.center = portals[1].rect.center
                     self.angle = (270 - portals[1].angle) % 360 * math.pi / 180
@@ -166,3 +168,5 @@ class CubeObj(PhysObj, pygame.sprite.Sprite):
                     self.angle = (270 - portals[0].angle) % 360 * math.pi / 180
                     self.warpCooldown = 20 
                     return
+        if not touchedPortal:
+            self.warpCooldown = 0
