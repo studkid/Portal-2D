@@ -44,7 +44,7 @@ async def PhysTest():
     dropper.spawnCube()
 
     players = [
-        Player(50, 270, True, str(GlobalVariables.net.id) == str(0)), # change this to be 'if the other player is not controlling cube, then true'
+        Player(50, 270, True, str(GlobalVariables.net.id) == str(0)), 
         Player(100, 270, False, False)
     ]
     players[0].name = GlobalVariables.Account_Username
@@ -60,7 +60,15 @@ async def PhysTest():
         :return: None
         """
         print(dropper.sprite.rect.x)
-        data = str(GlobalVariables.net.id) + ":" + str(players[0].x) + "," + str(players[0].y) + ":" + str("True" if players[0].leftSide == True else "False") + ":" + str(GlobalVariables.Account_Username) + ":" + str(dropper.sprite.rect.x) + "," + str(dropper.sprite.rect.y)
+        if players[0].cubeState == "11":
+            cubeState = "0"
+            players[0].controllingCube = False
+        elif players[0].cubeState == "10":
+            cubeState = "1"
+            players[0].controllingCube = True
+        else:
+            cubeState = "-1"
+        data = str(GlobalVariables.net.id) + ":" + str(players[0].x) + "," + str(players[0].y) + ":" + str("True" if players[0].leftSide == True else "False") + ":" + str(GlobalVariables.Account_Username) + ":" + str(dropper.sprite.rect.x) + "," + str(dropper.sprite.rect.y) + ":" + cubeState + ":" + str(players[0].pGun.angle)
         reply = GlobalVariables.net.send(data)
         return reply
 
@@ -72,9 +80,11 @@ async def PhysTest():
         players[1].image = players[1].leftStandingImage if left else players[1].rightStandingImage
         name = data.split(":")[3]
         cube = data.split(":")[4].split(",")
+        cubeState = data.split(":")[5]
+        angle = data.split(":")[6]
         print(left)
         #print(data.split(":"))
-        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)) #TODO: get cube pos, only use it if the current player isnt controlling cube
         #except:
         #    return 0,0
 
@@ -142,9 +152,16 @@ async def PhysTest():
 
         if(players[0].controllingCube == False):
             print("using server cube pos")
-            players[1].x, players[1].y, dummy0, players[1].name, dropper.sprite.rect.x, dropper.sprite.rect.y = parse_data(send_data()) ##        
+            players[1].x, players[1].y, dummy0, players[1].name, dropper.sprite.rect.x, dropper.sprite.rect.y, cubeState, players[1].pGun.angle = parse_data(send_data()) ##        
         else:
-            players[1].x, players[1].y, dummy0, players[1].name, dummy1, dummy2 = parse_data(send_data()) ## 
+            players[1].x, players[1].y, dummy0, players[1].name, dummy1, dummy2, cubeState, players[1].pGun.angle = parse_data(send_data()) ## 
+
+        if(cubeState == "0"):
+            players[0].cubeState = "0"
+            players[0].controllingCube = False
+        elif(cubeState == "1"):
+            players[0].cubeState = "1"
+            players[0].controllingCube = True
         
         for player in players:
             player.update(wallList, dt)
