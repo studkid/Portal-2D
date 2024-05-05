@@ -25,7 +25,7 @@ screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height)
 # dropper = pygame.sprite.Group()
 wallList = [
     Platform(0, height - 20, width, 20, True, 0),
-    Platform(200, 300, 100, 20, True, 0),
+    Platform(220, 300, 120, 20, True, 0),
     Platform(700, 500, 20, 200, False, 2),
     Platform(150, 400, 100, 20, True, 1),
     Platform(100, 500, 100, 20, True, 1),
@@ -49,7 +49,7 @@ async def PhysTest():
     ]
     players[0].name = GlobalVariables.Account_Username
     pButton = PlayerButton(200, height - 50, 30)
-    players[1].pGun.add(Portal(1000, 650, 180, 1))
+    #players[1].pGun.add(Portal(1000, 650, 180, 1))
 
     button = ButtonObject(230, 285, 0)
     pygame.display.update()
@@ -68,7 +68,15 @@ async def PhysTest():
             players[0].controllingCube = True
         else:
             cubeState = "-1"
-        data = str(GlobalVariables.net.id) + ":" + str(players[0].x) + "," + str(players[0].y) + ":" + str("True" if players[0].leftSide == True else "False") + ":" + str(GlobalVariables.Account_Username) + ":" + str(dropper.sprite.rect.x) + "," + str(dropper.sprite.rect.y) + ":" + cubeState + ":" + str(players[0].pGun.angle)
+
+        if type(players[0].pGun.sprite) is Portal:
+            portalPos = players[0].pGun.portalPos
+            portalRot = players[0].pGun.portalRot
+        else:
+            portalPos = ("None", "None")
+            portalRot = 0
+
+        data = str(GlobalVariables.net.id) + ":" + str(players[0].x) + "," + str(players[0].y) + ":" + str("True" if players[0].leftSide == True else "False") + ":" + str(GlobalVariables.Account_Username) + ":" + str(dropper.sprite.rect.x) + "," + str(dropper.sprite.rect.y) + ":" + cubeState + ":" + str(players[0].pGun.angle) + ":" + str(portalPos[0]) + "," + str(portalPos[1]) + ":" + str(portalRot)
         reply = GlobalVariables.net.send(data)
         return reply
 
@@ -82,9 +90,15 @@ async def PhysTest():
         cube = data.split(":")[4].split(",")
         cubeState = data.split(":")[5]
         angle = data.split(":")[6]
+        portalPos = data.split(":")[7].split(",")
+        portalRot = data.split(":")[8]
+        if str(portalPos[0]) == "None":
+            players[1].pGun.empty()
+        else:
+            players[1].pGun.add(Portal(int(float(portalPos[0])), int(float(portalPos[1])), int(float(portalRot)), 1))
         print(left)
         #print(data.split(":"))
-        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        return float(pos[0]), float(pos[1]), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)) #TODO: get cube pos, only use it if the current player isnt controlling cube
         #except:
         #    return 0,0
 
@@ -150,11 +164,12 @@ async def PhysTest():
         players[0].move(pressed_keys, wallList, dt)
         players[0].jump(dt)
 
+
         if(players[0].controllingCube == False):
             print("using server cube pos")
-            players[1].x, players[1].y, dummy0, players[1].name, dropper.sprite.rect.x, dropper.sprite.rect.y, cubeState, players[1].pGun.angle = parse_data(send_data()) ##        
+            players[1].x, players[1].y, dummy0, players[1].name, dropper.sprite.rect.x, dropper.sprite.rect.y, cubeState, players[1].pGun.angle, dummy1, dummy2, dummy3 = parse_data(send_data()) ##        
         else:
-            players[1].x, players[1].y, dummy0, players[1].name, dummy1, dummy2, cubeState, players[1].pGun.angle = parse_data(send_data()) ## 
+            players[1].x, players[1].y, dummy0, players[1].name, dummy1, dummy2, cubeState, players[1].pGun.angle, dummy3, dummy4, dummy5 = parse_data(send_data()) ## 
 
         if(cubeState == "0"):
             players[0].cubeState = "0"
