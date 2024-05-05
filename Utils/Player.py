@@ -68,6 +68,15 @@ class Player():
         if self.warpCooldown > 0:
             self.warpCooldown -= 1
 
+        if self.cubeState == "10":
+            self.cubeState = "0"
+            self.controllingCube = False
+
+        if self.cubeState == "11":
+            self.cubeState = "1"
+            self.controllingCube = True
+            
+
     def move(self, pressed_keys, platforms, dt):
         if pressed_keys[pygame.K_d]:
             if self.x + self.size_x <= self.background_x:
@@ -204,13 +213,17 @@ class Player():
 
     def interactButton(self, pressed_keys, button) -> bool:
         if pressed_keys[pygame.K_e] and self.rect().colliderect(button.rect):
-            return button.activate()
+            if button.activate():
+                self.cubeState = "11"
+                self.controllingCube = True
+                return True
         return False
     
     def mouseInput(self, mouse, cube = None):
         if mouse == 1:
             self.pGun.is_shooting()
         if not self.cube and mouse == 3 and cube and self.rect().colliderect(cube.rect):
+            self.cubeState = "11"
             cube.runPhysics = False
             self.cube = cube
         elif self.cube and mouse == 3:

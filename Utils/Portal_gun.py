@@ -20,16 +20,21 @@ class Pgun( pygame.sprite.GroupSingle ):
         self.hitbox_rect = self.base_pgun_image.get_rect( center = self.pos )
         self.rect = self.hitbox_rect.copy()
         self.shoot_cooldown = 0
+        self.angle = 0
         self.gun_barrel_offset = pygame.math.Vector2( 0, 0 ) #sets how far away the portal gun is away from the player
       
 #locks aims the pgun twords wherever the mouse is 
     def pgun_rotation( self ):
-        self.mouse_coords = pygame.mouse.get_pos()
-        self.x_change_mouse_pgun = ( self.mouse_coords[ 0 ] - self.hitbox_rect.centerx )
-        self.y_change_mouse_pgun = ( self.mouse_coords[ 1 ] - self.hitbox_rect.centery )
-        self.angle = math.degrees( math.atan2( self.y_change_mouse_pgun, self.x_change_mouse_pgun ) )
-        self.image = pygame.transform.rotate( self.base_pgun_image, -self.angle )
-        self.rect = self.image.get_rect( center = self.hitbox_rect.center )
+        if self.playerNum == 0:
+            self.mouse_coords = pygame.mouse.get_pos()
+            self.x_change_mouse_pgun = ( self.mouse_coords[ 0 ] - self.hitbox_rect.centerx )
+            self.y_change_mouse_pgun = ( self.mouse_coords[ 1 ] - self.hitbox_rect.centery )
+            self.angle = math.degrees( math.atan2( self.y_change_mouse_pgun, self.x_change_mouse_pgun ) )
+            self.image = pygame.transform.rotate( self.base_pgun_image, -self.angle )
+            self.rect = self.image.get_rect( center = self.hitbox_rect.center )
+        else:
+            self.image = pygame.transform.rotate( self.base_pgun_image, -self.angle )
+            self.rect = self.image.get_rect( center = self.hitbox_rect.center )
 
 #sets a delay when you shoot
     def is_shooting( self ): 
@@ -46,8 +51,8 @@ class Pgun( pygame.sprite.GroupSingle ):
 
     def update( self, platforms ):
         self.rect.center = self.hitbox_rect.center
-        if self.playerNum == 0:
-            self.pgun_rotation()
+        #if self.playerNum == 0:
+        self.pgun_rotation()
 
         if self.shoot_cooldown > 0:
             self.shoot_cooldown -= 1
