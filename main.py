@@ -39,7 +39,7 @@ async def main():
         :return: None
         """
         name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
-        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170" + ":-1" + ":0"
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170" + ":-1" + ":0" + ":None,None" + ":0"
         reply = GlobalVariables.net.send(data)
         return reply
 
@@ -52,7 +52,9 @@ async def main():
         cube = data.split(":")[4].split(",")
         cubeState = data.split(":")[5]
         angle = data.split(":")[6]
-        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        portalPos = data.split(":")[7].split(",")
+        portalRot = data.split(":")[8]
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)) #TODO: get cube pos, only use it if the current player isnt controlling cube
         #except:
         #    return 0,0
 
