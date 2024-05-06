@@ -45,7 +45,7 @@ class Player():
         self.warpCooldown = 0
         self.name = ""
         self.controllingCube = controllingCube
-        self.cubeState = "1"
+        self.cubeState = "1" if controllingCube else "0"
 
     def draw(self, screen):
         if self.cube:
@@ -229,6 +229,7 @@ class Player():
             self.pGun.is_shooting()
         if not self.cube and mouse == 3 and cube and self.rect().colliderect(cube.rect):
             self.cubeState = "11"
+            self.controllingCube = True
             cube.runPhysics = False
             self.cube = cube
         elif self.cube and mouse == 3:
@@ -251,10 +252,10 @@ class Player():
                 if portal.playerNum == 0:
                     print(portals[1].angle)
                     if portals[1].angle == 0: # left
-                        self.x = portals[1].rect.right
+                        self.x = portals[1].rect.right - 80
                         self.y = portals[1].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[1].angle == 180: # right
-                        self.x = portals[1].rect.left + (GlobalVariables.Player_size_X)
+                        self.x = portals[1].rect.left + 80 #(GlobalVariables.Player_size_X)
                         self.y = portals[1].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[1].angle == 90: # bottom
                         self.x = portals[1].rect.centerx - (GlobalVariables.Player_size_X / 2)
@@ -268,10 +269,10 @@ class Player():
                 elif portal.playerNum == 1:
                     print(portals[0].angle)
                     if portals[0].angle == 0:
-                        self.x = portals[0].rect.right
+                        self.x = portals[0].rect.right - 80
                         self.y = portals[0].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[0].angle == 180:
-                        self.x = portals[0].rect.left + (GlobalVariables.Player_size_X)
+                        self.x = portals[0].rect.left + 80 #(GlobalVariables.Player_size_X)
                         self.y = portals[0].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[0].angle == 90:
                         self.x = portals[0].rect.centerx - (GlobalVariables.Player_size_X / 2)

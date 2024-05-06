@@ -7,6 +7,7 @@ import levels
 import test_code
 import account
 from Utils import GlobalVariables
+from Levels import PlayLevel
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
@@ -39,7 +40,7 @@ async def main():
         :return: None
         """
         name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
-        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170" + ":-1" + ":0" + ":None,None" + ":0"
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":-500,5000" + ":-1" + ":0" + ":None,None" + ":0" + ":-1"
         reply = GlobalVariables.net.send(data)
         return reply
 
@@ -54,7 +55,8 @@ async def main():
         angle = data.split(":")[6]
         portalPos = data.split(":")[7].split(",")
         portalRot = data.split(":")[8]
-        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        roomId = data.split(":")[9]
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)), int(roomId) #TODO: get cube pos, only use it if the current player isnt controlling cube
         #except:
         #    return 0,0
 
@@ -75,12 +77,31 @@ async def main():
 
         screen.blit(title_text, title_rect)
 
-        name = parse_data(send_data())[3]
+        data = parse_data(send_data())
+        name = data[3]
         connected = (name != "User" and GlobalVariables.Account_Username != "")
         connection_text = ("Connected to " + name) if connected else "Searching for a connection..."
         connection_text = GlobalVariables.font(30).render(connection_text, True, GlobalVariables.Text_Forecolor)
         connection_rect = pygame.Rect(50, 550, connection_text.get_width(), connection_text.get_height())
         screen.blit(connection_text, connection_rect)
+
+        p2room = data[11]
+        if len(str(p2room)) > 2:
+            if str(p2room) == "101":
+                await PlayLevel.play_level(1)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "102":
+                await PlayLevel.play_level(2)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "103":
+                await PlayLevel.play_level(3)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "104":
+                await PlayLevel.play_level(4)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "105":
+                await PlayLevel.play_level(5)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
 
         if logged:
             log_off_button.active = True

@@ -44,7 +44,7 @@ async def PhysTest():
     dropper.spawnCube()
 
     players = [
-        Player(50, 270, True, str(GlobalVariables.net.id) == str(0)), 
+        Player(100, 270, True, str(GlobalVariables.net.id) == str(0)), 
         Player(100, 270, False, False)
     ]
     players[0].name = GlobalVariables.Account_Username

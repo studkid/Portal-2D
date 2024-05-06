@@ -32,10 +32,10 @@ class ExitDoor():
     
     def try_exit(self, player, pressed_keys):
         if self.opened:
-            if pressed_keys[pygame.K_e]:
-                if (player.x > self.x + 75 and player.x < self.x + 150) or (player.x + player.size_x > self.x + 75 and player.x + player.size_x < self.x + 150):
-                    if player.y > self.y:
-                        print("Player tried to exit!!!!!!!!!!")
-                        return True
+            #if pressed_keys[pygame.K_e]:
+            if (player.x > self.x + 75 and player.x < self.x + 150) or (player.x + player.size_x > self.x + 75 and player.x + player.size_x < self.x + 150):
+                if player.y > self.y:
+                    print("Player tried to exit!!!!!!!!!!")
+                    return True
 
         return False

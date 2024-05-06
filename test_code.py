@@ -35,6 +35,39 @@ buttons: Dict[str, MenuButton] = {
 
 async def test_screen():
     running = True
+
+    global levelStarted
+    levelStarted = False
+
+    def send_data(): 
+        """
+        Send position to server
+        :return: None
+        """
+        global levelStarted
+        name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
+        roomId = "0"
+        levelStarted = True
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170" + ":-1" + ":0" + ":None,None" + ":0" + ":" + str(roomId)
+        reply = GlobalVariables.net.send(data)
+        return reply
+
+    @staticmethod
+    def parse_data(data): 
+        #try:
+        pos = data.split(":")[1].split(",")
+        left = data.split(":")[2]
+        name = data.split(":")[3]
+        cube = data.split(":")[4].split(",")
+        cubeState = data.split(":")[5]
+        angle = data.split(":")[6]
+        portalPos = data.split(":")[7].split(",")
+        portalRot = data.split(":")[8]
+        roomId = data.split(":")[9]
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)), int(roomId) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        #except:
+        #    return 0,0
+
     while running:
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(background, (0,0))
@@ -46,6 +79,25 @@ async def test_screen():
 
         esc_text = GlobalVariables.font(24).render("back - ESC", True, GlobalVariables.Text_Forecolor)
         screen.blit(esc_text, (GlobalVariables.Width - 190, 50))
+
+        data = parse_data(send_data())
+        p2room = data[11]
+        if len(str(p2room)) > 2:
+            if str(p2room) == "101":
+                await PlayLevel.play_level(1)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "102":
+                await PlayLevel.play_level(2)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "103":
+                await PlayLevel.play_level(3)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "104":
+                await PlayLevel.play_level(4)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "105":
+                await PlayLevel.play_level(5)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
 
         for key in buttons:
             buttons[key].check_hover(mouse_pos)
