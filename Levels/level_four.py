@@ -210,9 +210,16 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         if(cubeState == "0"):
             players[0].cubeState = "0"
             players[0].controllingCube = False
+            dropper.sprite.runPhysics = False
         elif(cubeState == "1"):
             players[0].cubeState = "1"
             players[0].controllingCube = True
+
+        if players[0].controllingCube == False and Timer.elapsed_time > 5:
+            dropper.sprite.runPhysics = False
+
+        print("player cube state: " + players[0].cubeState)
+        print("running physics?" + str(dropper.sprite.runPhysics))
         
         for player in players:
             player.update(platforms, dt)
