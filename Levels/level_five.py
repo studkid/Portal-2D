@@ -61,6 +61,8 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
     global completionTimer
     completionTimer = 160
     finalTime = 0
+    global frameTimer
+    frameTimer = 0
 
     pygame.display.update()
 
@@ -114,11 +116,13 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
         p2room = data.split(":")[9]
 
         global completionTimer
+        global frameTimer
         
         print("PLAYER 2 IS IN ROOM " + str(p2room))
-        if len(str(p2room)) > 2:
-            if str(p2room) == "100":
-                print("AHOOOOOOOOOO)))))))))))))Y")
+        if type(frameTimer) is int:
+            if (str(p2room) == "-1" or str(p2room) == "100" or str(p2room) == "0") and frameTimer > 60:
+                frameTimer = 0
+                print("attempting to exit")
                 completionTimer = 0
 
         if str(portalPos[0]) == "None":
@@ -133,6 +137,8 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
 
     running = True
     while running:
+        frameTimer += 1
+
         screen.blit(background, (0,0))
 
         dt = clock.tick(GlobalVariables.FPS)
@@ -243,6 +249,7 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
         if completionTimer == 0:
             if levelComplete:
                 GlobalVariables.complete_level(5, finalTime // 1000)
+            frameTimer = 0
             running = False
             return
         
