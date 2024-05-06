@@ -7,6 +7,7 @@ import levels
 import test_code
 import account
 from Utils import GlobalVariables
+from Levels import PlayLevel
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
@@ -18,9 +19,9 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 buttons: Dict[str, MenuButton] = {
-    "connect_button":  MenuButton(50, 120, "Connection", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "levels_button":  MenuButton(50, 170, "Levels", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "test_button": MenuButton(50, 220, "Test your code", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    #"connect_button":  MenuButton(50, 120, "Connection", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "stats_button":  MenuButton(50, 120, "Stats", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "play_button": MenuButton(50, 170, "Play", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
 }
 
 async def main():
@@ -32,6 +33,32 @@ async def main():
     sign_up_button.rect.right = GlobalVariables.Width - 50
     log_in_button.rect.right = GlobalVariables.Width - 50
     log_off_button.rect.right = GlobalVariables.Width - 50
+
+    def send_data(): 
+        """
+        Send position to server
+        :return: None
+        """
+        name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":-500,5000" + ":-1" + ":0" + ":None,None" + ":0" + ":-1"
+        reply = GlobalVariables.net.send(data)
+        return reply
+
+    @staticmethod
+    def parse_data(data): 
+        #try:
+        pos = data.split(":")[1].split(",")
+        left = data.split(":")[2]
+        name = data.split(":")[3]
+        cube = data.split(":")[4].split(",")
+        cubeState = data.split(":")[5]
+        angle = data.split(":")[6]
+        portalPos = data.split(":")[7].split(",")
+        portalRot = data.split(":")[8]
+        roomId = data.split(":")[9]
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)), int(roomId) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        #except:
+        #    return 0,0
 
     while True:
         logged = GlobalVariables.Account_Username is not ""
@@ -49,6 +76,32 @@ async def main():
         user_rect = user_text.get_rect(right=GlobalVariables.Width - 50, top=50)
 
         screen.blit(title_text, title_rect)
+
+        data = parse_data(send_data())
+        name = data[3]
+        connected = (name != "User" and GlobalVariables.Account_Username != "")
+        connection_text = ("Connected to " + name) if connected else "Searching for a connection..."
+        connection_text = GlobalVariables.font(30).render(connection_text, True, GlobalVariables.Text_Forecolor)
+        connection_rect = pygame.Rect(50, 550, connection_text.get_width(), connection_text.get_height())
+        screen.blit(connection_text, connection_rect)
+
+        p2room = data[11]
+        if len(str(p2room)) > 2:
+            if str(p2room) == "101":
+                await PlayLevel.play_level(1)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "102":
+                await PlayLevel.play_level(2)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "103":
+                await PlayLevel.play_level(3)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "104":
+                await PlayLevel.play_level(4)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "105":
+                await PlayLevel.play_level(5)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
 
         if logged:
             log_off_button.active = True
@@ -69,6 +122,13 @@ async def main():
             log_in_button.check_hover(mouse_pos)
             log_in_button.update(screen)
 
+        if connected:
+            for key in buttons:
+                buttons[key].active = True
+        else:
+            for key in buttons:
+                buttons[key].active = False
+        
         for key in buttons:
             buttons[key].check_hover(mouse_pos)
             buttons[key].update(screen)
@@ -77,13 +137,13 @@ async def main():
             if event.type == pygame.QUIT:
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if buttons["connect_button"].check_click(mouse_pos):
-                    await connection.connect_screen()
-                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
-                if buttons["levels_button"].check_click(mouse_pos):
+                #if buttons["connect_button"].check_click(mouse_pos):
+                #    await connection.connect_screen()
+                #    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+                if buttons["stats_button"].check_click(mouse_pos):
                     await levels.level_screen()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
-                if buttons["test_button"].check_click(mouse_pos):
+                if buttons["play_button"].check_click(mouse_pos):
                     await test_code.test_screen()
                     pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
                 if sign_up_button.check_click(mouse_pos) and sign_up_button.active == True:

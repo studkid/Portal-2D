@@ -39,6 +39,9 @@ async def connect_screen():
 
         screen.blit(title_text, title_rect)
 
+        esc_text = GlobalVariables.font(24).render("back - ESC", True, GlobalVariables.Text_Forecolor)
+        screen.blit(esc_text, (GlobalVariables.Width - 190, 50))
+
         for key in buttons:
             buttons[key].check_hover(mouse_pos)
             buttons[key].update(screen)

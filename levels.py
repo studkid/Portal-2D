@@ -5,11 +5,12 @@ import connection
 from Utils import GlobalVariables
 from PortalDatabase import DatabaseUtil
 from Utils.MenuButton import MenuButton
+from Levels import PlayLevel
 
 background = pygame.Surface((GlobalVariables.Width, GlobalVariables.Height))
 background.fill(GlobalVariables.Background_Color)
 
-pygame.display.set_caption("Portal 2D - Levels")
+pygame.display.set_caption("Portal 2D - Stats")
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -89,31 +90,85 @@ async def level_screen():
     else:
         running = True
 
-    connect_button = MenuButton(GlobalVariables.Width - 150, 50, "Connect/Host", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
-    connect_button.rect.right = GlobalVariables.Width - 50
+    #connect_button = MenuButton(GlobalVariables.Width - 150, 50, "Connect/Host", GlobalVariables.font(24), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor)
+    #connect_button.rect.right = GlobalVariables.Width - 50
+
+    global levelStarted
+    levelStarted = False
+
+    def send_data(): 
+        """
+        Send position to server
+        :return: None
+        """
+        global levelStarted
+        name = GlobalVariables.Account_Username if (GlobalVariables.Account_Username != "") else "User"
+        roomId = "-1"
+        levelStarted = True
+        data = str(GlobalVariables.net.id) + ":" + str(100) + "," + str(270) + ":" + "False" + ":" + str(name) + ":1168,170" + ":-1" + ":0" + ":None,None" + ":0" + ":" + str(roomId)
+        reply = GlobalVariables.net.send(data)
+        return reply
+
+    @staticmethod
+    def parse_data(data): 
+        #try:
+        pos = data.split(":")[1].split(",")
+        left = data.split(":")[2]
+        name = data.split(":")[3]
+        cube = data.split(":")[4].split(",")
+        cubeState = data.split(":")[5]
+        angle = data.split(":")[6]
+        portalPos = data.split(":")[7].split(",")
+        portalRot = data.split(":")[8]
+        roomId = data.split(":")[9]
+        return int(float(pos[0])), int(float(pos[1])), left, name, int(float(cube[0])), int(float(cube[1])), cubeState, int(float(angle)), portalPos[0], portalPos[1], int(float(portalRot)), int(roomId) #TODO: get cube pos, only use it if the current player isnt controlling cube
+        #except:
+        #    return 0,0
 
     while running:
         screen.blit(background, (0,0))
 
         mouse_pos = pygame.mouse.get_pos()
 
-        title_text = GlobalVariables.font(50).render("Levels", True, GlobalVariables.Text_Forecolor)
+        title_text = GlobalVariables.font(50).render("Level Stats", True, GlobalVariables.Text_Forecolor)
         title_rect = pygame.Rect(50, 50, title_text.get_width(), title_text.get_height())
 
         screen.blit(title_text, title_rect)
 
-        connect_button.check_hover(mouse_pos)
-        connect_button.update(screen)
+        esc_text = GlobalVariables.font(24).render("back - ESC", True, GlobalVariables.Text_Forecolor)
+        screen.blit(esc_text, (GlobalVariables.Width - 190, 50))
+
+        data = parse_data(send_data())
+        p2room = data[11]
+        if len(str(p2room)) > 2:
+            if str(p2room) == "101":
+                await PlayLevel.play_level(1)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "102":
+                await PlayLevel.play_level(2)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "103":
+                await PlayLevel.play_level(3)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "104":
+                await PlayLevel.play_level(4)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            if str(p2room) == "105":
+                await PlayLevel.play_level(5)
+                pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+
+        #connect_button.check_hover(mouse_pos)
+        #connect_button.update(screen)
 
         printLevels()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if connect_button.check_click(mouse_pos):
-                    await connection.connect_screen()
-                    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
+            #if event.type == pygame.MOUSEBUTTONDOWN:
+                #if connect_button.check_click(mouse_pos):
+                #    await connection.connect_screen()
+                #    pygame.display.set_mode((GlobalVariables.Width,GlobalVariables.Height))
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False

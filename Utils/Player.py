@@ -7,7 +7,7 @@ from Utils.Portal_gun import Pgun, Portal
 
 class Player():
 
-    def __init__(self, x, y, first_player = True):
+    def __init__(self, x, y, first_player = True, controllingCube = False):
         self.x = x
         self.y = y
         self.background_x = GlobalVariables.Width
@@ -30,38 +30,57 @@ class Player():
         self.leftStandingImage = GlobalVariables.FirstPlayer_LeftStandingImage
         self.rightRunningImage = GlobalVariables.FirstPlayer_RightRunningImage
         self.leftRunningImage = GlobalVariables.FirstPlayer_LeftRunningImage
+        self.first_player = first_player
         if not first_player:
             self.rightStandingImage = GlobalVariables.SecondPlayer_RightStandingImage
             self.leftStandingImage = GlobalVariables.SecondPlayer_LeftStandingImage
             self.rightRunningImage = GlobalVariables.SecondPlayer_RightRunningImage
             self.leftRunningImage = GlobalVariables.SecondPlayer_LeftRunningImage
+            self.gravity = 0
         self.leftSide = False
         self.image = self.rightStandingImage
         self.cube = None
         self.completed = False
         self.pGun = Pgun(first_player)
         self.warpCooldown = 0
+        self.name = ""
+        self.controllingCube = controllingCube
+        self.cubeState = "1" if controllingCube else "0"
 
     def draw(self, screen):
         if self.cube:
             self.cube.rect.center = self.rect().center
         screen.blit(self.image, (self.x, self.y))
+        name_text = GlobalVariables.font(24).render(self.name, True, GlobalVariables.Text_NameColor)
+        screen.blit(name_text, (self.x, self.y - 30))
         self.pGun.draw(screen)
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.size_x, self.size_y)
 
     def update(self, platforms, dt): ## platforms is an array for all Rect objects in the level that player can get on
+
         self.set_gravity(platforms, dt)
         if self.isJump:
             self.check_collision(platforms, 0, 1)
         else:
             self.check_collision(platforms, 0, -1)
+
+
         self.pGun.hitbox_rect.center = self.rect().center
         self.pGun.update(platforms)
 
         if self.warpCooldown > 0:
             self.warpCooldown -= 1
+
+        if self.cubeState == "10":
+            self.cubeState = "0"
+            self.controllingCube = False
+
+        if self.cubeState == "11":
+            self.cubeState = "1"
+            self.controllingCube = True
+            
 
     def move(self, pressed_keys, platforms, dt):
         if pressed_keys[pygame.K_d]:
@@ -199,13 +218,18 @@ class Player():
 
     def interactButton(self, pressed_keys, button) -> bool:
         if pressed_keys[pygame.K_e] and self.rect().colliderect(button.rect):
-            return button.activate()
+            if button.activate():
+                self.cubeState = "11"
+                self.controllingCube = True
+                return True
         return False
     
     def mouseInput(self, mouse, cube = None):
         if mouse == 1:
             self.pGun.is_shooting()
         if not self.cube and mouse == 3 and cube and self.rect().colliderect(cube.rect):
+            self.cubeState = "11"
+            self.controllingCube = True
             cube.runPhysics = False
             self.cube = cube
         elif self.cube and mouse == 3:
@@ -219,17 +243,19 @@ class Player():
             self.cube = None
 
     def portalWarp(self, portals):
-        if self.warpCooldown > 0:
-            return
+        touchingPortal = False
         for portal in portals:
             if self.rect().colliderect(portal):
+                touchingPortal = True
+                if self.warpCooldown > 0:
+                    return
                 if portal.playerNum == 0:
                     print(portals[1].angle)
                     if portals[1].angle == 0: # left
-                        self.x = portals[1].rect.right
+                        self.x = portals[1].rect.right - 80
                         self.y = portals[1].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[1].angle == 180: # right
-                        self.x = portals[1].rect.left + (GlobalVariables.Player_size_X)
+                        self.x = portals[1].rect.left + 80 #(GlobalVariables.Player_size_X)
                         self.y = portals[1].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[1].angle == 90: # bottom
                         self.x = portals[1].rect.centerx - (GlobalVariables.Player_size_X / 2)
@@ -237,16 +263,16 @@ class Player():
                     elif portals[1].angle == 270: # top
                         self.x = portals[1].rect.centerx - (GlobalVariables.Player_size_X / 2)
                         self.y = portals[1].rect.top + (GlobalVariables.Player_size_Y)
-                    self.warpCooldown = 80
+                    self.warpCooldown = 70
                     self.canJump = False
                     return
                 elif portal.playerNum == 1:
                     print(portals[0].angle)
                     if portals[0].angle == 0:
-                        self.x = portals[0].rect.right
+                        self.x = portals[0].rect.right - 80
                         self.y = portals[0].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[0].angle == 180:
-                        self.x = portals[0].rect.left + (GlobalVariables.Player_size_X)
+                        self.x = portals[0].rect.left + 80 #(GlobalVariables.Player_size_X)
                         self.y = portals[0].rect.centery - (GlobalVariables.Player_size_Y / 2)
                     elif portals[0].angle == 90:
                         self.x = portals[0].rect.centerx - (GlobalVariables.Player_size_X / 2)
@@ -254,9 +280,11 @@ class Player():
                     elif portals[0].angle == 270:
                         self.x = portals[0].rect.centerx - (GlobalVariables.Player_size_X / 2)
                         self.y = portals[0].rect.top + (GlobalVariables.Player_size_Y)
-                    self.warpCooldown = 80 
+                    self.warpCooldown = 70 
                     self.canJump = False
                     return
+        if not touchingPortal:
+            self.warpCooldown = 0
 
     def drawHitbox(self, screen):
         pygame.draw.rect(screen, (255, 0, 0), self.rect(), 2, 1)
