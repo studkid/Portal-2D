@@ -249,6 +249,9 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         
         if players[0].interactButton(pressed_keys, pButton):
             dropper.spawnCube()
+            players[0].cubeState = "11"
+            players[0].controllingCube = True
+            dropper.sprite.runPhysics = True
         
         for wall in platforms:
             wall.draw(screen)

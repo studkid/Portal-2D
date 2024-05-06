@@ -228,6 +228,9 @@ async def Level(): ### TODO - MAKE A LEVEL FIVE DESIGN
                 dropper.add(CubeObj(0, 0, 0.0999, 0.2))
                 count += 1
             dropper.spawnCube()
+            players[0].cubeState = "11"
+            players[0].controllingCube = True
+            dropper.sprite.runPhysics = True
         
         for wall in platforms:
             wall.draw(screen)

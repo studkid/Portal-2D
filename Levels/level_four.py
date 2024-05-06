@@ -140,6 +140,9 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         portals = [players[0].pGun.sprite, players[1].pGun.sprite]
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
+
+        laser_text = GlobalVariables.font(14).render("If you get hit by a laser, you'll get sent back to the start.", True, GlobalVariables.Text_NameColor)
+        screen.blit(laser_text, (770, 310))
         
         ## Level four design
 
@@ -231,6 +234,10 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
                 dropper.add(CubeObj(0, 0, 0.0999, 0.2))
                 count += 1
             dropper.spawnCube()
+            players[0].cubeState = "11"
+            players[0].controllingCube = True
+            dropper.sprite.runPhysics = True
+
         
         for wall in platforms:
             wall.draw(screen)
