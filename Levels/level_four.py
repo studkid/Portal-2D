@@ -135,7 +135,8 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         #except:
         #    return 0,0
 
-
+    laser_text = GlobalVariables.font(14).render("If you get hit by a laser, you'll get sent back to the start.", True, GlobalVariables.Text_NameColor)
+    
     running = True
     while running:
         frameTimer += 1
@@ -147,7 +148,6 @@ async def Level(): ### TODO - MAKE A LEVEL FOUR DESIGN
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
 
-        laser_text = GlobalVariables.font(14).render("If you get hit by a laser, you'll get sent back to the start.", True, GlobalVariables.Text_NameColor)
         screen.blit(laser_text, (770, 310))
         
         ## Level four design

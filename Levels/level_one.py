@@ -127,6 +127,27 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         #except:
         #    return 0,0
 
+    
+    control1_text = GlobalVariables.font(14).render("Move left/right with A and D.", True, GlobalVariables.Text_NameColor)
+    control2_text = GlobalVariables.font(14).render("Jump with SPACE.", True, GlobalVariables.Text_NameColor)
+    control3_text = GlobalVariables.font(14).render("Shoot portal with LEFT CLICK.", True, GlobalVariables.Text_NameColor)
+
+    portal1_text = GlobalVariables.font(14).render("Portals can only be created on GRAY walls.", True, GlobalVariables.Text_NameColor)
+    portal2_text = GlobalVariables.font(14).render("Players and cubes can teleport using the portals!", True, GlobalVariables.Text_NameColor)
+    
+    cube_text = GlobalVariables.font(14).render("Pick up and throw cubes with RIGHT CLICK.", True, GlobalVariables.Text_NameColor)
+        
+    tiny1_text = GlobalVariables.font(14).render("TINY BUTTONS can be pressed with E when nearby.", True, GlobalVariables.Text_NameColor)
+    tiny2_text = GlobalVariables.font(14).render("When pressed, tiny buttons respawn the cube.", True, GlobalVariables.Text_NameColor)
+    
+    red_text = GlobalVariables.font(14).render("RED WALLS block players, but allow cubes to pass.", True, GlobalVariables.Text_NameColor)
+    
+    big1_text = GlobalVariables.font(14).render("BIG BUTTONS can be pressed by players or cubes.", True, GlobalVariables.Text_NameColor)
+    big2_text = GlobalVariables.font(14).render("When pressed, big buttons open the exit door!", True, GlobalVariables.Text_NameColor)
+    
+    door1_text = GlobalVariables.font(14).render("If BOTH players make it to the open door,", True, GlobalVariables.Text_NameColor)
+    door2_text = GlobalVariables.font(14).render("you complete the level!", True, GlobalVariables.Text_NameColor)
+    
     running = True
     while running:
         frameTimer += 1
@@ -138,37 +159,24 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
 
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
-
-        control1_text = GlobalVariables.font(14).render("Move left/right with A and D.", True, GlobalVariables.Text_NameColor)
-        control2_text = GlobalVariables.font(14).render("Jump with SPACE.", True, GlobalVariables.Text_NameColor)
-        control3_text = GlobalVariables.font(14).render("Shoot portal with LEFT CLICK.", True, GlobalVariables.Text_NameColor)
+        
         screen.blit(control1_text, (50, 400))
         screen.blit(control2_text, (50, 420))
         screen.blit(control3_text, (50, 440))
-
-        portal1_text = GlobalVariables.font(14).render("Portals can only be created on GRAY walls.", True, GlobalVariables.Text_NameColor)
-        portal2_text = GlobalVariables.font(14).render("Players and cubes can teleport using the portals!", True, GlobalVariables.Text_NameColor)
+        
         screen.blit(portal1_text, (860, 100))
         screen.blit(portal2_text, (860, 120))
 
-        cube_text = GlobalVariables.font(14).render("Pick up and throw cubes with RIGHT CLICK.", True, GlobalVariables.Text_NameColor)
         screen.blit(cube_text, (100, 560))
 
-        tiny1_text = GlobalVariables.font(14).render("TINY BUTTONS can be pressed with E when nearby.", True, GlobalVariables.Text_NameColor)
-        tiny2_text = GlobalVariables.font(14).render("When pressed, tiny buttons respawn the cube.", True, GlobalVariables.Text_NameColor)
         screen.blit(tiny1_text, (330, 640))
         screen.blit(tiny2_text, (330, 660))
 
-        red_text = GlobalVariables.font(14).render("RED WALLS block players, but allow cubes to pass.", True, GlobalVariables.Text_NameColor)
         screen.blit(red_text, (510, 470))
 
-        big1_text = GlobalVariables.font(14).render("BIG BUTTONS can be pressed by players or cubes.", True, GlobalVariables.Text_NameColor)
-        big2_text = GlobalVariables.font(14).render("When pressed, big buttons open the exit door!", True, GlobalVariables.Text_NameColor)
         screen.blit(big1_text, (760, 640))
         screen.blit(big2_text, (760, 660))
 
-        door1_text = GlobalVariables.font(14).render("If BOTH players make it to the open door,", True, GlobalVariables.Text_NameColor)
-        door2_text = GlobalVariables.font(14).render("you complete the level!", True, GlobalVariables.Text_NameColor)
         screen.blit(door1_text, (920, 530))
         screen.blit(door2_text, (920, 550))
         
