@@ -133,7 +133,7 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
 
-        control1_text = GlobalVariables.font(14).render("Move left-right with W and D.", True, GlobalVariables.Text_NameColor)
+        control1_text = GlobalVariables.font(14).render("Move left/right with A and D.", True, GlobalVariables.Text_NameColor)
         control2_text = GlobalVariables.font(14).render("Jump with SPACE.", True, GlobalVariables.Text_NameColor)
         control3_text = GlobalVariables.font(14).render("Shoot portal with LEFT CLICK.", True, GlobalVariables.Text_NameColor)
         screen.blit(control1_text, (50, 400))
