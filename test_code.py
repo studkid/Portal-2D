@@ -19,15 +19,15 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height))
 
 buttons: Dict[str, MenuButton] = {
-    "phys_test_button":  MenuButton(50, 120, "Physics Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "player_test_button":  MenuButton(50, 170, "Player Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "door_test_button":  MenuButton(50, 220, "Door Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "portal_test_button":  MenuButton(50, 270, "Portal Test", GlobalVariables.font(30), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "level_one_button":  MenuButton(50, 320, "    - Level One", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "level_two_button":  MenuButton(50, 370, "    - Level Two", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "level_three_button":  MenuButton(50, 420, "    - Level Three", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "level_four_button":  MenuButton(50, 470, "    - Level Four", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
-    "level_five_button":  MenuButton(50, 520, "    - Level Five", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "phys_test_button":  MenuButton(50, 470, "    - Physics Test", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "player_test_button":  MenuButton(50, 520, "    - Player Test", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "door_test_button":  MenuButton(50, 570, "    - Door Test", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "portal_test_button":  MenuButton(50, 620, "    - Portal Test", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_one_button":  MenuButton(50, 170, "    - 1: Beginner's Luck", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_two_button":  MenuButton(50, 220, "    - 2: Trials and Tribulations", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_three_button":  MenuButton(50, 270, "    - 3: The End of the Beginning", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_four_button":  MenuButton(50, 320, "    - 4: The Beginning of the End", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
+    "level_five_button":  MenuButton(50, 370, "    - 5: Finale", GlobalVariables.font(28), GlobalVariables.Text_Forecolor, GlobalVariables.Text_Hovercolor),
     ### add a key name of button and a value of MenuButton for your code to test with
     ### make sure your MenuButton is 50 extra y value from previous button
     ### will also need to add an if statement on almost bottom for your button
@@ -79,6 +79,12 @@ async def test_screen():
 
         esc_text = GlobalVariables.font(24).render("back - ESC", True, GlobalVariables.Text_Forecolor)
         screen.blit(esc_text, (GlobalVariables.Width - 190, 50))
+
+        levels_text = GlobalVariables.font(30).render("Levels", True, GlobalVariables.Text_Forecolor)
+        screen.blit(levels_text, (50, 120))
+
+        test_text = GlobalVariables.font(30).render("Test Rooms", True, GlobalVariables.Text_Forecolor)
+        screen.blit(test_text, (50, 420))
 
         data = parse_data(send_data())
         p2room = data[11]
