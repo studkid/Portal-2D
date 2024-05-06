@@ -25,7 +25,7 @@ screen = pygame.display.set_mode((GlobalVariables.Width, GlobalVariables.Height)
 async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
     platforms = [
         Platform(0, GlobalVariables.Height - 20, GlobalVariables.Width, 20, False, 0),
-        Platform(600, GlobalVariables.Height - 200, 20, 180, False, 1),
+        Platform(710, GlobalVariables.Height - 200, 20, 180, False, 1),
         Platform(0, GlobalVariables.Height - 200, 20, 180, True, 0),
         Platform(GlobalVariables.Width - 20, 0, 20, 250, True, 0),
     ]
@@ -38,7 +38,7 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
     
     pButton = PlayerButton(300, GlobalVariables.Height - 75, 30)
 
-    button = ButtonObject(680, GlobalVariables.Height - 35, 0)
+    button = ButtonObject(790, GlobalVariables.Height - 35, 0)
 
     players = [
         Player(50, 520, True, str(GlobalVariables.net.id) == str(0)), 
@@ -46,7 +46,7 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
     ]
     players[0].name = GlobalVariables.Account_Username
 
-    door = ExitDoor(1100, GlobalVariables.Height - 150)
+    door = ExitDoor(1150, GlobalVariables.Height - 150)
 
     global hasStarted
     hasStarted = False
@@ -132,22 +132,45 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
 
         pressed_keys = pygame.key.get_pressed()
         screen.blit(background, (0,0))
+
+        control1_text = GlobalVariables.font(14).render("Move left-right with W and D.", True, GlobalVariables.Text_NameColor)
+        control2_text = GlobalVariables.font(14).render("Jump with SPACE.", True, GlobalVariables.Text_NameColor)
+        control3_text = GlobalVariables.font(14).render("Shoot portal with LEFT CLICK.", True, GlobalVariables.Text_NameColor)
+        screen.blit(control1_text, (50, 400))
+        screen.blit(control2_text, (50, 420))
+        screen.blit(control3_text, (50, 440))
+
+        portal1_text = GlobalVariables.font(14).render("Portals can only be created on GRAY walls.", True, GlobalVariables.Text_NameColor)
+        portal2_text = GlobalVariables.font(14).render("Players and cubes can teleport using the portals!", True, GlobalVariables.Text_NameColor)
+        screen.blit(portal1_text, (860, 100))
+        screen.blit(portal2_text, (860, 120))
+
+        cube_text = GlobalVariables.font(14).render("Pick up and throw cubes with RIGHT CLICK.", True, GlobalVariables.Text_NameColor)
+        screen.blit(cube_text, (100, 560))
+
+        tiny1_text = GlobalVariables.font(14).render("TINY BUTTONS can be pressed with E when nearby.", True, GlobalVariables.Text_NameColor)
+        tiny2_text = GlobalVariables.font(14).render("When pressed, tiny buttons respawn the cube.", True, GlobalVariables.Text_NameColor)
+        screen.blit(tiny1_text, (330, 640))
+        screen.blit(tiny2_text, (330, 660))
+
+        red_text = GlobalVariables.font(14).render("RED WALLS block players, but allow cubes to pass.", True, GlobalVariables.Text_NameColor)
+        screen.blit(red_text, (510, 470))
+
+        big1_text = GlobalVariables.font(14).render("BIG BUTTONS can be pressed by players or cubes.", True, GlobalVariables.Text_NameColor)
+        big2_text = GlobalVariables.font(14).render("When pressed, big buttons open the exit door!", True, GlobalVariables.Text_NameColor)
+        screen.blit(big1_text, (760, 640))
+        screen.blit(big2_text, (760, 660))
+
+        door1_text = GlobalVariables.font(14).render("If BOTH players make it to the open door,", True, GlobalVariables.Text_NameColor)
+        door2_text = GlobalVariables.font(14).render("you complete the level!", True, GlobalVariables.Text_NameColor)
+        screen.blit(door1_text, (920, 530))
+        screen.blit(door2_text, (920, 550))
         
         ## Level one design
 
         door.door_status(button)
         door.update(screen)
 
-        if levelComplete and completionTimer > 0:
-            completionTimer -= 1
-            completionText = GlobalVariables.font(50).render("Level completed in " + str(finalTime // 1000) + " seconds!", True, (0, 0, 0))
-            screen.blit(completionText, (GlobalVariables.Width/2 - completionText.get_width()/2, GlobalVariables.Height/2))
-
-        if completionTimer == 0:
-            if levelComplete:
-                GlobalVariables.complete_level(1, finalTime // 1000)
-            running = False
-            return
 
         if not levelComplete and door.try_exit(players[0], pressed_keys) and door.try_exit(players[1], pressed_keys):
             levelComplete = True
@@ -214,7 +237,7 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         for player in players:
             player.update(platforms, dt)
             player.draw(screen)
-            player.drawHitbox(screen)
+            #player.drawHitbox(screen)
 
         
         if players[0].interactButton(pressed_keys, pButton):
@@ -222,6 +245,17 @@ async def Level(): ### TODO - MAKE A LEVEL ONE DESIGN
         
         for wall in platforms:
             wall.draw(screen)
+
+        if levelComplete and completionTimer > 0:
+            completionTimer -= 1
+            completionText = GlobalVariables.font(50).render("Level completed in " + str(finalTime // 1000) + " seconds!", True, (0, 0, 0))
+            screen.blit(completionText, (GlobalVariables.Width/2 - completionText.get_width()/2, GlobalVariables.Height/2))
+
+        if completionTimer == 0:
+            if levelComplete:
+                GlobalVariables.complete_level(1, finalTime // 1000)
+            running = False
+            return
         pygame.display.flip()
 
         ## Event Handler

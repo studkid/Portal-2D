@@ -142,16 +142,6 @@ async def Level(): ### TODO - MAKE A LEVEL TWO DESIGN
         door.door_status(button)
         door.update(screen)
         
-        if levelComplete and completionTimer > 0:
-            completionTimer -= 1
-            completionText = GlobalVariables.font(50).render("Level completed in " + str(finalTime // 1000) + " seconds!", True, (0, 0, 0))
-            screen.blit(completionText, (GlobalVariables.Width/2 - completionText.get_width()/2, GlobalVariables.Height/2))
-
-        if completionTimer == 0:
-            if levelComplete:
-                GlobalVariables.complete_level(2, finalTime // 1000)
-            running = False
-            return
 
         if not levelComplete and door.try_exit(players[0], pressed_keys) and door.try_exit(players[1], pressed_keys):
             levelComplete = True
@@ -216,7 +206,7 @@ async def Level(): ### TODO - MAKE A LEVEL TWO DESIGN
         for player in players:
             player.update(platforms, dt)
             player.draw(screen)
-            player.drawHitbox(screen)
+            #player.drawHitbox(screen)
 
         
         if players[0].interactButton(pressed_keys, pButton):
@@ -224,6 +214,18 @@ async def Level(): ### TODO - MAKE A LEVEL TWO DESIGN
         
         for wall in platforms:
             wall.draw(screen)
+
+        if levelComplete and completionTimer > 0:
+            completionTimer -= 1
+            completionText = GlobalVariables.font(50).render("Level completed in " + str(finalTime // 1000) + " seconds!", True, (0, 0, 0))
+            screen.blit(completionText, (GlobalVariables.Width/2 - completionText.get_width()/2, GlobalVariables.Height/2))
+
+        if completionTimer == 0:
+            if levelComplete:
+                GlobalVariables.complete_level(2, finalTime // 1000)
+            running = False
+            return
+        
         pygame.display.flip()
 
         ## Event Handler
